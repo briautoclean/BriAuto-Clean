@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BriAuto Clean — Nettoyage automobile à domicile</title>
+<meta name="description" content="BriAuto Clean, nettoyage automobile professionnel à domicile autour d'Oissery. Formules et prestations à la carte, réservez en ligne.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#12233F;
+    --ink-soft:#1C3660;
+    --blue:#2E6BE6;
+    --blue-dark:#1F4FBF;
+    --cyan:#5FD6E8;
+    --paper:#FAFBFC;
+    --paper-alt:#F0F3F8;
+    --line:#DFE4EC;
+    --slate:#5B6472;
+    --white:#FFFFFF;
+    --radius-s:6px;
+    --radius-m:10px;
+    --shadow: 0 12px 28px -14px rgba(18,35,63,0.28);
+    --maxw:1160px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    font-family:'Inter',sans-serif;
+    color:var(--ink);
+    background:var(--paper);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,h4{
+    font-family:'Oswald',sans-serif;
+    font-weight:600;
+    line-height:1.12;
+    margin:0 0 .5em;
+    letter-spacing:.2px;
+  }
+  p{margin:0 0 1em;color:var(--slate);}
+  a{color:inherit;}
+  img,svg{display:block;max-width:100%;}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px;}
+  section{padding:88px 0;}
+  .section-head{max-width:620px;margin-bottom:48px;}
+  .section-head h2{font-size:clamp(28px,3.4vw,40px);color:var(--ink);}
+  .section-head p{font-size:17px;}
+  .tag{
+    display:inline-flex;align-items:center;gap:8px;
+    font-family:'Inter',sans-serif;font-weight:600;font-size:13px;
+    color:var(--blue-dark);background:rgba(46,107,230,0.08);
+    padding:6px 14px;border-radius:999px;margin-bottom:18px;
+  }
+  .tag::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--blue);}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:10px;
+    font-family:'Inter',sans-serif;font-weight:600;font-size:15px;
+    padding:14px 26px;border-radius:var(--radius-s);
+    border:1px solid transparent;cursor:pointer;text-decoration:none;
+    transition:transform .15s ease, box-shadow .15s ease, background .15s ease;
+  }
+  .btn-primary{background:var(--blue);color:#fff;box-shadow:0 10px 24px -10px rgba(46,107,230,0.55);}
+  .btn-primary:hover{background:var(--blue-dark);transform:translateY(-1px);}
+  .btn-ghost{background:transparent;color:var(--ink);border-color:var(--line);}
+  .btn-ghost:hover{border-color:var(--blue);color:var(--blue-dark);}
+  .btn-block{width:100%;}
+
+  /* HEADER */
+  header{
+    position:sticky;top:0;z-index:40;background:rgba(250,251,252,0.92);
+    backdrop-filter:blur(8px);border-bottom:1px solid var(--line);
+  }
+  .nav{display:flex;align-items:center;justify-content:space-between;padding:16px 28px;max-width:var(--maxw);margin:0 auto;}
+  .logo{display:flex;align-items:center;gap:10px;font-family:'Oswald',sans-serif;font-weight:700;font-size:20px;letter-spacing:.3px;color:var(--ink);text-decoration:none;}
+  .logo .dot{width:10px;height:10px;border-radius:2px;background:var(--blue);transform:rotate(45deg);}
+  .nav-links{display:flex;gap:32px;list-style:none;margin:0;padding:0;font-weight:500;font-size:15px;}
+  .nav-links a{text-decoration:none;color:var(--ink-soft);}
+  .nav-links a:hover{color:var(--blue-dark);}
+  .nav-cta{display:flex;align-items:center;gap:18px;}
+  .nav-toggle{display:none;background:none;border:none;cursor:pointer;padding:6px;}
+  .nav-toggle span{display:block;width:22px;height:2px;background:var(--ink);margin:5px 0;}
+
+  /* HERO */
+  .hero{padding-top:72px;padding-bottom:64px;overflow:hidden;}
+  .hero .wrap{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center;}
+  .hero h1{font-size:clamp(34px,5vw,54px);color:var(--ink);}
+  .hero h1 span{color:var(--blue);}
+  .hero p.lead{font-size:18px;max-width:480px;}
+  .hero-actions{display:flex;gap:16px;margin-top:28px;flex-wrap:wrap;}
+  .hero-meta{display:flex;gap:28px;margin-top:40px;flex-wrap:wrap;}
+  .hero-meta div{display:flex;flex-direction:column;}
+  .hero-meta strong{font-family:'Oswald',sans-serif;font-size:22px;color:var(--ink);}
+  .hero-meta span{font-size:13px;color:var(--slate);}
+  .hero-art{position:relative;}
+  .hero-art svg{width:100%;height:auto;}
+
+  /* PACKAGES */
+  .pkg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+  .pkg{
+    background:var(--white);border:1px solid var(--line);border-radius:var(--radius-m);
+    padding:32px 28px;display:flex;flex-direction:column;
+  }
+  .pkg.featured{
+    background:var(--ink);color:#fff;border-color:var(--ink);
+    box-shadow:var(--shadow);transform:translateY(-8px);
+  }
+  .pkg-eyebrow{font-size:13px;font-weight:600;color:var(--blue-dark);margin-bottom:10px;}
+  .pkg.featured .pkg-eyebrow{color:var(--cyan);}
+  .pkg h3{font-size:24px;margin-bottom:4px;}
+  .pkg .price{font-family:'Oswald',sans-serif;font-size:36px;color:var(--ink);margin:10px 0 6px;}
+  .pkg.featured .price{color:#fff;}
+  .pkg .price small{font-family:'Inter',sans-serif;font-size:14px;font-weight:500;color:var(--slate);}
+  .pkg.featured .price small{color:#B9C3D6;}
+  .pkg p.desc{font-size:14.5px;margin-bottom:20px;}
+  .pkg.featured p.desc{color:#C7CFE0;}
+  .pkg ul{list-style:none;margin:0 0 26px;padding:0;flex:1;}
+  .pkg li{display:flex;gap:10px;align-items:flex-start;font-size:14.5px;padding:7px 0;border-top:1px solid var(--line);color:var(--ink-soft);}
+  .pkg li:first-child{border-top:none;}
+  .pkg.featured li{border-top:1px solid rgba(255,255,255,0.14);color:#E4E9F3;}
+  .pkg li svg{flex:none;margin-top:3px;width:15px;height:15px;color:var(--blue);}
+  .pkg.featured li svg{color:var(--cyan);}
+  .pkg .btn-ghost{border-color:var(--line);}
+  .pkg.featured .btn-ghost{border-color:rgba(255,255,255,0.3);color:#fff;}
+  .pkg.featured .btn-ghost:hover{border-color:var(--cyan);color:var(--cyan);}
+
+  /* OPTIONS A LA CARTE */
+  .options-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--radius-m);overflow:hidden;}
+  .opt{background:var(--white);padding:26px 22px;display:flex;flex-direction:column;gap:10px;}
+  .opt .icon{width:34px;height:34px;color:var(--blue);}
+  .opt h4{font-size:16px;margin-bottom:0;color:var(--ink);}
+  .opt .opt-price{font-family:'Oswald',sans-serif;font-size:17px;color:var(--blue-dark);}
+  .opt p{font-size:13.5px;margin-bottom:0;}
+
+  /* HOW IT WORKS */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;counter-reset:step;}
+  .step{position:relative;padding-left:0;}
+  .step .num{font-family:'Oswald',sans-serif;font-size:44px;color:var(--line);margin-bottom:8px;}
+  .step h4{font-size:19px;color:var(--ink);}
+  .step p{font-size:14.5px;}
+
+  /* BOOKING */
+  .booking{background:var(--ink);color:#fff;}
+  .booking .section-head h2{color:#fff;}
+  .booking .section-head p{color:#C7CFE0;}
+  .booking-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:48px;align-items:start;}
+  .booking-info{padding-top:6px;}
+  .booking-info .item{display:flex;gap:14px;margin-bottom:22px;}
+  .booking-info .item svg{flex:none;width:20px;height:20px;color:var(--cyan);margin-top:3px;}
+  .booking-info .item h5{margin:0 0 4px;font-family:'Inter',sans-serif;font-weight:600;font-size:15px;}
+  .booking-info .item p{margin:0;color:#C7CFE0;font-size:14px;}
+
+  form.card{background:#fff;border-radius:var(--radius-m);padding:32px;color:var(--ink);}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .field{margin-bottom:18px;}
+  .field label{display:block;font-size:13.5px;font-weight:600;margin-bottom:6px;color:var(--ink-soft);}
+  .field input, .field select, .field textarea{
+    width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:var(--radius-s);
+    font-family:'Inter',sans-serif;font-size:14.5px;color:var(--ink);background:var(--paper);
+  }
+  .field input:focus, .field select:focus, .field textarea:focus{
+    outline:2px solid var(--blue);outline-offset:1px;border-color:var(--blue);
+  }
+  .field textarea{resize:vertical;min-height:90px;}
+  fieldset{border:1px solid var(--line);border-radius:var(--radius-s);padding:14px 16px;margin:0 0 18px;}
+  fieldset legend{font-size:13.5px;font-weight:600;color:var(--ink-soft);padding:0 6px;}
+  .check-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 18px;}
+  .check-grid label{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:400;color:var(--ink);margin:0;}
+  .check-grid input{width:auto;}
+  .radio-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+  .radio-card{border:1px solid var(--line);border-radius:var(--radius-s);padding:10px 12px;font-size:14px;text-align:center;cursor:pointer;}
+  .radio-card input{display:none;}
+  .radio-card:has(input:checked){border-color:var(--blue);background:rgba(46,107,230,0.06);color:var(--blue-dark);font-weight:600;}
+  .form-note{font-size:12.5px;color:var(--slate);margin-top:10px;}
+
+  footer{background:var(--ink);color:#C7CFE0;padding:48px 0 28px;border-top:1px solid rgba(255,255,255,0.08);}
+  .footer-grid{display:flex;justify-content:space-between;flex-wrap:wrap;gap:32px;padding-bottom:28px;}
+  .footer-grid .logo{color:#fff;}
+  .footer-cols{display:flex;gap:56px;flex-wrap:wrap;}
+  .footer-cols h5{font-size:13px;color:#fff;margin:0 0 12px;font-weight:600;}
+  .footer-cols a{display:block;color:#B9C3D6;text-decoration:none;font-size:14px;margin-bottom:8px;}
+  .footer-cols a:hover{color:#fff;}
+  .footer-bottom{border-top:1px solid rgba(255,255,255,0.1);padding-top:18px;font-size:13px;color:#8C97AC;}
+
+  @media (max-width: 880px){
+    .nav-links, .nav-cta .btn-ghost{display:none;}
+    .nav-toggle{display:block;}
+    .hero .wrap{grid-template-columns:1fr;}
+    .hero-art{order:-1;max-width:340px;margin:0 auto;}
+    .pkg-grid{grid-template-columns:1fr;}
+    .pkg.featured{transform:none;}
+    .options-grid{grid-template-columns:1fr 1fr;}
+    .steps{grid-template-columns:1fr;}
+    .booking-grid{grid-template-columns:1fr;}
+    .field-row{grid-template-columns:1fr;}
+    .check-grid{grid-template-columns:1fr;}
+    .radio-grid{grid-template-columns:1fr;}
+    .footer-grid{flex-direction:column;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <nav class="nav">
+    <a href="#" class="logo"><span class="dot"></span>BriAuto Clean</a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#formules">Formules</a></li>
+      <li><a href="#options">Options</a></li>
+      <li><a href="#comment-ca-marche">Comment ça marche</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <div class="nav-cta">
+      <a href="#rendez-vous" class="btn btn-ghost">Prendre rendez-vous</a>
+      <button class="nav-toggle" id="navToggle" aria-label="Ouvrir le menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <div>
+      <span class="tag">Oissery &amp; alentours — rayon 30 km</span>
+      <h1>Votre véhicule, nettoyé <span>à votre porte</span>.</h1>
+      <p class="lead">BriAuto Clean se déplace chez vous pour un nettoyage intérieur et extérieur soigné. Choisissez une formule complète ou uniquement les prestations dont vous avez besoin.</p>
+      <div class="hero-actions">
+        <a href="#rendez-vous" class="btn btn-primary">Prendre rendez-vous</a>
+        <a href="#formules" class="btn btn-ghost">Voir les formules</a>
+      </div>
+      <div class="hero-meta">
+        <div><strong>3</strong><span>formules complètes</span></div>
+        <div><strong>8+</strong><span>prestations à la carte</span></div>
+        <div><strong>30 km</strong><span>autour d'Oissery (77)</span></div>
+      </div>
+    </div>
+    <div class="hero-art">
+      <svg viewBox="0 0 460 340" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M60 230c0-8 5-15 13-18l30-40c8-11 21-17 34-17h96c13 0 26 6 34 17l30 40c8 3 13 10 13 18v34c0 7-6 13-13 13h-14c-2 15-15 26-30 26s-28-11-30-26H167c-2 15-15 26-30 26s-28-11-30-26H73c-7 0-13-6-13-13v-34z" stroke="#12233F" stroke-width="4" stroke-linejoin="round"/>
+        <path d="M108 155l24-32c5-6 12-10 20-10h72c8 0 15 4 20 10l24 32" stroke="#12233F" stroke-width="4" stroke-linejoin="round"/>
+        <line x1="60" y1="230" x2="386" y2="230" stroke="#12233F" stroke-width="4"/>
+        <circle cx="137" cy="277" r="17" stroke="#2E6BE6" stroke-width="4"/>
+        <circle cx="309" cy="277" r="17" stroke="#2E6BE6" stroke-width="4"/>
+        <path d="M150 118l160-24" stroke="#5FD6E8" stroke-width="5" stroke-linecap="round"/>
+        <path d="M170 100l120-16" stroke="#5FD6E8" stroke-width="3" stroke-linecap="round" opacity=".6"/>
+        <g stroke="#2E6BE6" stroke-width="4" stroke-linecap="round">
+          <path d="M370 70v18"/>
+          <path d="M361 79h18"/>
+        </g>
+        <g stroke="#5FD6E8" stroke-width="3" stroke-linecap="round">
+          <path d="M395 130v14"/>
+          <path d="M388 137h14"/>
+        </g>
+        <circle cx="55" cy="120" r="5" fill="#5FD6E8"/>
+        <circle cx="40" cy="150" r="3" fill="#2E6BE6"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<section id="formules">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="tag">Formules</span>
+      <h2>Une formule pour chaque besoin</h2>
+      <p>Trois niveaux de nettoyage, du rafraîchissement rapide à la remise à neuf complète. Tarifs indicatifs pour une citadine — un devis exact est confirmé selon le véhicule.</p>
+    </div>
+    <div class="pkg-grid">
+
+      <div class="pkg">
+        <span class="pkg-eyebrow">Essentiel</span>
+        <h3>Extérieur</h3>
+        <div class="price">39€<small> / véhicule</small></div>
+        <p class="desc">Pour redonner de l'éclat à la carrosserie entre deux nettoyages complets.</p>
+        <ul>
+          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Lavage carrosserie à la main</li>
+          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Nettoyage des jantes</li>
+          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Vitres extérieures</li>
+          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Séchage &amp; lustrage rapide</li>
+        </ul>
+        <button class="btn btn-ghost btn-block choose-pkg" data-pkg="Essentiel — 39€">Choisir cette formule</button>
+      </div>
+
+      <div class="pkg featured">
+        <span class="pkg-eyebrow">Confort — le plus choisi</span>
+        <h3>Intérieur + Extérieur</h3>
+        <div class="price">69€<small> / véhicule</small></div>
+        <p class="desc">Le nettoyage complet pour un véhicule propre dedans comme dehors.</p>
+        <ul>
+          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Tout le contenu de la formule Essentiel</li>
+          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Aspiration sièges, tapis et coffre</li>
+          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Vitres intérieures &amp; plastiques dépoussiérés</li>
+          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Parfum d'habitacle offert</li>
+        </ul>
+        <button class="btn btn-primary btn-block choose-pkg" data-pkg="Confort — 69€">Choisir cette formule</button>
+      </div>
+
+      <div class="pkg">
+        <span class="pkg-eyebrow">Prestige</span>
+        <h3>Remise à neuf</h3>
+        <div class="price">119€<small> / véhicule</small></div>
+        <p class="desc">Un nettoyage en profondeur, pour un véhicule qui retrouve son état d'origine.</p>
+        <ul>
+          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Tout le contenu de la formule Confort</li>
+          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Shampoing sièges &amp; tapis en profondeur</li>
+          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Nettoyage du compartiment moteur</li>
+          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Cire de protection carrosserie</li>
+        </ul>
+        <button class="btn btn-ghost btn-block choose-pkg" data-pkg="Prestige — 119€">Choisir cette formule</button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section id="options" style="background:var(--paper-alt);">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="tag">À la carte</span>
+      <h2>Uniquement ce dont vous avez besoin</h2>
+      <p>Pas besoin d'une formule complète ? Sélectionnez une ou plusieurs prestations, à combiner librement.</p>
+    </div>
+    <div class="options-grid">
+
+      <div class="opt">
+        <svg class="icon" viewBox="0 0 24 24" fill="none"><rect x="4" y="5" width="16" height="12" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M4 10h16" stroke="currentColor" stroke-width="1.6"/></svg>
+        <h4>Vitres intérieures &amp; extérieures</h4>
+        <p>Nettoyage sans traces, toutes vitres du véhicule.</p>
+        <span class="opt-price">10€</span>
+      </div>
+
+      <div class="opt">
+        <svg class="icon" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="7" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="2.2" stroke="currentColor" stroke-width="1.6"/><path d="M12 5v2M12 17v2M5 12h2M17 12h2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <h4>Jantes détaillées</h4>
+        <p>Décrassage complet, y compris les faces internes.</p>
+        <span class="opt-price">15€</span>
+      </div>
+
+      <div class="opt">
+        <svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M6 18v-6a6 6 0 0112 0v6" stroke="currentColor" stroke-width="1.6"/><path d="M4 18h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <h4>Aspiration sièges &amp; tapis</h4>
+        <p>Dépoussiérage complet de l'habitacle et du coffre.</p>
+        <span class="opt-price">15€</span>
+      </div>
+
+      <div class="opt">
+        <svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M4 15c2-6 14-6 16 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M7 15v3M12 15v3M17 15v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <h4>Shampoing sièges tissu</h4>
+        <p>Traitement en profondeur des taches et odeurs.</p>
+        <span class="opt-price">35€</span>
+      </div>
+
+      <div class="opt">
+        <svg class="icon" viewBox="0 0 24 24" fill="none"><rect x="5" y="4" width="14" height="16" rx="3" stroke="currentColor" stroke-width="1.6"/><path d="M9 9h6M9 13h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <h4>Cuir : nettoyage &amp; traitement</h4>
+        <p>Nourrit et protège les surfaces en cuir.</p>
+        <span class="opt-price">30€</span>
+      </div>
+
+      <div class="opt">
+        <svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M6 10V6h6l2 4" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><rect x="4" y="10" width="16" height="7" rx="1.5" stroke="currentColor" stroke-width="1.6"/><circle cx="8" cy="17" r="1.4" stroke="currentColor" stroke-width="1.4"/><circle cx="16" cy="17" r="1.4" stroke="currentColor" stroke-width="1.4"/></svg>
+        <h4>Compartiment moteur</h4>
+        <p>Dégraissage et nettoyage soigné du bloc moteur.</p>
+        <span class="opt-price">25€</span>
+      </div>
+
+      <div class="opt">
+        <svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M12 3s5 5.5 5 9.5a5 5 0 01-10 0C7 8.5 12 3 12 3z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+        <h4>Traitement anti-odeur</h4>
+        <p>Désodorisation en profondeur de l'habitacle.</p>
+        <span class="opt-price">20€</span>
+      </div>
+
+      <div class="opt">
+        <svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M4 12l6 6L20 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" opacity="0"/><circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.6"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <h4>Cire de protection</h4>
+        <p>Brillance et protection longue durée de la carrosserie.</p>
+        <span class="opt-price">25€</span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section id="comment-ca-marche">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="tag">Comment ça marche</span>
+      <h2>Un rendez-vous en trois étapes</h2>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="num">1</div>
+        <h4>Choisissez vos prestations</h4>
+        <p>Une formule complète ou des options à la carte, selon les besoins de votre véhicule.</p>
+      </div>
+      <div class="step">
+        <div class="num">2</div>
+        <h4>Réservez votre créneau</h4>
+        <p>Indiquez votre adresse et la date souhaitée via le formulaire de rendez-vous.</p>
+      </div>
+      <div class="step">
+        <div class="num">3</div>
+        <h4>On s'occupe du reste</h4>
+        <p>BriAuto Clean se déplace chez vous, à votre travail, ou à l'adresse de votre choix.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="booking" id="rendez-vous">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="tag">Rendez-vous</span>
+      <h2>Réservez votre nettoyage</h2>
+      <p>Remplissez le formulaire, nous revenons vers vous rapidement pour confirmer le créneau.</p>
+    </div>
+    <div class="booking-grid">
+      <div class="booking-info">
+        <div class="item">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M12 21s7-6.1 7-11a7 7 0 10-14 0c0 4.9 7 11 7 11z" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="10" r="2.5" stroke="currentColor" stroke-width="1.6"/></svg>
+          <div><h5>Zone d'intervention</h5><p>Oissery (77178) et un rayon de 30 km. Au-delà, contactez-nous pour vérifier la disponibilité.</p></div>
+        </div>
+        <div class="item">
+          <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M3 7l9 6 9-6" stroke="currentColor" stroke-width="1.6"/></svg>
+          <div><h5>Réponse par email</h5><p>Chaque demande est traitée à l'adresse briauto.cleaning@gmail.com.</p></div>
+        </div>
+        <div class="item">
+          <svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M4 9h16" stroke="currentColor" stroke-width="1.6"/><path d="M8 3v3M16 3v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          <div><h5>Sur rendez-vous</h5><p>Indiquez vos disponibilités, nous confirmons le créneau au plus vite.</p></div>
+        </div>
+      </div>
+
+      <form class="card" id="bookingForm" action="https://formsubmit.co/briauto.cleaning@gmail.com" method="POST">
+        <input type="hidden" name="_subject" value="Nouvelle demande de rendez-vous — BriAuto Clean">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_captcha" value="true">
+
+        <div class="field-row">
+          <div class="field">
+            <label for="nom">Nom et prénom</label>
+            <input type="text" id="nom" name="Nom" required>
+          </div>
+          <div class="field">
+            <label for="tel">Téléphone</label>
+            <input type="tel" id="tel" name="Téléphone" required>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="Email" required>
+          </div>
+          <div class="field">
+            <label for="date">Date souhaitée</label>
+            <input type="date" id="date" name="Date souhaitée">
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="adresse">Adresse d'intervention</label>
+          <input type="text" id="adresse" name="Adresse" placeholder="Numéro, rue, ville, code postal" required>
+        </div>
+
+        <div class="field">
+          <label for="vehicule">Véhicule (marque, modèle)</label>
+          <input type="text" id="vehicule" name="Véhicule" placeholder="Ex : Peugeot 208">
+        </div>
+
+        <fieldset>
+          <legend>Formule</legend>
+          <div class="radio-grid" id="pkgRadios">
+            <label class="radio-card"><input type="radio" name="Formule" value="Essentiel — 39€">Essentiel</label>
+            <label class="radio-card"><input type="radio" name="Formule" value="Confort — 69€" checked>Confort</label>
+            <label class="radio-card"><input type="radio" name="Formule" value="Prestige — 119€">Prestige</label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Options à la carte (facultatif)</legend>
+          <div class="check-grid">
+            <label><input type="checkbox" name="Options" value="Vitres"> Vitres</label>
+            <label><input type="checkbox" name="Options" value="Jantes"> Jantes détaillées</label>
+            <label><input type="checkbox" name="Options" value="Aspiration"> Aspiration sièges/tapis</label>
+            <label><input type="checkbox" name="Options" value="Shampoing sièges"> Shampoing sièges</label>
+            <label><input type="checkbox" name="Options" value="Cuir"> Cuir</label>
+            <label><input type="checkbox" name="Options" value="Compartiment moteur"> Compartiment moteur</label>
+            <label><input type="checkbox" name="Options" value="Anti-odeur"> Anti-odeur</label>
+            <label><input type="checkbox" name="Options" value="Cire de protection"> Cire de protection</label>
+          </div>
+        </fieldset>
+
+        <div class="field">
+          <label for="message">Message (facultatif)</label>
+          <textarea id="message" name="Message" placeholder="Précisions sur votre véhicule, vos disponibilités..."></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block">Envoyer ma demande de rendez-vous</button>
+        <p class="form-note">En envoyant ce formulaire, votre demande est transmise directement par email à BriAuto Clean.</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a href="#" class="logo"><span class="dot"></span>BriAuto Clean</a>
+        <p style="margin-top:14px;max-width:280px;color:#8C97AC;font-size:14px;">Nettoyage automobile à domicile, autour d'Oissery (77).</p>
+      </div>
+      <div class="footer-cols">
+        <div>
+          <h5>Navigation</h5>
+          <a href="#formules">Formules</a>
+          <a href="#options">Options</a>
+          <a href="#comment-ca-marche">Comment ça marche</a>
+          <a href="#rendez-vous">Rendez-vous</a>
+        </div>
+        <div>
+          <h5>Contact</h5>
+          <a href="mailto:briauto.cleaning@gmail.com">briauto.cleaning@gmail.com</a>
+          <a href="#">Oissery (77178) — rayon 30 km</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">© <span id="year"></span> BriAuto Clean. Tous droits réservés.</div>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  const navToggle = document.getElementById('navToggle');
+  const navLinks = document.getElementById('navLinks');
+  navToggle.addEventListener('click', () => {
+    const open = navLinks.style.display === 'flex';
+    navLinks.style.display = open ? 'none' : 'flex';
+    navLinks.style.cssText += 'flex-direction:column;position:absolute;top:64px;left:0;right:0;background:#FAFBFC;padding:20px 28px;border-bottom:1px solid #DFE4EC;';
+  });
+
+  document.querySelectorAll('.choose-pkg').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const value = btn.getAttribute('data-pkg');
+      document.querySelectorAll('#pkgRadios input[type=radio]').forEach(r => {
+        r.checked = (r.value === value);
+      });
+      document.getElementById('rendez-vous').scrollIntoView({behavior:'smooth'});
+    });
+  });
+</script>
+
+</body>
+</html>
