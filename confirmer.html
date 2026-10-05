@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Confirmer un rendez-vous — BriAuto Clean</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#12233F;--blue:#2E6BE6;--blue-dark:#1F4FBF;--cyan:#5FD6E8;--line:#DFE4EC;--slate:#5B6472;--paper:#F3F6FB;}
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:'Inter',system-ui,sans-serif;color:var(--ink);background:var(--paper);min-height:100vh;}
+  header{background:linear-gradient(165deg,#0F1E38,#173463);color:#fff;padding:22px 20px 60px;}
+  .wrap{max-width:560px;margin:0 auto;}
+  .brand{display:flex;align-items:center;gap:10px;font-family:'Oswald',sans-serif;font-size:20px;font-weight:700;}
+  header h1{font-family:'Oswald',sans-serif;font-size:28px;font-weight:600;margin:18px 0 4px;}
+  header p{margin:0;color:#B8C6DE;font-size:15px;}
+  main{margin-top:-40px;padding:0 16px 40px;}
+  .card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:0 24px 50px -30px rgba(18,35,63,.45);margin-bottom:16px;}
+  .recap{display:grid;grid-template-columns:auto 1fr;gap:8px 16px;font-size:15px;}
+  .recap dt{color:var(--slate);}
+  .recap dd{margin:0;font-weight:600;}
+  .recap a{color:var(--blue-dark);text-decoration:none;}
+  label{display:block;font-size:14px;font-weight:600;margin-bottom:8px;}
+  textarea{width:100%;min-height:250px;padding:14px;border:1px solid var(--line);border-radius:10px;font-family:inherit;font-size:15px;line-height:1.5;color:var(--ink);background:#FAFBFC;resize:vertical;}
+  textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 4px rgba(46,107,230,.15);background:#fff;}
+  .hint{font-size:13px;color:var(--slate);margin:8px 0 0;}
+  .slots{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+  .slot{border:1.5px solid var(--line);border-radius:10px;background:#fff;padding:11px 4px;font-family:inherit;font-size:15px;font-weight:700;color:var(--ink);cursor:pointer;
+    transition:border-color .2s ease, background .2s ease, color .2s ease;}
+  .slot:hover{border-color:var(--blue);}
+  .slot.sel{background:var(--blue);border-color:var(--blue);color:#fff;}
+  .slot.client{position:relative;}
+  .slot.client::after{content:"client";position:absolute;top:-8px;right:-4px;font-size:10px;font-weight:700;background:var(--cyan);color:var(--ink);padding:1px 6px;border-radius:999px;}
+  .hint.warn{color:#9A5B00;font-weight:600;}
+  .actions{display:grid;gap:10px;}
+  .btn{display:flex;align-items:center;justify-content:center;gap:10px;padding:15px 18px;border-radius:12px;font-size:16px;font-weight:700;text-decoration:none;border:none;cursor:pointer;font-family:inherit;}
+  .btn-sms{background:var(--blue);color:#fff;box-shadow:0 12px 24px -12px rgba(46,107,230,.8);}
+  .btn-wa{background:#1FAF5B;color:#fff;}
+  .btn-copy{background:#fff;color:var(--ink);border:1.5px solid var(--line);}
+  .btn svg{width:20px;height:20px;flex:none;}
+  .toast{text-align:center;font-size:14px;font-weight:600;color:#14532D;min-height:20px;margin-top:4px;}
+  .error{text-align:center;color:#7F1D1D;}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="brand">
+      <svg width="30" height="30" viewBox="0 0 34 34" fill="none"><rect x="2" y="2" width="30" height="30" rx="7" fill="#5FD6E8"/><path d="M12 9v16M12 9h6.5a4 4 0 010 8H12M12 17h7a4 4 0 010 8H12" stroke="#12233F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      BriAuto Clean
+    </div>
+    <h1>Confirmer le rendez-vous</h1>
+    <p>Vérifiez le message, puis envoyez-le au client.</p>
+  </div>
+</header>
+
+<main>
+  <div class="wrap" id="app">
+    <div class="card">
+      <dl class="recap">
+        <dt>Client</dt><dd id="rNom"></dd>
+        <dt>Téléphone</dt><dd><a id="rTel" href="#"></a></dd>
+        <dt>Rendez-vous</dt><dd id="rDate"></dd>
+        <dt>Adresse</dt><dd id="rAdr"></dd>
+      </dl>
+    </div>
+
+    <div class="card">
+      <label id="slotLabel">Heure de passage</label>
+      <div class="slots" id="slots" role="group" aria-labelledby="slotLabel"></div>
+      <p class="hint" id="slotHint"></p>
+    </div>
+
+    <div class="card">
+      <label for="msg">Message envoyé au client</label>
+      <textarea id="msg"></textarea>
+      <p class="hint">Vous pouvez modifier le texte avant l'envoi (changer d'heure remet le texte à jour).</p>
+    </div>
+
+    <div class="actions">
+      <a class="btn btn-sms" id="btnSms" href="#">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M4 5h16v11H8l-4 4V5z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+        Envoyer par SMS
+      </a>
+      <a class="btn btn-wa" id="btnWa" href="#" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M4 20l1.3-4A8 8 0 1 1 8 18.7L4 20z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+        Envoyer par WhatsApp
+      </a>
+      <button class="btn btn-copy" id="btnCopy" type="button">Copier le message</button>
+      <div class="toast" id="toast" aria-live="polite"></div>
+    </div>
+  </div>
+</main>
+
+<script>
+  const q = new URLSearchParams(location.search);
+  const nom = q.get('nom') || '';
+  const tel = (q.get('tel') || '').trim();
+  const date = q.get('date') || '';      // ex. "Mardi 20 octobre 2026"
+  const heure = q.get('heure') || '';    // ex. "9h30" ou "n'importe quelle heure"
+  const adresse = q.get('adresse') || '';
+
+  if (!tel) {
+    document.getElementById('app').innerHTML = '<div class="card error">Lien incomplet : numéro de téléphone manquant.</div>';
+  } else {
+    const prenom = nom.split(' ')[0] || '';
+    const dateTxt = date ? date.charAt(0).toLowerCase() + date.slice(1) : '';
+    const SLOTS = ['9h00','9h30','10h00','10h30','11h00','11h30','12h00','12h30','13h00','13h30','14h00','14h30','15h00'];
+    const heureClient = SLOTS.includes(heure) ? heure : null;   // null = le client a choisi "Peu importe"
+    let heureChoisie = heureClient;
+
+    function buildMessage(){
+      const quand = heureChoisie
+        ? 'le ' + dateTxt + ' à ' + heureChoisie
+        : 'le ' + dateTxt + " (nous vous préciserons l'heure de passage)";
+      return 'Bonjour ' + prenom + ',\n\n' +
+        'Votre rendez-vous BriAuto Clean est confirmé ' + quand + '.\n' +
+        (adresse ? 'Nous passerons récupérer votre véhicule au ' + adresse + '.\n' : '') +
+        '\nPour toute question, répondez simplement à ce message.\n\n' +
+        'Merci de votre confiance,\nBriAuto Clean';
+    }
+    function renderSlots(){
+      const box = document.getElementById('slots'); box.innerHTML = '';
+      SLOTS.forEach(s => {
+        const b = document.createElement('button');
+        b.type = 'button'; b.className = 'slot' + (s === heureChoisie ? ' sel' : '') + (s === heureClient ? ' client' : '');
+        b.textContent = s; b.setAttribute('aria-pressed', s === heureChoisie ? 'true' : 'false');
+        b.addEventListener('click', () => { heureChoisie = s; update(); });
+        box.appendChild(b);
+      });
+      const hint = document.getElementById('slotHint');
+      if (!heureClient && !heureChoisie) { hint.textContent = "Le client a choisi « Peu importe » : choisissez l'heure de passage."; hint.className = 'hint warn'; }
+      else if (!heureClient) { hint.textContent = 'Le client avait choisi « Peu importe ».'; hint.className = 'hint'; }
+      else { hint.textContent = heureChoisie === heureClient ? 'Heure choisie par le client.' : 'Heure modifiée (le client avait choisi ' + heureClient + ').'; hint.className = 'hint'; }
+    }
+    function update(){
+      renderSlots();
+      document.getElementById('rDate').textContent = date ? (date + (heureChoisie ? ' à ' + heureChoisie : ' — heure à définir')) : '—';
+      msg.value = buildMessage();
+      refresh();
+    }
+
+    // numéro : on enlève espaces/points ; 06... → +336... pour WhatsApp
+    const digits = tel.replace(/[^\d+]/g, '');
+    const intl = digits.startsWith('+') ? digits.slice(1) : (digits.startsWith('0') ? '33' + digits.slice(1) : digits);
+
+    document.getElementById('rNom').textContent = nom || '—';
+    const rTel = document.getElementById('rTel'); rTel.textContent = tel; rTel.href = 'tel:' + digits;
+    document.getElementById('rAdr').textContent = adresse || '—';
+    const msg = document.getElementById('msg');
+
+    const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    function refresh(){
+      const body = encodeURIComponent(msg.value);
+      document.getElementById('btnSms').href = 'sms:' + digits + (isIOS ? '&' : '?') + 'body=' + body;
+      document.getElementById('btnWa').href = 'https://wa.me/' + intl + '?text=' + body;
+    }
+    msg.addEventListener('input', refresh);
+    update();
+
+    document.getElementById('btnCopy').addEventListener('click', async () => {
+      const toast = document.getElementById('toast');
+      try { await navigator.clipboard.writeText(msg.value); toast.textContent = 'Message copié ✓'; }
+      catch (e) { msg.select(); toast.textContent = 'Sélectionnez le texte puis copiez-le.'; }
+      setTimeout(() => toast.textContent = '', 2500);
+    });
+  }
+</script>
+</body>
+</html>
