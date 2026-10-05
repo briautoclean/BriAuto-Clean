@@ -22,7 +22,7 @@
   .recap dd{margin:0;font-weight:600;}
   .recap a{color:var(--blue-dark);text-decoration:none;}
   label{display:block;font-size:14px;font-weight:600;margin-bottom:8px;}
-  textarea{width:100%;min-height:250px;padding:14px;border:1px solid var(--line);border-radius:10px;font-family:inherit;font-size:15px;line-height:1.5;color:var(--ink);background:#FAFBFC;resize:vertical;}
+  textarea{width:100%;min-height:340px;padding:14px;border:1px solid var(--line);border-radius:10px;font-family:inherit;font-size:15px;line-height:1.5;color:var(--ink);background:#FAFBFC;resize:vertical;}
   textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 4px rgba(46,107,230,.15);background:#fff;}
   .hint{font-size:13px;color:var(--slate);margin:8px 0 0;}
   .slots{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
@@ -33,6 +33,8 @@
   .slot.client{position:relative;}
   .slot.client::after{content:"client";position:absolute;top:-8px;right:-4px;font-size:10px;font-weight:700;background:var(--cyan);color:var(--ink);padding:1px 6px;border-radius:999px;}
   .hint.warn{color:#9A5B00;font-weight:600;}
+  .changed{margin-top:12px;padding:12px 14px;border-radius:10px;background:#FFF6E5;border:1.5px solid #F2B544;color:#7A4A00;font-size:15px;line-height:1.45;}
+  .changed strong{font-size:17px;color:#12233F;}
   .actions{display:grid;gap:10px;}
   .btn{display:flex;align-items:center;justify-content:center;gap:10px;padding:15px 18px;border-radius:12px;font-size:16px;font-weight:700;text-decoration:none;border:none;cursor:pointer;font-family:inherit;}
   .btn-sms{background:var(--blue);color:#fff;box-shadow:0 12px 24px -12px rgba(46,107,230,.8);}
@@ -70,6 +72,7 @@
       <label id="slotLabel">Heure de passage</label>
       <div class="slots" id="slots" role="group" aria-labelledby="slotLabel"></div>
       <p class="hint" id="slotHint"></p>
+      <div class="changed" id="changed" hidden></div>
     </div>
 
     <div class="card">
@@ -91,6 +94,7 @@
       <div class="toast" id="toast" aria-live="polite"></div>
     </div>
   </div>
+  <p style="text-align:center;font-size:12px;color:#8C97AC;margin:18px 0 0;">Page de confirmation — version 3 (horaire modifié)</p>
 </main>
 
 <script>
@@ -110,15 +114,33 @@
     const heureClient = SLOTS.includes(heure) ? heure : null;   // null = le client a choisi "Peu importe"
     let heureChoisie = heureClient;
 
+    // Gras "Unicode" : reste visible dans un SMS ou WhatsApp (texte simple)
+    function enGras(s){
+      return Array.from(s).map(c => {
+        const n = c.codePointAt(0);
+        if (n >= 48 && n <= 57) return String.fromCodePoint(0x1D7EC + n - 48);    // 0-9
+        if (n >= 97 && n <= 122) return String.fromCodePoint(0x1D5EE + n - 97);   // a-z
+        if (n >= 65 && n <= 90) return String.fromCodePoint(0x1D5D4 + n - 65);    // A-Z
+        return c;
+      }).join('');
+    }
+    const fin = '\nPour toute question, répondez simplement à ce message.\n\nMerci de votre confiance,\nBriAuto Clean';
     function buildMessage(){
+      const modifie = heureClient && heureChoisie && heureChoisie !== heureClient;
+      if (modifie) {
+        return 'Bonjour ' + prenom + ',\n\n' +
+          'Merci pour votre demande de rendez-vous BriAuto Clean du ' + dateTxt + '.\n\n' +
+          '⚠️ ' + enGras('NOUVEL HORAIRE') + ' : le créneau de ' + heureClient + " n'est malheureusement pas disponible.\n" +
+          'Nous vous proposons ' + enGras(heureChoisie) + ' à la place.\n\n' +
+          'Pouvez-vous nous confirmer ce nouvel horaire en répondant « OK » à ce message, ou nous indiquer un autre horaire qui vous conviendrait mieux ?\n' +
+          (adresse ? '\nNous passerons récupérer votre véhicule au ' + adresse + '.\n' : '') + fin;
+      }
       const quand = heureChoisie
         ? 'le ' + dateTxt + ' à ' + heureChoisie
         : 'le ' + dateTxt + " (nous vous préciserons l'heure de passage)";
       return 'Bonjour ' + prenom + ',\n\n' +
         'Votre rendez-vous BriAuto Clean est confirmé ' + quand + '.\n' +
-        (adresse ? 'Nous passerons récupérer votre véhicule au ' + adresse + '.\n' : '') +
-        '\nPour toute question, répondez simplement à ce message.\n\n' +
-        'Merci de votre confiance,\nBriAuto Clean';
+        (adresse ? 'Nous passerons récupérer votre véhicule au ' + adresse + '.\n' : '') + fin;
     }
     function renderSlots(){
       const box = document.getElementById('slots'); box.innerHTML = '';
@@ -136,6 +158,11 @@
     }
     function update(){
       renderSlots();
+      const ch = document.getElementById('changed');
+      if (heureClient && heureChoisie && heureChoisie !== heureClient) {
+        ch.innerHTML = '⚠️ <b>Horaire modifié</b> : ' + heureClient + ' → <strong>' + heureChoisie + '</strong><br>Le message demande au client de confirmer ce nouvel horaire ou d\'en proposer un autre.';
+        ch.hidden = false;
+      } else { ch.hidden = true; }
       document.getElementById('rDate').textContent = date ? (date + (heureChoisie ? ' à ' + heureChoisie : ' — heure à définir')) : '—';
       msg.value = buildMessage();
       refresh();
