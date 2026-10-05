@@ -562,6 +562,22 @@
     .dt-slots{border-left:none;border-top:1px solid var(--line);padding-left:0;padding-top:12px;}
     .dt-slot-grid{grid-template-columns:repeat(4,1fr);}
   }
+
+  /* ===== Adresse vérifiée (Base Adresse Nationale) ===== */
+  .addr-wrap{position:relative;}
+  .addr-list{position:absolute;z-index:20;left:0;right:0;top:calc(100% + 4px);margin:0;padding:6px;list-style:none;background:#fff;
+    border:1px solid var(--line);border-radius:10px;box-shadow:0 18px 40px -18px rgba(18,35,63,.45);max-height:260px;overflow:auto;}
+  .addr-list li{padding:10px 12px;border-radius:8px;font-size:14px;color:var(--ink);cursor:pointer;display:flex;gap:8px;align-items:flex-start;}
+  .addr-list li small{display:block;color:var(--slate);font-size:12px;}
+  .addr-list li[aria-selected="true"],.addr-list li:hover{background:rgba(46,107,230,.08);}
+  .addr-list li svg{flex:none;width:16px;height:16px;margin-top:2px;color:var(--blue);}
+  .addr-list .addr-empty{color:var(--slate);cursor:default;}
+  .addr-list .addr-empty:hover{background:none;}
+  .addr-status{font-size:12.5px;font-weight:600;margin:6px 0 0;min-height:0;}
+  .addr-status.ok{color:#1B7F45;}
+  .addr-status.warn{color:#9A5B00;}
+  .addr-status.err{color:#C53030;}
+  #adresse.valid{border-color:#2FA463;}
   @media (prefers-reduced-motion: reduce){
     /* Réglage "Réduire les animations" du téléphone : on retire les mouvements brusques,
        on garde les animations d'ambiance douces (vague, bulles, étapes, illustrations), ralenties. */
@@ -1018,13 +1034,18 @@
           </div>
           <div class="field">
             <label for="tel">Téléphone</label>
-            <input type="tel" id="tel" name="Téléphone" required>
+            <input type="tel" id="tel" name="Téléphone" inputmode="tel" autocomplete="tel" placeholder="06 12 34 56 78" required>
           </div>
         </div>
 
         <div class="field">
           <label for="adresse">Votre adresse</label>
-          <input type="text" id="adresse" name="Adresse du client" placeholder="Numéro, rue, ville, code postal" autocomplete="street-address" required aria-describedby="adresseAide">
+          <div class="addr-wrap">
+            <input type="text" id="adresse" name="Adresse du client" placeholder="Commencez à taper : 13 rue Gaston Fontaine, Oissery…" autocomplete="off" required
+              role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="addrList" aria-describedby="adresseAide addrStatus">
+            <ul class="addr-list" id="addrList" role="listbox" hidden></ul>
+          </div>
+          <p class="addr-status" id="addrStatus" aria-live="polite"></p>
           <p class="field-help" id="adresseAide">Nous venons récupérer votre véhicule à cette adresse pour le nettoyer en station de lavage et/ou dans nos locaux.</p>
         </div>
 
@@ -1313,7 +1334,7 @@
     return {
       nom: data['Nom'] || '—',
       telephone: data['Téléphone'] || '—',
-      adresse: data['Adresse du client'] || '—',
+      adresse: (data['Adresse du client'] || '—') + (typeof adrChoisie !== 'undefined' && !adrChoisie && data['Adresse du client'] ? ' (non vérifiée)' : ''),
       date: niceDate(data['Date souhaitée']),
       heure: data['Heure souhaitée'] === 'Peu importe' ? "n'importe quelle heure" : (data['Heure souhaitée'] || '—'),
       vehicule: data['Véhicule'] || 'Non précisé',
@@ -1617,6 +1638,122 @@
     dtPicker.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, true);
   renderCalendar(); renderSlots(); syncFields();
+
+  // ===== Téléphone : correction automatique (0 manquant, +33) et contrôle =====
+  const telInput = document.getElementById('tel');
+  function normaliserTel(v){
+    let d = (v || '').replace(/[^\d+]/g, '');
+    if (d.startsWith('+33')) d = '0' + d.slice(3);
+    else if (d.startsWith('0033')) d = '0' + d.slice(4);
+    else if (d.startsWith('33') && d.length === 11) d = '0' + d.slice(2);
+    d = d.replace(/\+/g, '');
+    if (d.length === 9 && /^[1-9]/.test(d)) d = '0' + d;   // ex. 783671916 → 0783671916
+    return d;
+  }
+  function verifierTel(){
+    const d = normaliserTel(telInput.value);
+    if (/^0[1-9]\d{8}$/.test(d)) {
+      telInput.value = d.replace(/(\d{2})(?=\d)/g, '$1 ');   // 07 83 67 19 16
+      telInput.setCustomValidity('');
+    } else if (telInput.value.trim()) {
+      telInput.setCustomValidity('Numéro à 10 chiffres commençant par 0 (ex : 06 12 34 56 78)');
+    } else {
+      telInput.setCustomValidity('');
+    }
+  }
+  telInput.addEventListener('blur', verifierTel);
+  telInput.addEventListener('input', () => telInput.setCustomValidity(''));
+  // contrôle juste avant l'envoi (avant la validation du navigateur)
+  document.getElementById('submitBtn').addEventListener('click', verifierTel);
+
+  // ===== Adresse : suggestions officielles (Base Adresse Nationale / IGN) =====
+  const ADR_API = 'https://data.geopf.fr/geocodage/search';
+  const OISSERY = { lat: 49.0697, lon: 2.8158 };   // pour proposer d'abord les adresses proches
+  const adrInput = document.getElementById('adresse');
+  const adrList = document.getElementById('addrList');
+  const adrStatus = document.getElementById('addrStatus');
+  const pinIcon = '<svg viewBox="0 0 24 24" fill="none"><path d="M12 21s7-6.1 7-11a7 7 0 10-14 0c0 4.9 7 11 7 11z" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="10" r="2.5" stroke="currentColor" stroke-width="2"/></svg>';
+  let adrChoisie = null, adrApiEnPanne = false, adrResults = [], adrIndex = -1, adrTimer = null, adrSeq = 0;
+
+  function distanceKm(a, b){
+    const R = 6371, rad = x => x * Math.PI / 180;
+    const dLat = rad(b.lat - a.lat), dLon = rad(b.lon - a.lon);
+    const s = Math.sin(dLat/2)**2 + Math.cos(rad(a.lat)) * Math.cos(rad(b.lat)) * Math.sin(dLon/2)**2;
+    return 2 * R * Math.asin(Math.sqrt(s));
+  }
+  function setAdrStatus(kind, txt){ adrStatus.className = 'addr-status' + (kind ? ' ' + kind : ''); adrStatus.textContent = txt || ''; }
+  function fermerListe(){ adrList.hidden = true; adrInput.setAttribute('aria-expanded', 'false'); adrIndex = -1; }
+  function afficherListe(){
+    adrList.innerHTML = '';
+    if (!adrResults.length) {
+      adrList.innerHTML = '<li class="addr-empty">Aucune adresse trouvée. Vérifiez le numéro, la rue et la ville.</li>';
+    }
+    adrResults.forEach((f, i) => {
+      const p = f.properties;
+      const li = document.createElement('li');
+      li.setAttribute('role', 'option'); li.id = 'adr-opt-' + i;
+      li.setAttribute('aria-selected', i === adrIndex ? 'true' : 'false');
+      li.innerHTML = pinIcon + '<span>' + (p.name || p.label) + '<small>' + (p.postcode || '') + ' ' + (p.city || '') + '</small></span>';
+      li.addEventListener('mousedown', e => { e.preventDefault(); choisirAdresse(i); });
+      adrList.appendChild(li);
+    });
+    adrList.hidden = false; adrInput.setAttribute('aria-expanded', 'true');
+  }
+  function choisirAdresse(i){
+    const f = adrResults[i]; if (!f) return;
+    const p = f.properties;
+    adrChoisie = { label: p.label, coords: { lon: f.geometry.coordinates[0], lat: f.geometry.coordinates[1] }, type: p.type };
+    adrInput.value = p.label;
+    adrInput.classList.add('valid'); adrInput.setCustomValidity('');
+    fermerListe();
+    const km = Math.round(distanceKm(OISSERY, adrChoisie.coords));
+    if (p.type !== 'housenumber') setAdrStatus('warn', '✓ Adresse trouvée. Pensez à préciser le numéro dans le message si besoin.');
+    else if (km > 30) setAdrStatus('warn', '✓ Adresse vérifiée — à environ ' + km + ' km d\'Oissery, hors zone habituelle : nous vous confirmerons la disponibilité.');
+    else setAdrStatus('ok', '✓ Adresse vérifiée');
+  }
+  async function chercherAdresses(q){
+    const seq = ++adrSeq;
+    const url = ADR_API + '?' + new URLSearchParams({ q, limit: 6, autocomplete: 1, index: 'address', lat: OISSERY.lat, lon: OISSERY.lon });
+    try {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const json = await res.json();
+      if (seq !== adrSeq) return;               // une recherche plus récente est en cours
+      adrApiEnPanne = false;
+      adrResults = (json.features || []).filter(f => ['housenumber', 'street', 'locality'].includes(f.properties.type));
+      adrIndex = -1; afficherListe();
+    } catch (err) {
+      if (seq !== adrSeq) return;
+      adrApiEnPanne = true; fermerListe();
+      setAdrStatus('warn', 'Vérification des adresses momentanément indisponible : saisissez votre adresse complète.');
+    }
+  }
+  adrInput.addEventListener('input', () => {
+    adrChoisie = null; adrInput.classList.remove('valid'); adrInput.setCustomValidity('');
+    if (!adrApiEnPanne) setAdrStatus('', '');
+    clearTimeout(adrTimer);
+    const q = adrInput.value.trim();
+    if (q.length < 4) { fermerListe(); return; }
+    adrTimer = setTimeout(() => chercherAdresses(q), 250);
+  });
+  adrInput.addEventListener('keydown', e => {
+    if (adrList.hidden || !adrResults.length) return;
+    if (e.key === 'ArrowDown') { e.preventDefault(); adrIndex = (adrIndex + 1) % adrResults.length; afficherListe(); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); adrIndex = (adrIndex - 1 + adrResults.length) % adrResults.length; afficherListe(); }
+    else if (e.key === 'Enter' && adrIndex >= 0) { e.preventDefault(); choisirAdresse(adrIndex); }
+    else if (e.key === 'Escape') { fermerListe(); }
+    if (adrIndex >= 0) adrInput.setAttribute('aria-activedescendant', 'adr-opt-' + adrIndex);
+  });
+  adrInput.addEventListener('blur', () => setTimeout(fermerListe, 150));
+  // contrôle avant l'envoi : l'adresse doit venir de la liste (sauf si le service est en panne)
+  document.getElementById('submitBtn').addEventListener('click', () => {
+    if (!adrInput.value.trim()) return;                          // le champ "requis" s'en charge
+    if (adrChoisie && adrInput.value === adrChoisie.label) { adrInput.setCustomValidity(''); return; }
+    if (adrApiEnPanne && adrInput.value.trim().length >= 10) { adrInput.setCustomValidity(''); return; }
+    adrInput.setCustomValidity('Choisissez votre adresse dans la liste proposée.');
+    setAdrStatus('err', 'Choisissez votre adresse dans la liste proposée (tapez le numéro, la rue et la ville).');
+  });
+  bookingForm.addEventListener('reset', () => { adrChoisie = null; adrInput.classList.remove('valid'); setAdrStatus('', ''); fermerListe(); });
 </script>
 
 </body>

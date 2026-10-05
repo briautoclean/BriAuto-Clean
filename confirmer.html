@@ -142,11 +142,15 @@
     }
 
     // numéro : on enlève espaces/points ; 06... → +336... pour WhatsApp
-    const digits = tel.replace(/[^\d+]/g, '');
+    let digits = tel.replace(/[^\d+]/g, '');
+    if (digits.startsWith('+33')) digits = '0' + digits.slice(3);
+    else if (digits.startsWith('0033')) digits = '0' + digits.slice(4);
+    else if (digits.startsWith('33') && digits.length === 11) digits = '0' + digits.slice(2);
+    if (digits.length === 9 && /^[1-9]/.test(digits)) digits = '0' + digits;   // 0 manquant → ajouté
     const intl = digits.startsWith('+') ? digits.slice(1) : (digits.startsWith('0') ? '33' + digits.slice(1) : digits);
 
     document.getElementById('rNom').textContent = nom || '—';
-    const rTel = document.getElementById('rTel'); rTel.textContent = tel; rTel.href = 'tel:' + digits;
+    const rTel = document.getElementById('rTel'); rTel.textContent = digits.replace(/(\d{2})(?=\d)/g, '$1 '); rTel.href = 'tel:' + digits;
     document.getElementById('rAdr').textContent = adresse || '—';
     const msg = document.getElementById('msg');
 
