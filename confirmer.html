@@ -35,6 +35,12 @@
   .hint.warn{color:#9A5B00;font-weight:600;}
   .changed{margin-top:12px;padding:12px 14px;border-radius:10px;background:#FFF6E5;border:1.5px solid #F2B544;color:#7A4A00;font-size:15px;line-height:1.45;}
   .changed strong{font-size:17px;color:#12233F;}
+  .agenda{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:12px;}
+  .btn-agenda{border:1.5px solid var(--blue);background:#fff;color:var(--blue-dark);font-family:inherit;font-size:15px;font-weight:700;padding:11px 16px;border-radius:10px;cursor:pointer;}
+  .btn-agenda:disabled{opacity:.6;cursor:default;}
+  .agenda-status{font-size:14px;font-weight:600;}
+  .agenda-status.ok{color:#1B7F45;}
+  .agenda-status.err{color:#C53030;}
   .actions{display:grid;gap:10px;}
   .btn{display:flex;align-items:center;justify-content:center;gap:10px;padding:15px 18px;border-radius:12px;font-size:16px;font-weight:700;text-decoration:none;border:none;cursor:pointer;font-family:inherit;}
   .btn-sms{background:var(--blue);color:#fff;box-shadow:0 12px 24px -12px rgba(46,107,230,.8);}
@@ -73,6 +79,10 @@
       <div class="slots" id="slots" role="group" aria-labelledby="slotLabel"></div>
       <p class="hint" id="slotHint"></p>
       <div class="changed" id="changed" hidden></div>
+      <div class="agenda" id="agendaBox" hidden>
+        <button type="button" class="btn-agenda" id="btnAgenda">📅 Mettre à jour l'agenda</button>
+        <span class="agenda-status" id="agendaStatus" aria-live="polite"></span>
+      </div>
     </div>
 
     <div class="card">
@@ -94,7 +104,7 @@
       <div class="toast" id="toast" aria-live="polite"></div>
     </div>
   </div>
-  <p style="text-align:center;font-size:12px;color:#8C97AC;margin:18px 0 0;">Page de confirmation — version 3 (horaire modifié)</p>
+  <p style="text-align:center;font-size:12px;color:#8C97AC;margin:18px 0 0;">Page de confirmation — version 4 (mise à jour de l'agenda)</p>
 </main>
 
 <script>
@@ -104,6 +114,11 @@
   const date = q.get('date') || '';      // ex. "Mardi 20 octobre 2026"
   const heure = q.get('heure') || '';    // ex. "9h30" ou "n'importe quelle heure"
   const adresse = q.get('adresse') || '';
+  const dateIso = q.get('d') || '';       // ex. "2026-10-20" (pour retrouver le rendez-vous dans l'agenda)
+  const rdvId = q.get('id') || '';
+  // Même adresse et même clé que dans le site (index.html)
+  const AGENDA_URL = 'https://script.google.com/macros/s/AKfycbxfXrKv9wPuuyY4x8wpgAqtIdKjMVTPCPxxfJShjKlgfe8u5OocRJeuJ_utHue0CXm6/exec';
+  const AGENDA_CLE = 'briauto-2026';
 
   if (!tel) {
     document.getElementById('app').innerHTML = '<div class="card error">Lien incomplet : numéro de téléphone manquant.</div>';
@@ -156,8 +171,47 @@
       else if (!heureClient) { hint.textContent = 'Le client avait choisi « Peu importe ».'; hint.className = 'hint'; }
       else { hint.textContent = heureChoisie === heureClient ? 'Heure choisie par le client.' : 'Heure modifiée (le client avait choisi ' + heureClient + ').'; hint.className = 'hint'; }
     }
+    // ----- Mise à jour de Google Agenda -----
+    let heureAgenda = heureClient;   // heure actuellement enregistrée dans l'agenda (null = journée entière)
+    const agendaBox = document.getElementById('agendaBox'), btnAgenda = document.getElementById('btnAgenda'), agendaStatus = document.getElementById('agendaStatus');
+    function agendaAJour(){ return !heureChoisie || heureChoisie === heureAgenda; }
+    function payloadAgenda(){ return JSON.stringify({ cle: AGENDA_CLE, action: 'modifier', rdvId, nom, date: dateIso, heure: heureChoisie }); }
+    async function majAgenda(){
+      if (agendaAJour() || !dateIso) return;
+      const cible = heureChoisie;
+      btnAgenda.disabled = true; agendaStatus.className = 'agenda-status'; agendaStatus.textContent = 'Mise à jour…';
+      try {
+        const res = await fetch(AGENDA_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: payloadAgenda() });
+        const out = await res.json();
+        if (!out.ok) throw new Error(out.erreur || 'erreur');
+        heureAgenda = cible;
+        agendaStatus.className = 'agenda-status ok'; agendaStatus.textContent = '✓ Agenda mis à jour : ' + cible;
+      } catch (err) {
+        agendaStatus.className = 'agenda-status err';
+        agendaStatus.textContent = err && err.message && err.message !== 'Failed to fetch' ? '✗ ' + err.message : '✗ Mise à jour impossible, modifiez l\'heure dans Google Agenda.';
+      } finally { btnAgenda.disabled = false; renderAgenda(); }
+    }
+    function renderAgenda(){
+      const besoin = !!dateIso && !agendaAJour();
+      agendaBox.hidden = !besoin && !agendaStatus.textContent;
+      btnAgenda.hidden = !besoin;
+      btnAgenda.textContent = "📅 Mettre à jour l'agenda (" + (heureChoisie || '') + ')';
+    }
+    btnAgenda.addEventListener('click', majAgenda);
+    // à l'envoi du SMS / WhatsApp : mise à jour automatique si besoin (envoi "en tâche de fond")
+    function majAgendaEnFond(){
+      if (agendaAJour() || !dateIso) return;
+      fetch(AGENDA_URL, { method: 'POST', mode: 'no-cors', keepalive: true, headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: payloadAgenda() }).catch(() => {});
+      heureAgenda = heureChoisie;
+      agendaStatus.className = 'agenda-status ok'; agendaStatus.textContent = '✓ Agenda mis à jour : ' + heureChoisie; renderAgenda();
+    }
+    document.getElementById('btnSms').addEventListener('click', majAgendaEnFond);
+    document.getElementById('btnWa').addEventListener('click', majAgendaEnFond);
+
     function update(){
       renderSlots();
+      if (!agendaAJour()) { agendaStatus.textContent = ''; }
+      renderAgenda();
       const ch = document.getElementById('changed');
       if (heureClient && heureChoisie && heureChoisie !== heureClient) {
         ch.innerHTML = '⚠️ <b>Horaire modifié</b> : ' + heureClient + ' → <strong>' + heureChoisie + '</strong><br>Le message demande au client de confirmer ce nouvel horaire ou d\'en proposer un autre.';

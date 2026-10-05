@@ -1346,9 +1346,11 @@
     };
   }
   // Lien vers la page "confirmer.html" (bouton "Confirmer le rendez-vous" dans l'email)
-  function confirmLink(p){
+  function confirmLink(data){
+    const p = emailParams(data);
     const u = new URL('confirmer.html', location.href);
-    u.search = new URLSearchParams({ nom: p.nom, tel: p.telephone, date: p.date, heure: p.heure, adresse: p.adresse }).toString();
+    u.search = new URLSearchParams({ nom: p.nom, tel: p.telephone, date: p.date, heure: p.heure, adresse: p.adresse,
+      d: data['Date souhaitée'] || '', id: data['Référence'] || '' }).toString();
     return u.toString();
   }
   async function sendEmailJS(data){
@@ -1356,7 +1358,7 @@
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ service_id: EMAILJS.serviceId, template_id: EMAILJS.templateId, user_id: EMAILJS.publicKey,
-        template_params: Object.assign(emailParams(data), { lien_confirmation: confirmLink(emailParams(data)) }) })
+        template_params: Object.assign(emailParams(data), { lien_confirmation: confirmLink(data) }) })
     });
     if (!res.ok) throw new Error('emailjs ' + res.status);
   }
@@ -1367,7 +1369,7 @@
   function sendGoogleAgenda(data){
     if (!GOOGLE_AGENDA_URL) return Promise.resolve();
     const p = emailParams(data);
-    const payload = Object.assign({}, p, { cle: GOOGLE_AGENDA_CLE, date: data['Date souhaitée'] || '', heure: data['Heure souhaitée'] || '' });
+    const payload = Object.assign({}, p, { cle: GOOGLE_AGENDA_CLE, date: data['Date souhaitée'] || '', heure: data['Heure souhaitée'] || '', rdvId: data['Référence'] || '' });
     // pour "Peu importe", le script crée un événement sur toute la journée
     // "no-cors" + text/plain : accepté par Google Apps Script sans configuration supplémentaire
     return fetch(GOOGLE_AGENDA_URL, { method: 'POST', mode: 'no-cors', keepalive: true, headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) })
@@ -1397,6 +1399,7 @@
     const data = collect();
     if (data['bot-field']) return;
     delete data['bot-field'];
+    data['Référence'] = 'RDV-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).slice(2, 6).toUpperCase();
     submitBtn.disabled = true; submitBtn.textContent = 'Envoi en cours…';
     try {
       // Agenda Google lancé en premier, indépendamment des emails
