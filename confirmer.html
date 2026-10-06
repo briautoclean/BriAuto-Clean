@@ -104,7 +104,7 @@
       <div class="toast" id="toast" aria-live="polite"></div>
     </div>
   </div>
-  <p style="text-align:center;font-size:12px;color:#8C97AC;margin:18px 0 0;">Page de confirmation — version 4 (mise à jour de l'agenda)</p>
+  <p style="text-align:center;font-size:12px;color:#8C97AC;margin:18px 0 0;">Page de confirmation — version 5 (durée formule 5 h)</p>
 </main>
 
 <script>
@@ -175,15 +175,18 @@
     let heureAgenda = heureClient;   // heure actuellement enregistrée dans l'agenda (null = journée entière)
     const agendaBox = document.getElementById('agendaBox'), btnAgenda = document.getElementById('btnAgenda'), agendaStatus = document.getElementById('agendaStatus');
     function agendaAJour(){ return !heureChoisie || heureChoisie === heureAgenda; }
-    function payloadAgenda(){ return JSON.stringify({ cle: AGENDA_CLE, action: 'modifier', rdvId, nom, date: dateIso, heure: heureChoisie }); }
+    let forcerAgenda = false;   // après un avertissement de chevauchement, le 2e clic force la mise à jour
+    function payloadAgenda(forcer){ return JSON.stringify({ cle: AGENDA_CLE, action: 'modifier', rdvId, nom, date: dateIso, heure: heureChoisie, forcer: !!forcer }); }
     async function majAgenda(){
       if (agendaAJour() || !dateIso) return;
       const cible = heureChoisie;
       btnAgenda.disabled = true; agendaStatus.className = 'agenda-status'; agendaStatus.textContent = 'Mise à jour…';
       try {
-        const res = await fetch(AGENDA_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: payloadAgenda() });
+        const res = await fetch(AGENDA_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: payloadAgenda(forcerAgenda) });
         const out = await res.json();
+        if (!out.ok && out.conflit) { forcerAgenda = true; throw new Error('Attention : ' + out.erreur + '. Cliquez à nouveau pour enregistrer quand même.'); }
         if (!out.ok) throw new Error(out.erreur || 'erreur');
+        forcerAgenda = false;
         heureAgenda = cible;
         agendaStatus.className = 'agenda-status ok'; agendaStatus.textContent = '✓ Agenda mis à jour : ' + cible;
       } catch (err) {
@@ -195,13 +198,13 @@
       const besoin = !!dateIso && !agendaAJour();
       agendaBox.hidden = !besoin && !agendaStatus.textContent;
       btnAgenda.hidden = !besoin;
-      btnAgenda.textContent = "📅 Mettre à jour l'agenda (" + (heureChoisie || '') + ')';
+      btnAgenda.textContent = (forcerAgenda ? '📅 Enregistrer quand même (' : "📅 Mettre à jour l'agenda (") + (heureChoisie || '') + ')';
     }
     btnAgenda.addEventListener('click', majAgenda);
     // à l'envoi du SMS / WhatsApp : mise à jour automatique si besoin (envoi "en tâche de fond")
     function majAgendaEnFond(){
       if (agendaAJour() || !dateIso) return;
-      fetch(AGENDA_URL, { method: 'POST', mode: 'no-cors', keepalive: true, headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: payloadAgenda() }).catch(() => {});
+      fetch(AGENDA_URL, { method: 'POST', mode: 'no-cors', keepalive: true, headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: payloadAgenda(true) }).catch(() => {});
       heureAgenda = heureChoisie;
       agendaStatus.className = 'agenda-status ok'; agendaStatus.textContent = '✓ Agenda mis à jour : ' + heureChoisie; renderAgenda();
     }
@@ -210,7 +213,7 @@
 
     function update(){
       renderSlots();
-      if (!agendaAJour()) { agendaStatus.textContent = ''; }
+      if (!agendaAJour()) { agendaStatus.textContent = ''; forcerAgenda = false; }
       renderAgenda();
       const ch = document.getElementById('changed');
       if (heureClient && heureChoisie && heureChoisie !== heureClient) {

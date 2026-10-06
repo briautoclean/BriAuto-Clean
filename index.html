@@ -551,6 +551,8 @@
     transition:border-color .2s ease, background .2s ease, color .2s ease, transform .2s var(--ease);animation:fadeSlide .35s var(--ease) both;}
   .dt-slot:hover:not(:disabled):not(.sel){border-color:var(--blue);color:var(--blue-dark);transform:translateY(-1px);}
   .dt-slot:disabled{opacity:.35;cursor:default;text-decoration:line-through;}
+  .dt-slot.busy{background:#EEF1F5;border-color:#E2E6EC;color:#9AA4B2;opacity:.7;}
+  .dt-loading .dt-days{opacity:.55;transition:opacity .2s;}
   .dt-slot.sel{background:var(--blue);border-color:var(--blue);color:#fff;}
   .dt-slot-any{grid-column:span 2;border-style:dashed;}
   .dt-slot-any.sel{border-style:solid;}
@@ -1372,8 +1374,11 @@
     const payload = Object.assign({}, p, { cle: GOOGLE_AGENDA_CLE, date: data['Date souhaitée'] || '', heure: data['Heure souhaitée'] || '', rdvId: data['Référence'] || '' });
     // pour "Peu importe", le script crée un événement sur toute la journée
     // "no-cors" + text/plain : accepté par Google Apps Script sans configuration supplémentaire
-    return fetch(GOOGLE_AGENDA_URL, { method: 'POST', mode: 'no-cors', keepalive: true, headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) })
-      .catch(() => {});
+    // réponse lue pour détecter un créneau déjà pris ; si l'agenda ne répond pas, on n'empêche pas la demande
+    const ctrl = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    const timer = ctrl ? setTimeout(() => ctrl.abort(), 10000) : null;
+    return fetch(GOOGLE_AGENDA_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload), signal: ctrl ? ctrl.signal : undefined })
+      .then(r => r.json()).catch(() => ({})).finally(() => clearTimeout(timer));
   }
   async function sendFormSubmit(data){
     const payload = Object.assign({}, data, {
@@ -1402,17 +1407,22 @@
     data['Référence'] = 'RDV-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).slice(2, 6).toUpperCase();
     submitBtn.disabled = true; submitBtn.textContent = 'Envoi en cours…';
     try {
-      // Agenda Google lancé en premier, indépendamment des emails
-      const agenda = sendGoogleAgenda(data);
+      // Agenda Google en premier : vérifie que le créneau est toujours libre et le bloque
+      const agenda = await sendGoogleAgenda(data);
+      if (agenda && agenda.conflit) {
+        showStatus('err', "Désolé, ce créneau vient d'être réservé par un autre client. Choisissez un autre horaire ci-dessus.");
+        if (window.briautoCreneauPris) window.briautoCreneauPris();
+        return;
+      }
       // Email en tableau (EmailJS) + enregistrement Netlify ; FormSubmit en dernier secours
       const results = await Promise.allSettled([
         sendNetlify(data),
         emailjsReady() ? sendEmailJS(data) : Promise.reject(new Error('emailjs non configuré'))
       ]);
-      await agenda;
       if (results.every(r => r.status === 'rejected')) await sendFormSubmit(data);
       showStatus('ok', "Demande envoyée. Nous revenons vers vous rapidement pour confirmer le créneau.");
       bookingForm.reset(); setMode('formule'); updateTotal();
+      if (window.briautoRafraichirDispo) window.briautoRafraichirDispo();
     } catch (err) {
       showStatus('err', "L'envoi n'a pas abouti. Réessayez dans un instant, ou écrivez-nous à <a href=\"mailto:briauto.cleaning@gmail.com\">briauto.cleaning@gmail.com</a>.");
     } finally {
@@ -1563,7 +1573,63 @@
   let viewYear = today.getFullYear(), viewMonth = today.getMonth();
   let selDate = null, selSlot = null;
 
+  // ----- Disponibilités lues dans Google Agenda (seulement les heures occupées, aucun nom) -----
+  const DUREE_FORMULE = 300, DUREE_CARTE = 120;   // minutes bloquées : formule complète 5 h, à la carte 2 h
+  const dispo = {};   // 'AAAA-MM' -> { etat: 'chargement' | 'ok' | 'erreur', heure, occupe: { 'AAAA-MM-JJ': [[début, fin], …] } }
+  const moisDe = d => d.getFullYear() + '-' + pad2(d.getMonth() + 1);
+  const minutes = hhmm => { const [h, m] = hhmm.split(':').map(Number); return h * 60 + m; };
+  function chargerMois(y, m, forcer){
+    const cle = y + '-' + pad2(m + 1);
+    const c = dispo[cle];
+    if (!GOOGLE_AGENDA_URL) return;
+    if (c && !forcer && (c.etat === 'chargement' || Date.now() - c.heure < 120000)) return;
+    dispo[cle] = { etat: 'chargement', heure: Date.now(), occupe: c ? c.occupe : {} };
+    const de = cle + '-01', a = cle + '-' + pad2(new Date(y, m + 1, 0).getDate());
+    const ctrl = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    const timer = ctrl ? setTimeout(() => ctrl.abort(), 12000) : null;
+    fetch(GOOGLE_AGENDA_URL + '?action=dispo&cle=' + encodeURIComponent(GOOGLE_AGENDA_CLE) + '&from=' + de + '&to=' + a, { signal: ctrl ? ctrl.signal : undefined })
+      .then(r => r.json())
+      .then(out => {
+        if (!out || !out.ok || !Array.isArray(out.occupe)) throw new Error('dispo');
+        const occupe = {};
+        const ajouter = (jour, d0, f0) => { (occupe[jour] = occupe[jour] || []).push([d0, f0]); };
+        out.occupe.forEach(ev => {
+          const fd = ev.fd || ev.d;
+          if (fd === ev.d) { ajouter(ev.d, minutes(ev.s), minutes(ev.e)); return; }
+          // événement sur plusieurs jours
+          ajouter(ev.d, minutes(ev.s), 24 * 60);
+          const j = new Date(ev.d + 'T12:00:00'); j.setDate(j.getDate() + 1);
+          while (isoOf(j) < fd) { ajouter(isoOf(j), 0, 24 * 60); j.setDate(j.getDate() + 1); }
+          ajouter(fd, 0, minutes(ev.e));
+        });
+        dispo[cle] = { etat: 'ok', heure: Date.now(), occupe };
+      })
+      .catch(() => { dispo[cle] = { etat: 'erreur', heure: Date.now(), occupe: {} }; })   // agenda injoignable : tous les créneaux restent ouverts
+      .finally(() => { clearTimeout(timer); apresChargement(); });
+  }
+  function etatJour(date){ const c = dispo[moisDe(date)]; return c ? c.etat : (GOOGLE_AGENDA_URL ? 'chargement' : 'erreur'); }
+  function dureeActuelle(){ return currentMode === 'formule' ? DUREE_FORMULE : DUREE_CARTE; }
+  function creneauLibre(date, slot){
+    const c = dispo[moisDe(date)];
+    const plages = c && c.occupe[isoOf(date)];
+    if (!plages) return true;
+    const [hh, mm] = slot.split('h').map(Number);
+    const debut = hh * 60 + mm, fin = debut + dureeActuelle();
+    return !plages.some(([d0, f0]) => d0 < fin && f0 > debut);
+  }
+  function apresChargement(){
+    // la sélection en cours devient impossible ? on la retire
+    let perdu = false;
+    if (selDate && selSlot && selSlot !== 'Peu importe' && !availableSlots(selDate).includes(selSlot)) { selSlot = null; perdu = true; }
+    if (selDate && !availableSlots(selDate).length) { selDate = null; selSlot = null; }
+    renderCalendar(); renderSlots(); syncFields();
+    if (perdu) { dtSummary.textContent = "Ce créneau n'est pas disponible pour cette prestation, choisissez-en un autre"; dtSummary.className = 'dt-summary err'; }
+  }
+
   function renderCalendar(){
+    chargerMois(viewYear, viewMonth);
+    const chargement = etatJour(new Date(viewYear, viewMonth, 1)) === 'chargement';
+    dtPicker.classList.toggle('dt-loading', chargement);
     const first = new Date(viewYear, viewMonth, 1);
     dtMonth.textContent = first.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
     document.getElementById('dtPrev').disabled = (viewYear === today.getFullYear() && viewMonth === today.getMonth());
@@ -1584,9 +1650,10 @@
     }
   }
   function availableSlots(date){
-    // pour aujourd'hui, on masque les créneaux déjà passés
+    // pour aujourd'hui, on masque les créneaux déjà passés ; partout, on retire les créneaux déjà réservés
     const now = new Date();
     return SLOTS.filter(s => {
+      if (!creneauLibre(date, s)) return false;
       if (date.toDateString() !== now.toDateString()) return true;
       const [hh, mm] = s.split('h').map(Number);
       return hh * 60 + mm > now.getHours() * 60 + now.getMinutes();
@@ -1596,11 +1663,17 @@
     dtSlots.innerHTML = '';
     if (!selDate) { dtSlotsTitle.textContent = "Choisissez d'abord une date"; return; }
     dtSlotsTitle.textContent = 'Créneaux du ' + selDate.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
-    const ok = availableSlots(selDate);
+    chargerMois(selDate.getFullYear(), selDate.getMonth());
+    const enChargement = etatJour(selDate) === 'chargement';
+    if (enChargement) dtSlotsTitle.textContent += ' — vérification des disponibilités…';
+    const ok = enChargement ? [] : availableSlots(selDate);
     SLOTS.forEach((s, i) => {
       const b = document.createElement('button');
       b.type = 'button'; b.className = 'dt-slot'; b.textContent = s; b.style.animationDelay = (i * 0.025) + 's';
-      if (!ok.includes(s)) b.disabled = true;
+      if (!ok.includes(s)) {
+        b.disabled = true;
+        if (!enChargement && !creneauLibre(selDate, s)) { b.classList.add('busy'); b.title = 'Déjà réservé'; }
+      }
       if (s === selSlot) { b.classList.add('sel'); b.setAttribute('aria-pressed', 'true'); }
       b.addEventListener('click', () => { selSlot = s; renderSlots(); syncFields(); });
       dtSlots.appendChild(b);
@@ -1641,6 +1714,19 @@
     dtPicker.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, true);
   renderCalendar(); renderSlots(); syncFields();
+  // formule (5 h) ou à la carte (2 h) : les créneaux possibles changent avec le mode choisi
+  const setModeInitial = setMode;
+  setMode = function(mode){ setModeInitial(mode); apresChargement(); };
+  window.briautoRafraichirDispo = () => { Object.keys(dispo).forEach(k => delete dispo[k]); renderCalendar(); renderSlots(); };
+  window.briautoCreneauPris = () => {
+    selSlot = null;
+    if (selDate) chargerMois(selDate.getFullYear(), selDate.getMonth(), true);
+    chargerMois(viewYear, viewMonth, true);
+    renderCalendar(); renderSlots(); syncFields();
+    dtPicker.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  };
+  // si la page reste ouverte longtemps, on revérifie en revenant dessus
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) { renderCalendar(); if (selDate) renderSlots(); } });
 
   // ===== Téléphone : correction automatique (0 manquant, +33) et contrôle =====
   const telInput = document.getElementById('tel');
