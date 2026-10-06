@@ -1616,8 +1616,10 @@
     const plages = c && c.occupe[isoOf(date)];
     if (!plages) return true;
     const [hh, mm] = slot.split('h').map(Number);
-    const debut = hh * 60 + mm, fin = debut + (duree || dureeActuelle());
-    return !plages.some(([d0, f0]) => d0 < fin && f0 > debut);
+    // un créneau est pris seulement si son heure de début tombe pendant un rendez-vous existant
+    // (la durée du nouveau rendez-vous n'entre pas en compte : n'importe quelle formule reste possible avant un rendez-vous)
+    const debut = hh * 60 + mm;
+    return !plages.some(([d0, f0]) => debut >= d0 && debut < f0);
   }
   function apresChargement(){
     // la sélection en cours devient impossible ? on la retire
