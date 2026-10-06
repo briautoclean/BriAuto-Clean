@@ -1800,7 +1800,7 @@
   bookingForm.addEventListener('reset', () => { dtAlert.hidden = true; });
   // si la page reste ouverte longtemps, on revérifie en revenant dessus
   document.addEventListener('visibilitychange', () => { if (!document.hidden) actualiserDispo(); });
-  // ----- Actualisation automatique : toutes les 20 s tant que le client regarde la prise de rendez-vous -----
+  // ----- Actualisation automatique : toutes les 5 s tant que le client regarde la prise de rendez-vous -----
   // (un rendez-vous ajouté, déplacé ou supprimé dans Google Agenda apparaît sans recharger la page)
   let rdvVisible = false;
   if ('IntersectionObserver' in window) {
@@ -1812,7 +1812,7 @@
     chargerMois(viewYear, viewMonth, true);
     if (selDate && (selDate.getFullYear() !== viewYear || selDate.getMonth() !== viewMonth)) chargerMois(selDate.getFullYear(), selDate.getMonth(), true);
   }
-  setInterval(() => { if (rdvVisible && !document.hidden) actualiserDispo(); }, 20000);
+  setInterval(() => { if (rdvVisible && !document.hidden) actualiserDispo(); }, 5000);
   // créneau choisi par le client qui vient d'être pris entre-temps
   window.briautoCreneauRetire = () => {
     dtAlert.innerHTML = '<span class="dt-alert-ico">!</span><span><strong>Le créneau que vous aviez choisi vient d\'être réservé.</strong> Choisissez un autre horaire ci-dessous.</span>';
