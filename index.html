@@ -1596,8 +1596,11 @@
     const cle = y + '-' + pad2(m + 1);
     const c = dispo[cle];
     if (!GOOGLE_AGENDA_URL) return;
-    if (c && !forcer && (c.etat === 'chargement' || Date.now() - c.heure < 120000)) return;
-    dispo[cle] = { etat: 'chargement', heure: Date.now(), occupe: c ? c.occupe : {} };
+    if (c && c.enCours) return;
+    if (c && !forcer && Date.now() - c.heure < 120000) return;
+    // actualisation en arrière-plan : on garde l'affichage actuel pendant la vérification (pas de clignotement)
+    if (c && c.etat === 'ok') c.enCours = true;
+    else dispo[cle] = { etat: 'chargement', heure: Date.now(), occupe: {}, enCours: true };
     const de = cle + '-01', a = cle + '-' + pad2(new Date(y, m + 1, 0).getDate());
     const ctrl = typeof AbortController !== 'undefined' ? new AbortController() : null;
     const timer = ctrl ? setTimeout(() => ctrl.abort(), 12000) : null;
@@ -1616,10 +1619,18 @@
           while (isoOf(j) < fd) { ajouter(isoOf(j), 0, 24 * 60); j.setDate(j.getDate() + 1); }
           ajouter(fd, 0, minutes(ev.e));
         });
-        dispo[cle] = { etat: 'ok', heure: Date.now(), occupe };
+        const sig = JSON.stringify(occupe), avant = dispo[cle];
+        const change = !avant || avant.etat !== 'ok' || avant.sig !== sig;
+        dispo[cle] = { etat: 'ok', heure: Date.now(), occupe, sig };
+        if (change) apresChargement(avant && avant.etat === 'ok');   // on ne redessine que si l'agenda a changé
       })
-      .catch(() => { dispo[cle] = { etat: 'erreur', heure: Date.now(), occupe: {} }; })   // agenda injoignable : tous les créneaux restent ouverts
-      .finally(() => { clearTimeout(timer); apresChargement(); });
+      .catch(() => {
+        const avant = dispo[cle];
+        if (avant && avant.etat === 'ok') { avant.enCours = false; avant.heure = Date.now(); return; }   // on garde les dernières infos connues
+        dispo[cle] = { etat: 'erreur', heure: Date.now(), occupe: {} };   // agenda injoignable : tous les créneaux restent ouverts
+        apresChargement();
+      })
+      .finally(() => { clearTimeout(timer); });
   }
   function etatJour(date){ const c = dispo[moisDe(date)]; return c ? c.etat : (GOOGLE_AGENDA_URL ? 'chargement' : 'erreur'); }
   function dureeActuelle(){ return currentMode === 'formule' ? DUREE_FORMULE : DUREE_CARTE; }
@@ -1633,13 +1644,14 @@
     const debut = hh * 60 + mm;
     return !plages.some(([d0, f0]) => debut >= d0 && debut < f0);
   }
-  function apresChargement(){
+  function apresChargement(actualisation){
     // la sélection en cours devient impossible ? on la retire
     let perdu = false;
     if (selDate && selSlot && selSlot !== 'Peu importe' && !availableSlots(selDate).includes(selSlot)) { selSlot = null; perdu = true; }
     if (selDate && !availableSlots(selDate, DUREE_CARTE).length) { selDate = null; selSlot = null; }
     renderCalendar(); renderSlots(); syncFields();
-    if (perdu) { dtSummary.textContent = "Ce créneau n'est pas disponible pour cette prestation, choisissez-en un autre"; dtSummary.className = 'dt-summary err'; }
+    if (perdu && actualisation && window.briautoCreneauRetire) window.briautoCreneauRetire();
+    else if (perdu) { dtSummary.textContent = "Ce créneau n'est pas disponible pour cette prestation, choisissez-en un autre"; dtSummary.className = 'dt-summary err'; }
   }
 
   function renderCalendar(){
@@ -1787,7 +1799,26 @@
   dtSlots.addEventListener('click', () => { if (selSlot) { dtAlert.hidden = true; } });
   bookingForm.addEventListener('reset', () => { dtAlert.hidden = true; });
   // si la page reste ouverte longtemps, on revérifie en revenant dessus
-  document.addEventListener('visibilitychange', () => { if (!document.hidden) { renderCalendar(); if (selDate) renderSlots(); } });
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) actualiserDispo(); });
+  // ----- Actualisation automatique : toutes les 20 s tant que le client regarde la prise de rendez-vous -----
+  // (un rendez-vous ajouté, déplacé ou supprimé dans Google Agenda apparaît sans recharger la page)
+  let rdvVisible = false;
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(entries => { rdvVisible = entries.some(e => e.isIntersecting); if (rdvVisible) actualiserDispo(); })
+      .observe(document.getElementById('rendez-vous'));
+  } else rdvVisible = true;
+  function actualiserDispo(){
+    if (document.hidden) return;
+    chargerMois(viewYear, viewMonth, true);
+    if (selDate && (selDate.getFullYear() !== viewYear || selDate.getMonth() !== viewMonth)) chargerMois(selDate.getFullYear(), selDate.getMonth(), true);
+  }
+  setInterval(() => { if (rdvVisible && !document.hidden) actualiserDispo(); }, 20000);
+  // créneau choisi par le client qui vient d'être pris entre-temps
+  window.briautoCreneauRetire = () => {
+    dtAlert.innerHTML = '<span class="dt-alert-ico">!</span><span><strong>Le créneau que vous aviez choisi vient d\'être réservé.</strong> Choisissez un autre horaire ci-dessous.</span>';
+    dtAlert.hidden = false;
+    dtSummary.textContent = 'Choisissez un nouveau créneau'; dtSummary.className = 'dt-summary err';
+  };
 
   // ===== Téléphone : correction automatique (0 manquant, +33) et contrôle =====
   const telInput = document.getElementById('tel');
