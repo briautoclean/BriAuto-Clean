@@ -551,6 +551,8 @@
     transition:border-color .2s ease, background .2s ease, color .2s ease, transform .2s var(--ease);animation:fadeSlide .35s var(--ease) both;}
   .dt-slot:hover:not(:disabled):not(.sel){border-color:var(--blue);color:var(--blue-dark);transform:translateY(-1px);}
   .dt-slot:disabled{opacity:.35;cursor:default;text-decoration:line-through;}
+  .dt-slots-note{margin-top:10px;font-size:12.5px;line-height:1.45;color:#8A5A00;background:#FFF6E0;border-radius:8px;padding:8px 10px;}
+  .dt-slots-note:empty{display:none;}
   .dt-slot.busy{background:#EEF1F5;border-color:#E2E6EC;color:#9AA4B2;opacity:.7;}
   .dt-loading .dt-days{opacity:.55;transition:opacity .2s;}
   .dt-slot.sel{background:var(--blue);border-color:var(--blue);color:#fff;}
@@ -1609,19 +1611,19 @@
   }
   function etatJour(date){ const c = dispo[moisDe(date)]; return c ? c.etat : (GOOGLE_AGENDA_URL ? 'chargement' : 'erreur'); }
   function dureeActuelle(){ return currentMode === 'formule' ? DUREE_FORMULE : DUREE_CARTE; }
-  function creneauLibre(date, slot){
+  function creneauLibre(date, slot, duree){
     const c = dispo[moisDe(date)];
     const plages = c && c.occupe[isoOf(date)];
     if (!plages) return true;
     const [hh, mm] = slot.split('h').map(Number);
-    const debut = hh * 60 + mm, fin = debut + dureeActuelle();
+    const debut = hh * 60 + mm, fin = debut + (duree || dureeActuelle());
     return !plages.some(([d0, f0]) => d0 < fin && f0 > debut);
   }
   function apresChargement(){
     // la sélection en cours devient impossible ? on la retire
     let perdu = false;
     if (selDate && selSlot && selSlot !== 'Peu importe' && !availableSlots(selDate).includes(selSlot)) { selSlot = null; perdu = true; }
-    if (selDate && !availableSlots(selDate).length) { selDate = null; selSlot = null; }
+    if (selDate && !availableSlots(selDate, DUREE_CARTE).length) { selDate = null; selSlot = null; }
     renderCalendar(); renderSlots(); syncFields();
     if (perdu) { dtSummary.textContent = "Ce créneau n'est pas disponible pour cette prestation, choisissez-en un autre"; dtSummary.className = 'dt-summary err'; }
   }
@@ -1642,18 +1644,18 @@
       const b = document.createElement('button');
       b.type = 'button'; b.className = 'dt-day'; b.textContent = d;
       b.setAttribute('aria-label', date.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' }));
-      if (date < today || !availableSlots(date).length) b.disabled = true;
+      if (date < today || !availableSlots(date, DUREE_CARTE).length) b.disabled = true;
       if (date.getTime() === today.getTime()) b.classList.add('today');
       if (selDate && date.getTime() === selDate.getTime()) { b.classList.add('sel'); b.setAttribute('aria-pressed', 'true'); }
       b.addEventListener('click', () => { selDate = date; selSlot = null; renderCalendar(); renderSlots(); syncFields(); });
       dtDays.appendChild(b);
     }
   }
-  function availableSlots(date){
+  function availableSlots(date, duree){
     // pour aujourd'hui, on masque les créneaux déjà passés ; partout, on retire les créneaux déjà réservés
     const now = new Date();
     return SLOTS.filter(s => {
-      if (!creneauLibre(date, s)) return false;
+      if (!creneauLibre(date, s, duree)) return false;
       if (date.toDateString() !== now.toDateString()) return true;
       const [hh, mm] = s.split('h').map(Number);
       return hh * 60 + mm > now.getHours() * 60 + now.getMinutes();
@@ -1667,6 +1669,7 @@
     const enChargement = etatJour(selDate) === 'chargement';
     if (enChargement) dtSlotsTitle.textContent += ' — vérification des disponibilités…';
     const ok = enChargement ? [] : availableSlots(selDate);
+    const okCarte = enChargement ? [] : availableSlots(selDate, DUREE_CARTE);
     SLOTS.forEach((s, i) => {
       const b = document.createElement('button');
       b.type = 'button'; b.className = 'dt-slot'; b.textContent = s; b.style.animationDelay = (i * 0.025) + 's';
@@ -1686,6 +1689,14 @@
     if (selSlot === 'Peu importe') { any.classList.add('sel'); any.setAttribute('aria-pressed', 'true'); }
     any.addEventListener('click', () => { selSlot = 'Peu importe'; renderSlots(); syncFields(); });
     dtSlots.appendChild(any);
+    let note = document.getElementById('dtSlotsNote');
+    if (!note) { note = document.createElement('div'); note.id = 'dtSlotsNote'; note.className = 'dt-slots-note'; dtSlots.after(note); }
+    const extra = okCarte.filter(x => !ok.includes(x));
+    note.textContent = (!enChargement && currentMode === 'formule' && extra.length)
+      ? (ok.length ? 'Certains créneaux sont trop courts pour une formule complète (environ 5 h). '
+                   : 'Ce jour, il ne reste pas assez de temps pour une formule complète (environ 5 h). ')
+        + 'Pour une prestation à la carte, ' + (extra.length > 1 ? 'les créneaux ' : 'le créneau ') + extra.join(', ') + (extra.length > 1 ? ' sont disponibles' : ' est disponible') + ' (choisissez « Uniquement à la carte » plus bas).'
+      : '';
   }
   function syncFields(){
     dateField.value = selDate ? isoOf(selDate) : '';
