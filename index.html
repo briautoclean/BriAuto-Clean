@@ -551,6 +551,18 @@
     transition:border-color .2s ease, background .2s ease, color .2s ease, transform .2s var(--ease);animation:fadeSlide .35s var(--ease) both;}
   .dt-slot:hover:not(:disabled):not(.sel){border-color:var(--blue);color:var(--blue-dark);transform:translateY(-1px);}
   .dt-slot:disabled{opacity:.35;cursor:default;text-decoration:line-through;}
+  .dt-alert{display:flex;gap:10px;align-items:flex-start;background:#FDECEC;border:1.5px solid #E57373;color:#8E1F1F;border-radius:12px;padding:12px 14px;margin:0 0 10px;font-size:14px;line-height:1.45;animation:dtShake .45s ease;}
+  .dt-alert[hidden]{display:none;}
+  .dt-alert-ico,.dt-modal-ico{flex:none;width:24px;height:24px;border-radius:50%;background:#D93636;color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:15px;}
+  @keyframes dtShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+  .dt-modal{position:fixed;inset:0;z-index:1000;background:rgba(10,22,44,.55);display:flex;align-items:center;justify-content:center;padding:16px;animation:dtFade .2s ease;}
+  .dt-modal-box{background:#fff;border-radius:16px;max-width:420px;width:100%;padding:26px 24px 22px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3);animation:dtPop .25s ease;}
+  .dt-modal-box .dt-modal-ico{width:52px;height:52px;font-size:28px;margin:0 auto 12px;}
+  .dt-modal-box h3{margin:0 0 10px;font-size:20px;color:#12233F;}
+  .dt-modal-box p{margin:0 0 10px;font-size:15px;line-height:1.5;color:#3A4558;}
+  .dt-modal-box .dt-modal-ok{margin-top:8px;width:100%;}
+  @keyframes dtFade{from{opacity:0}to{opacity:1}}
+  @keyframes dtPop{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
   .dt-slots-note{margin-top:10px;font-size:12.5px;line-height:1.45;color:#8A5A00;background:#FFF6E0;border-radius:8px;padding:8px 10px;}
   .dt-slots-note:empty{display:none;}
   .dt-slot.busy{background:#EEF1F5;border-color:#E2E6EC;color:#9AA4B2;opacity:.7;}
@@ -1413,7 +1425,7 @@
       const agenda = await sendGoogleAgenda(data);
       if (agenda && agenda.conflit) {
         showStatus('err', "Désolé, ce créneau vient d'être réservé par un autre client. Choisissez un autre horaire ci-dessus.");
-        if (window.briautoCreneauPris) window.briautoCreneauPris();
+        if (window.briautoCreneauPris) window.briautoCreneauPris(data['Date souhaitée'], data['Heure souhaitée']);
         return;
       }
       // Email en tableau (EmailJS) + enregistrement Netlify ; FormSubmit en dernier secours
@@ -1731,13 +1743,49 @@
   const setModeInitial = setMode;
   setMode = function(mode){ setModeInitial(mode); apresChargement(); };
   window.briautoRafraichirDispo = () => { Object.keys(dispo).forEach(k => delete dispo[k]); renderCalendar(); renderSlots(); };
-  window.briautoCreneauPris = () => {
+  // ----- Créneau déjà pris : bandeau rouge au-dessus du calendrier + fenêtre bien visible -----
+  const dtAlert = document.createElement('div');
+  dtAlert.className = 'dt-alert'; dtAlert.setAttribute('role', 'alert'); dtAlert.hidden = true;
+  dtPicker.before(dtAlert);
+  function texteCreneau(iso, heure){
+    const d = iso ? new Date(iso + 'T12:00:00') : null;
+    const jour = d ? d.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' }) : '';
+    return (jour ? 'du ' + jour : '') + (heure && heure !== 'Peu importe' ? ' à ' + heure : '');
+  }
+  function fermerPopup(){
+    const m = document.getElementById('dtModal'); if (!m) return;
+    m.remove(); document.body.style.overflow = '';
+    dtPicker.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+  window.briautoCreneauPris = (iso, heure) => {
     selSlot = null;
     if (selDate) chargerMois(selDate.getFullYear(), selDate.getMonth(), true);
     chargerMois(viewYear, viewMonth, true);
     renderCalendar(); renderSlots(); syncFields();
-    dtPicker.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    const quand = texteCreneau(iso, heure);
+    dtAlert.innerHTML = '<span class="dt-alert-ico">!</span><span><strong>Ce créneau n\'est plus disponible.</strong> Le créneau ' + quand +
+      ' vient d\'être réservé par un autre client. Choisissez un autre jour ou une autre heure ci-dessous, puis renvoyez votre demande.</span>';
+    dtAlert.hidden = false;
+    dtPicker.classList.add('error');
+    dtSummary.textContent = 'Choisissez un nouveau créneau'; dtSummary.className = 'dt-summary err';
+    // fenêtre (pop-up)
+    fermerPopup();
+    const m = document.createElement('div');
+    m.id = 'dtModal'; m.className = 'dt-modal';
+    m.innerHTML = '<div class="dt-modal-box" role="alertdialog" aria-modal="true" aria-labelledby="dtModalTitle">' +
+      '<div class="dt-modal-ico">!</div>' +
+      '<h3 id="dtModalTitle">Créneau déjà réservé</h3>' +
+      '<p>Désolé, le créneau ' + quand + ' vient d\'être réservé par un autre client.</p>' +
+      '<p>Votre demande <strong>n\'a pas été envoyée</strong>. Choisissez un autre horaire, puis cliquez à nouveau sur « Envoyer ».</p>' +
+      '<button type="button" class="btn btn-primary dt-modal-ok">Choisir un autre créneau</button></div>';
+    m.addEventListener('click', e => { if (e.target === m || e.target.classList.contains('dt-modal-ok')) fermerPopup(); });
+    document.addEventListener('keydown', function esc(e){ if (e.key === 'Escape') { fermerPopup(); document.removeEventListener('keydown', esc); } });
+    document.body.appendChild(m); document.body.style.overflow = 'hidden';
+    m.querySelector('.dt-modal-ok').focus();
   };
+  // le bandeau disparaît dès qu'un nouveau créneau est choisi
+  dtSlots.addEventListener('click', () => { if (selSlot) { dtAlert.hidden = true; } });
+  bookingForm.addEventListener('reset', () => { dtAlert.hidden = true; });
   // si la page reste ouverte longtemps, on revérifie en revenant dessus
   document.addEventListener('visibilitychange', () => { if (!document.hidden) { renderCalendar(); if (selDate) renderSlots(); } });
 
