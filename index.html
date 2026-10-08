@@ -375,6 +375,33 @@
     .opt.opt-wide{flex-direction:column;align-items:stretch;}
     .opt-video{flex:none;width:100%;max-height:none;aspect-ratio:4/5;}
   }
+
+  /* ----- Halloween : personnages cliquables ----- */
+  .hw-spider,.hw-hs svg,.hw-bat,.hw-bathang span,.hw-pk,.hw-witch,.hw-drift,.hw-ghost{pointer-events:auto;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+  .hw-pk:hover,.hw-ghost:hover svg{filter:drop-shadow(0 0 10px rgba(255,170,60,.8));}
+  .hw-hs svg{transition:transform .45s cubic-bezier(.5,-.3,.6,1),opacity .45s;}
+  .hw-hs.hw-hidden svg{transform:translateY(-230px);opacity:0;transition:transform .35s cubic-bezier(.6,0,.9,.4),opacity .35s .15s;}
+  .hw-spider.hw-hidden{animation:hwUp .4s cubic-bezier(.6,0,.9,.4) forwards !important;}
+  @keyframes hwUp{to{transform:translateY(-480px);}}
+  .hw-bat.hw-flee svg,.hw-bathang span.hw-flee svg{animation:hwFlee .6s ease-in forwards !important;}
+  @keyframes hwFlee{0%{transform:scale(1);}30%{transform:scale(1.25) translateY(4px);}100%{transform:translate(60px,-260px) scale(.2) rotate(-25deg);opacity:0;}}
+  .hw-bathang span.hw-flee{animation-play-state:paused;}
+  .hw-pk.hw-boo{animation:hwPkJump .6s cubic-bezier(.3,1.6,.5,1) !important;}
+  .hw-pk.hw-boo .hw-face{fill:#FFF3B0;filter:drop-shadow(0 0 14px #FFD460) drop-shadow(0 0 4px #fff);}
+  @keyframes hwPkJump{0%{transform:none;}35%{transform:translateY(-26px) rotate(-8deg) scale(1.08);}70%{transform:translateY(0) scaleY(.88) scaleX(1.1);}100%{transform:none;}}
+  .hw-ghost.hw-boo svg,.hw-drift.hw-boo svg{animation:hwGhostBoo .7s ease !important;}
+  @keyframes hwGhostBoo{0%{transform:scale(1);}25%{transform:scale(1.35) rotate(-8deg);}50%{transform:scale(1.25) rotate(8deg);opacity:.5;}100%{transform:scale(1);opacity:1;}}
+  .hw-witch.hw-boo svg{animation:hwWitchSpin .8s ease;}
+  @keyframes hwWitchSpin{50%{transform:rotate(-20deg) translateY(-14px);}}
+  .hw-say{position:fixed;z-index:999;pointer-events:none;background:#fff;color:#2A1240;font-weight:800;font-size:18px;
+    padding:8px 14px;border-radius:16px;box-shadow:0 10px 24px -8px rgba(40,10,60,.55);transform:translate(-50%,-100%);
+    animation:hwSay 1.4s ease forwards;white-space:nowrap;font-family:inherit;}
+  .hw-say::after{content:"";position:absolute;left:50%;bottom:-7px;margin-left:-7px;border:7px solid transparent;border-top-color:#fff;border-bottom:0;}
+  @keyframes hwSay{0%{opacity:0;transform:translate(-50%,-80%) scale(.6);}15%{opacity:1;transform:translate(-50%,-110%) scale(1.08);}25%{transform:translate(-50%,-110%) scale(1);}80%{opacity:1;}100%{opacity:0;transform:translate(-50%,-150%);}}
+  .hw-spark{position:fixed;z-index:998;pointer-events:none;width:8px;height:8px;border-radius:50%;background:#FFB347;box-shadow:0 0 8px #FF9A3C;animation:hwSpark .8s ease-out forwards;}
+  @keyframes hwSpark{to{transform:translate(var(--dx),var(--dy)) scale(.2);opacity:0;}}
+  .hw-tip{display:none;}
+  html.halloween .hw-tip{display:inline;}
   /* AVANT / APRES SLIDER */
   .compare-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:32px;}
   .compare-slider{display:flex;flex-direction:column;}
@@ -787,7 +814,7 @@
 
 
 <div class="hw hw-strip" id="hwStrip" role="note">
-  <span>🎃 <strong>Spécial Halloween</strong><span class="hw-long"> — on chasse les toiles d'araignée, la poussière fantôme et les miettes de bonbons de votre habitacle !</span><span class="hw-short"> — adieu poussière fantôme !</span></span>
+  <span>🎃 <strong>Spécial Halloween</strong><span class="hw-long"> — on chasse les toiles d'araignée, la poussière fantôme et les miettes de bonbons de votre habitacle !</span><span class="hw-short"> — adieu poussière fantôme !</span><span class="hw-tip hw-long"> 👻 Psst… les monstres se cachent : cliquez dessus !</span></span>
   <a href="#rendez-vous">Réserver →</a>
   <button type="button" class="hw-close" aria-label="Fermer le bandeau" onclick="this.parentNode.remove()">×</button>
 </div>
@@ -1538,6 +1565,61 @@
     document.getElementById('continueToBooking').addEventListener('click', () => setTimeout(maj, 0));
     document.getElementById('bookingForm').addEventListener('reset', () => setTimeout(maj, 0));
     window.briautoMajDeperlant = maj;
+  })();
+
+  // ===== Halloween : personnages cliquables =====
+  (function(){
+    if (!document.documentElement.classList.contains('halloween')) return;
+    const pick = a => a[Math.floor(Math.random() * a.length)];
+    function dire(el, txt){
+      const r = el.getBoundingClientRect();
+      const b = document.createElement('div'); b.className = 'hw-say'; b.textContent = txt;
+      b.style.left = (r.left + r.width / 2) + 'px'; b.style.top = Math.max(40, r.top - 6) + 'px';
+      document.body.appendChild(b); setTimeout(() => b.remove(), 1500);
+    }
+    function etincelles(el){
+      const r = el.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+      for (let i = 0; i < 10; i++) {
+        const sp = document.createElement('span'); sp.className = 'hw-spark';
+        const a = Math.PI * 2 * i / 10, d = 40 + Math.random() * 30;
+        sp.style.left = cx + 'px'; sp.style.top = cy + 'px';
+        sp.style.setProperty('--dx', Math.cos(a) * d + 'px'); sp.style.setProperty('--dy', Math.sin(a) * d + 'px');
+        document.body.appendChild(sp); setTimeout(() => sp.remove(), 900);
+      }
+    }
+    function rejouer(el, cls){ el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); }
+    function sur(sel, fn){ document.querySelectorAll(sel).forEach(el => el.addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); fn(el, e); })); }
+
+    // Fantômes : « Bouh ! »
+    sur('.hw-ghost, .hw-drift', el => {
+      rejouer(el, 'hw-boo'); dire(el, pick(['Bouh ! 👻', 'BOUH !', 'Bouuuh…', 'Hou hou ! 👻']));
+      setTimeout(() => el.classList.remove('hw-boo'), 800);
+    });
+    // Araignées : remontent se cacher, puis redescendent
+    sur('.hw-spider', el => {
+      if (el.classList.contains('hw-hidden')) return;
+      el.classList.add('hw-hidden'); setTimeout(() => el.classList.remove('hw-hidden'), 4500);
+    });
+    sur('.hw-hs svg', svg => {
+      const el = svg.parentNode; if (el.classList.contains('hw-hidden')) return;
+      el.classList.add('hw-hidden'); setTimeout(() => el.classList.remove('hw-hidden'), 4500);
+    });
+    // Chauves-souris : s'envolent, puis reviennent
+    sur('.hw-bat, .hw-bathang span', el => {
+      if (el.classList.contains('hw-flee')) return;
+      dire(el, pick(['Iiiik !', 'Kiii !'])); el.classList.add('hw-flee');
+      setTimeout(() => el.classList.remove('hw-flee'), 5000);
+    });
+    // Citrouilles : sautent et s'illuminent
+    sur('.hw-pk', el => {
+      rejouer(el, 'hw-boo'); etincelles(el); dire(el, pick(['Mouahaha !', 'Hé hé hé ! 🎃', 'Joyeux Halloween !']));
+      setTimeout(() => el.classList.remove('hw-boo'), 700);
+    });
+    // Sorcière : ricane
+    sur('.hw-witch', el => {
+      rejouer(el, 'hw-boo'); dire(el, pick(['Hihihi ! 🧹', 'Abracadabra… propre !']));
+      setTimeout(() => el.classList.remove('hw-boo'), 900);
+    });
   })();
 
   // Sliders Avant / Après
