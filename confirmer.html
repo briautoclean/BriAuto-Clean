@@ -49,6 +49,15 @@
   .btn svg{width:20px;height:20px;flex:none;}
   .toast{text-align:center;font-size:14px;font-weight:600;color:#14532D;min-height:20px;margin-top:4px;}
   .error{text-align:center;color:#7F1D1D;}
+  .btn-cancel{background:#fff;color:#C53030;border:1.5px solid #F1B5B5;margin-top:6px;}
+  .btn-cancel:hover{background:#FFF5F5;border-color:#C53030;}
+  .btn-back{background:#fff;color:var(--ink);border:1.5px solid var(--line);margin-top:6px;}
+  .cancel-banner{display:none;margin-bottom:16px;padding:14px 16px;border-radius:12px;background:#FDECEC;border:1.5px solid #E57373;color:#7F1D1D;font-size:15px;line-height:1.45;}
+  body.annulation .cancel-banner{display:block;}
+  body.annulation header{background:linear-gradient(165deg,#3A0F14,#7A1E26);}
+  body.annulation #slotCard,body.annulation #btnCancel{display:none;}
+  body:not(.annulation) #btnBack,body:not(.annulation) #cancelAgenda{display:none;}
+  body.annulation .btn-sms{background:#C53030;box-shadow:0 12px 24px -12px rgba(197,48,48,.8);}
 </style>
 </head>
 <body>
@@ -58,13 +67,20 @@
       <svg width="30" height="30" viewBox="0 0 34 34" fill="none"><rect x="2" y="2" width="30" height="30" rx="7" fill="#5FD6E8"/><path d="M12 9v16M12 9h6.5a4 4 0 010 8H12M12 17h7a4 4 0 010 8H12" stroke="#12233F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       BriAuto Clean
     </div>
-    <h1>Confirmer le rendez-vous</h1>
-    <p>Vérifiez le message, puis envoyez-le au client.</p>
+    <h1 id="pageTitle">Confirmer le rendez-vous</h1>
+    <p id="pageSub">Vérifiez le message, puis envoyez-le au client.</p>
   </div>
 </header>
 
 <main>
   <div class="wrap" id="app">
+    <div class="cancel-banner" role="status">
+      <strong>Annulation du rendez-vous.</strong> Le message ci-dessous prévient le client, s'excuse et l'invite à reprendre rendez-vous.
+      <div class="agenda" id="cancelAgenda">
+        <button type="button" class="btn-agenda" id="btnDelAgenda" style="border-color:#C53030;color:#C53030">🗑 Retirer de l'agenda</button>
+        <span class="agenda-status" id="delStatus" aria-live="polite"></span>
+      </div>
+    </div>
     <div class="card">
       <dl class="recap">
         <dt>Client</dt><dd id="rNom"></dd>
@@ -74,7 +90,7 @@
       </dl>
     </div>
 
-    <div class="card">
+    <div class="card" id="slotCard">
       <label id="slotLabel">Heure de passage</label>
       <div class="slots" id="slots" role="group" aria-labelledby="slotLabel"></div>
       <p class="hint" id="slotHint"></p>
@@ -102,9 +118,11 @@
       </a>
       <button class="btn btn-copy" id="btnCopy" type="button">Copier le message</button>
       <div class="toast" id="toast" aria-live="polite"></div>
+      <button class="btn btn-cancel" id="btnCancel" type="button">✕ Annuler ce rendez-vous (imprévu)</button>
+      <button class="btn btn-back" id="btnBack" type="button">← Revenir à la confirmation</button>
     </div>
   </div>
-  <p style="text-align:center;font-size:12px;color:#8C97AC;margin:18px 0 0;">Page de confirmation — version 5 (durée formule 5 h)</p>
+  <p style="text-align:center;font-size:12px;color:#8C97AC;margin:18px 0 0;">Page de confirmation — version 6 (annulation)</p>
 </main>
 
 <script>
@@ -140,7 +158,18 @@
       }).join('');
     }
     const fin = '\nPour toute question, répondez simplement à ce message.\n\nMerci de votre confiance,\nBriAuto Clean';
+    let annulation = false;
+    const SITE = /^https?:/.test(location.protocol) ? location.origin : 'https://briautoclean.vercel.app';
     function buildMessage(){
+      if (annulation) {
+        const quand = 'du ' + dateTxt + (heureAgenda ? ' à ' + heureAgenda : '');
+        return '⚠️ ' + enGras('ANNULATION DE RENDEZ-VOUS') + '\n\n' +
+          'Bonjour ' + prenom + ',\n\n' +
+          'Suite à un imprévu, nous sommes malheureusement contraints d\'annuler votre rendez-vous BriAuto Clean ' + quand + '.\n\n' +
+          'Nous vous prions de bien vouloir nous en excuser.\n\n' +
+          'Vous pouvez reprendre rendez-vous pour un autre jour directement sur notre site (' + SITE + '), ou en répondant à ce message : nous ferons le nécessaire pour vous trouver un créneau rapidement.\n\n' +
+          'Encore toutes nos excuses pour la gêne occasionnée,\nBriAuto Clean';
+      }
       const modifie = heureClient && heureChoisie && heureChoisie !== heureClient;
       if (modifie) {
         return 'Bonjour ' + prenom + ',\n\n' +
@@ -203,6 +232,7 @@
     btnAgenda.addEventListener('click', majAgenda);
     // à l'envoi du SMS / WhatsApp : mise à jour automatique si besoin (envoi "en tâche de fond")
     function majAgendaEnFond(){
+      if (annulation) { supprimerAgenda(true); return; }
       if (agendaAJour() || !dateIso) return;
       fetch(AGENDA_URL, { method: 'POST', mode: 'no-cors', keepalive: true, headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: payloadAgenda(true) }).catch(() => {});
       heureAgenda = heureChoisie;
@@ -210,6 +240,42 @@
     }
     document.getElementById('btnSms').addEventListener('click', majAgendaEnFond);
     document.getElementById('btnWa').addEventListener('click', majAgendaEnFond);
+
+    // ----- Annulation -----
+    let agendaSupprime = false;
+    const delStatus = document.getElementById('delStatus'), btnDel = document.getElementById('btnDelAgenda');
+    async function supprimerAgenda(enFond){
+      if (agendaSupprime || !dateIso) return;
+      const corps = JSON.stringify({ cle: AGENDA_CLE, action: 'annuler', rdvId, nom, date: dateIso });
+      if (enFond) {
+        fetch(AGENDA_URL, { method: 'POST', mode: 'no-cors', keepalive: true, headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: corps }).catch(() => {});
+        agendaSupprime = true; delStatus.className = 'agenda-status ok'; delStatus.textContent = '✓ Retiré de l\'agenda'; btnDel.hidden = true; return;
+      }
+      btnDel.disabled = true; delStatus.className = 'agenda-status'; delStatus.textContent = 'Suppression…';
+      try {
+        const res = await fetch(AGENDA_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: corps });
+        const out = await res.json();
+        if (!out.ok) throw new Error(out.erreur || 'erreur');
+        agendaSupprime = true; btnDel.hidden = true;
+        delStatus.className = 'agenda-status ok'; delStatus.textContent = '✓ Retiré de l\'agenda : le créneau est de nouveau libre sur le site';
+      } catch (err) {
+        delStatus.className = 'agenda-status err';
+        delStatus.textContent = err && err.message && err.message !== 'Failed to fetch' ? '✗ ' + err.message : '✗ Suppression impossible, supprimez-le dans Google Agenda.';
+      } finally { btnDel.disabled = false; }
+    }
+    btnDel.addEventListener('click', () => supprimerAgenda(false));
+    function modeAnnulation(on){
+      annulation = on;
+      document.body.classList.toggle('annulation', on);
+      document.getElementById('pageTitle').textContent = on ? 'Annuler le rendez-vous' : 'Confirmer le rendez-vous';
+      document.getElementById('pageSub').textContent = on ? "Envoyez ce message au client pour le prévenir de l'annulation." : 'Vérifiez le message, puis envoyez-le au client.';
+      document.getElementById('btnSms').lastChild.textContent = on ? " Envoyer l'annulation par SMS" : ' Envoyer par SMS';
+      document.getElementById('btnWa').lastChild.textContent = on ? " Envoyer l'annulation par WhatsApp" : ' Envoyer par WhatsApp';
+      msg.value = buildMessage(); refresh();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    document.getElementById('btnCancel').addEventListener('click', () => modeAnnulation(true));
+    document.getElementById('btnBack').addEventListener('click', () => modeAnnulation(false));
 
     function update(){
       renderSlots();
