@@ -1736,7 +1736,7 @@
   function sendGoogleAgenda(data){
     if (!GOOGLE_AGENDA_URL) return Promise.resolve();
     const p = emailParams(data);
-    const payload = Object.assign({}, p, { cle: GOOGLE_AGENDA_CLE, date: data['Date souhaitée'] || '', heure: data['Heure souhaitée'] || '', rdvId: data['Référence'] || '' });
+    const payload = Object.assign({}, p, { cle: GOOGLE_AGENDA_CLE, date: data['Date souhaitée'] || '', heure: data['Heure souhaitée'] || '', rdvId: data['Référence'] || '', lien: confirmLink(data) });
     // pour "Peu importe", le script crée un événement sur toute la journée
     // "no-cors" + text/plain : accepté par Google Apps Script sans configuration supplémentaire
     // réponse lue pour détecter un créneau déjà pris ; si l'agenda ne répond pas, on n'empêche pas la demande
