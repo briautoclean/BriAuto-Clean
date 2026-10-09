@@ -159,7 +159,7 @@
     }
     const fin = '\nPour toute question, répondez simplement à ce message.\n\nMerci de votre confiance,\nBriAuto Clean';
     let annulation = false;
-    const SITE = /^https?:/.test(location.protocol) ? location.origin : 'https://briautoclean.vercel.app';
+    const SITE = /^https?:/.test(location.protocol) ? new URL('./', location.href).href : 'https://briautoclean.github.io/BriAuto-Clean/';
     function buildMessage(){
       if (annulation) {
         const quand = 'du ' + dateTxt + (heureAgenda ? ' à ' + heureAgenda : '');
