@@ -21,7 +21,7 @@
 <meta name="twitter:title" content="BriAuto Clean — Nettoyage auto avec récupération du véhicule">
 <meta name="twitter:description" content="BriAuto Clean, nettoyage automobile professionnel autour d'Oissery : nous récupérons votre véhicule chez vous pour le nettoyer. Formules et prestations à la carte, réservez en ligne.">
 <meta name="twitter:image" content="https://briautoclean.github.io/BriAuto-Clean/img/apercu-partage-v2.jpg">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "AutoWash", "name": "BriAuto Clean", "url": "https://briautoclean.github.io/BriAuto-Clean/", "image": "https://briautoclean.github.io/BriAuto-Clean/img/apercu-partage-v2.jpg", "logo": "https://briautoclean.github.io/BriAuto-Clean/img/icone-180.png", "description": "Nettoyage automobile intérieur et extérieur avec récupération du véhicule à domicile, autour d'Oissery (77).", "email": "briauto.cleaning@gmail.com", "priceRange": "10 € – 119 €", "address": {"@type": "PostalAddress", "addressLocality": "Oissery", "postalCode": "77178", "addressRegion": "Seine-et-Marne", "addressCountry": "FR"}, "geo": {"@type": "GeoCoordinates", "latitude": 49.0697, "longitude": 2.8158}, "areaServed": {"@type": "GeoCircle", "geoMidpoint": {"@type": "GeoCoordinates", "latitude": 49.0697, "longitude": 2.8158}, "geoRadius": "30000"}, "openingHoursSpecification": [{"@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"], "opens": "09:00", "closes": "15:00"}], "hasOfferCatalog": {"@type": "OfferCatalog", "name": "Formules de nettoyage", "itemListElement": [{"@type": "Offer", "price": "39", "priceCurrency": "EUR", "itemOffered": {"@type": "Service", "name": "Formule Essentiel — Extérieur"}}, {"@type": "Offer", "price": "69", "priceCurrency": "EUR", "itemOffered": {"@type": "Service", "name": "Formule Confort — Intérieur + Extérieur"}}, {"@type": "Offer", "price": "119", "priceCurrency": "EUR", "itemOffered": {"@type": "Service", "name": "Formule Prestige — Remise à neuf"}}]}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "AutoWash", "name": "BriAuto Clean", "url": "https://briautoclean.github.io/BriAuto-Clean/", "image": "https://briautoclean.github.io/BriAuto-Clean/img/apercu-partage-v2.jpg", "logo": "https://briautoclean.github.io/BriAuto-Clean/img/icone-180.png", "description": "Nettoyage automobile intérieur et extérieur avec récupération du véhicule à domicile, autour d'Oissery (77).", "email": "briauto.cleaning@gmail.com", "priceRange": "2 € – 130 €", "address": {"@type": "PostalAddress", "addressLocality": "Oissery", "postalCode": "77178", "addressRegion": "Seine-et-Marne", "addressCountry": "FR"}, "geo": {"@type": "GeoCoordinates", "latitude": 49.0697, "longitude": 2.8158}, "areaServed": {"@type": "GeoCircle", "geoMidpoint": {"@type": "GeoCoordinates", "latitude": 49.0697, "longitude": 2.8158}, "geoRadius": "30000"}, "openingHoursSpecification": [{"@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"], "opens": "09:00", "closes": "15:00"}], "hasOfferCatalog": {"@type": "OfferCatalog", "name": "Formules de nettoyage", "itemListElement": [{"@type": "Offer", "price": "40", "priceCurrency": "EUR", "itemOffered": {"@type": "Service", "name": "Formule Extérieur"}}, {"@type": "Offer", "price": "110", "priceCurrency": "EUR", "itemOffered": {"@type": "Service", "name": "Formule Intérieur"}}, {"@type": "Offer", "price": "130", "priceCurrency": "EUR", "itemOffered": {"@type": "Service", "name": "Formule Extérieur + Intérieur"}}]}}</script>
 <meta name="description" content="BriAuto Clean, nettoyage automobile professionnel autour d'Oissery : nous récupérons votre véhicule chez vous pour le nettoyer. Formules et prestations à la carte, réservez en ligne.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -420,6 +420,18 @@
   @keyframes hwSpark{to{transform:translate(var(--dx),var(--dy)) scale(.2);opacity:0;}}
   .hw-tip{display:none;}
   html.halloween .hw-tip{display:inline;}
+  /* formules & options : règles */
+  .pkg-note{font-size:13px;color:#8A5A00;background:#FFF6E0;border-radius:8px;padding:6px 10px;margin:-12px 0 10px;}
+  .pkg-note + .pkg-note{margin-top:0;}
+  .pkg-opts{font-size:13px;color:var(--slate);margin:0 0 18px;line-height:1.5;}
+  .pkg-opts strong{color:var(--ink);}
+  .opt-cond{align-self:flex-start;font-size:11.5px;font-weight:600;color:#8A5A00;background:#FFF6E0;padding:3px 8px;border-radius:999px;}
+  .opt.is-off{opacity:.5 !important;cursor:not-allowed;filter:grayscale(.6);}
+  .opt.is-off:hover{transform:none;box-shadow:none;}
+  .check-grid label.is-off{opacity:.42;cursor:not-allowed;}
+  .opt-rules{font-size:12.5px;color:var(--slate);margin:10px 0 0;}
+  .opt-rules:empty{display:none;}
+  @media (min-width:861px){ #options .options-grid{grid-template-columns:repeat(3,1fr);} }
   /* AVANT / APRES SLIDER */
   .compare-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:32px;}
   .compare-slider{display:flex;flex-direction:column;}
@@ -889,8 +901,8 @@
         <a href="#formules" class="btn btn-light">Voir les formules</a>
       </div>
       <div class="hero-meta hero-in" style="--d:.6s">
-        <div><strong data-count="3">3</strong><span>formules complètes</span></div>
-        <div><strong data-count="8" data-suffix="+">8+</strong><span>prestations à la carte</span></div>
+        <div><strong data-count="3">3</strong><span>formules</span></div>
+        <div><strong data-count="10">10</strong><span>options à la carte</span></div>
         <div><strong data-count="30" data-suffix=" km">30 km</strong><span>autour de Oissery (77)</span></div>
       </div>
     </div>
@@ -982,53 +994,55 @@
     <div class="section-head reveal">
       <span class="tag">Formules</span>
       <h2>Une formule pour chaque besoin</h2>
-      <p>Trois niveaux de nettoyage, du rafraîchissement rapide à la remise à neuf complète. Tarifs indicatifs pour une citadine — un devis exact est confirmé selon le véhicule.</p>
+      <p>Extérieur, intérieur, ou les deux : choisissez votre formule, puis ajoutez les options qui vous intéressent. Tarifs indicatifs — un devis exact est confirmé selon le véhicule.</p>
     </div>
     <div class="pkg-grid">
-
       <div class="pkg reveal" style="--d:.05s">
-        <span class="pkg-eyebrow">Essentiel</span>
-        <h3>Extérieur</h3>
-        <div class="price">39€<small> / véhicule</small></div>
-        <p class="desc">Pour redonner de l'éclat à la carrosserie entre deux nettoyages complets.</p>
+        <span class="pkg-eyebrow">Extérieur</span>
+        <h3>Lavage extérieur</h3>
+        <div class="price">40€<small> / véhicule</small></div>
+        <p class="desc">Un lavage à la main complet : carrosserie, jantes et vitres extérieures.</p>
         <ul>
-          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Lavage carrosserie à la main</li>
-          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Nettoyage des jantes</li>
-          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Vitres extérieures</li>
-          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Séchage &amp; lustrage rapide</li>
+          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Prélavage, mousse active &amp; rinçage</li>
+          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Nettoyage des jantes (soft)</li>
+          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Lavage de la carrosserie à la main</li>
+          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Nettoyage au pinceau des détails et recoins</li>
+          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Rinçage complet de la carrosserie</li>
+          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Séchage à la serviette, sans traces</li>
+          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Nettoyage des vitres extérieures</li>
         </ul>
-        <button class="btn btn-ghost btn-block choose-pkg" data-pkg="Essentiel — 39€">Choisir cette formule</button>
+        <p class="pkg-note">Jantes très sales : l'option <b>Jante Hard</b> est nécessaire.</p><p class="pkg-note">Vitres intérieures sales : ajoutez l'option <b>Vitre intérieure</b>.</p><p class="pkg-opts"><strong>Options possibles :</strong> Jante Hard (5€), Déperlant vitres (10€), Vitre intérieure (5€)</p>
+        <button class="btn btn-ghost btn-block choose-pkg" data-pkg="Extérieur — 40€">Choisir cette formule</button>
       </div>
-
-      <div class="pkg featured reveal" style="--d:.18s">
+      <div class="pkg reveal" style="--d:.18s">
+        <span class="pkg-eyebrow">Intérieur</span>
+        <h3>Nettoyage intérieur</h3>
+        <div class="price">110€<small> / véhicule</small></div>
+        <p class="desc">Un habitacle désencombré, dépoussiéré et aspiré de fond en comble.</p>
+        <ul>
+          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Désencombrement du véhicule</li>
+          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Dépoussiérage &amp; nettoyage des plastiques (tableau de bord, portières, coffre)</li>
+          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Aspiration complète (moquettes, sièges, joints)</li>
+          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Remise en place de vos objets</li>
+        </ul>
+        <p class="pkg-opts"><strong>Options possibles :</strong> Encadrements de portes (15€), Nettoyage sièges (30€), Nourrissant cuir (10€)</p>
+        <button class="btn btn-ghost btn-block choose-pkg" data-pkg="Intérieur — 110€">Choisir cette formule</button>
+      </div>
+      <div class="pkg featured reveal" style="--d:.31s">
         <span class="recommended-badge">Recommandé</span>
-        <span class="pkg-eyebrow">Confort</span>
-        <h3>Intérieur + Extérieur</h3>
-        <div class="price">69€<small> / véhicule</small></div>
-        <p class="desc">Le nettoyage complet pour un véhicule propre dedans comme dehors.</p>
+        <span class="pkg-eyebrow">Complète</span>
+        <h3>Extérieur + Intérieur</h3>
+        <div class="price">130€<small> / véhicule</small></div>
+        <p class="desc">Le nettoyage complet, dedans comme dehors, avec encadrements de portes et vitres inclus.</p>
         <ul>
-          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Tout le contenu de la formule Essentiel</li>
-          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Aspiration sièges, tapis et coffre</li>
-          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Vitres intérieures &amp; plastiques dépoussiérés</li>
-          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Parfum d'habitacle offert</li>
+          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Toute la formule Extérieur</li>
+          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Toute la formule Intérieur</li>
+          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Encadrements de portes inclus</li>
+          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Vitres intérieures &amp; extérieures incluses</li>
         </ul>
-        <button class="btn btn-primary btn-block choose-pkg" data-pkg="Confort — 69€">Choisir cette formule</button>
+        <p class="pkg-opts"><strong>Options possibles :</strong> Déperlant vitres (10€), Nettoyage sièges (30€), Nourrissant cuir (10€)</p>
+        <button class="btn btn-primary btn-block choose-pkg" data-pkg="Extérieur + Intérieur — 130€">Choisir cette formule</button>
       </div>
-
-      <div class="pkg reveal" style="--d:.31s">
-        <span class="pkg-eyebrow">Prestige</span>
-        <h3>Remise à neuf</h3>
-        <div class="price">119€<small> / véhicule</small></div>
-        <p class="desc">Un nettoyage en profondeur, pour un véhicule qui retrouve son état d'origine.</p>
-        <ul>
-          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Tout le contenu de la formule Confort</li>
-          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Shampoing sièges &amp; tapis en profondeur</li>
-          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Nettoyage du compartiment moteur</li>
-          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Cire de protection carrosserie</li>
-        </ul>
-        <button class="btn btn-ghost btn-block choose-pkg" data-pkg="Prestige — 119€">Choisir cette formule</button>
-      </div>
-
     </div>
   </div>
 </section>
@@ -1040,83 +1054,91 @@
     <div class="section-head reveal">
       <span class="tag">À la carte</span>
       <h2>Uniquement ce dont vous avez besoin</h2>
-      <p>Seules ou en complément d'une formule : sélectionnez une ou plusieurs prestations, à combiner librement.</p>
+      <p>Seules ou en complément d'une formule : sélectionnez une ou plusieurs options.</p>
     </div>
     <div class="options-grid" id="pageOptionChecks">
 
       <label class="opt reveal" style="--d:0.04s">
-        <input type="checkbox" value="Vitres" data-price="10">
+        <input type="checkbox" value="Jante Hard" data-price="5">
+        <svg class="icon" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="7" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="2.2" stroke="currentColor" stroke-width="1.6"/><path d="M12 5v2M12 17v2M5 12h2M17 12h2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <h4>Jante Hard</h4>
+        <p>Nettoyage à la brosse des 4 jantes.</p>
+        <span class="opt-price">5€</span>
+      </label>
+
+      <label class="opt reveal" style="--d:0.12s">
+        <input type="checkbox" value="Vitre intérieure" data-price="5">
+        <svg class="icon" viewBox="0 0 24 24" fill="none"><rect x="4" y="5" width="16" height="12" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M4 10h16" stroke="currentColor" stroke-width="1.6"/></svg>
+        <h4>Vitre intérieure</h4>
+        <p>Nettoyage des vitres intérieures.</p><span class="opt-cond">Avec la formule Extérieur uniquement</span>
+        <span class="opt-price">5€</span>
+      </label>
+
+      <label class="opt reveal" style="--d:0.20s">
+        <input type="checkbox" value="Vitres intérieures &amp; extérieures" data-price="10">
         <svg class="icon" viewBox="0 0 24 24" fill="none"><rect x="4" y="5" width="16" height="12" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M4 10h16" stroke="currentColor" stroke-width="1.6"/></svg>
         <h4>Vitres intérieures &amp; extérieures</h4>
-        <p>Nettoyage sans traces, toutes vitres du véhicule.</p>
+        <p>Nettoyage et dégraissage de toutes les vitres.</p>
         <span class="opt-price">10€</span>
       </label>
 
-      <label class="opt reveal" style="--d:0.12s">
-        <input type="checkbox" value="Jantes détaillées" data-price="15">
-        <svg class="icon" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="7" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="2.2" stroke="currentColor" stroke-width="1.6"/><path d="M12 5v2M12 17v2M5 12h2M17 12h2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-        <h4>Jantes détaillées</h4>
-        <p>Décrassage complet, y compris les faces internes.</p>
-        <span class="opt-price">15€</span>
-      </label>
-
-      <label class="opt reveal" style="--d:0.20s">
-        <input type="checkbox" value="Aspiration sièges/tapis" data-price="15">
-        <svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M6 18v-6a6 6 0 0112 0v6" stroke="currentColor" stroke-width="1.6"/><path d="M4 18h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-        <h4>Aspiration sièges &amp; tapis</h4>
-        <p>Dépoussiérage complet de l'habitacle et du coffre.</p>
-        <span class="opt-price">15€</span>
-      </label>
-
-      <label class="opt reveal" style="--d:0.28s">
-        <input type="checkbox" value="Shampoing sièges" data-price="35">
-        <svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M4 15c2-6 14-6 16 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M7 15v3M12 15v3M17 15v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-        <h4>Shampoing sièges tissu</h4>
-        <p>Traitement en profondeur des taches et odeurs.</p>
-        <span class="opt-price">35€</span>
-      </label>
-
       <label class="opt reveal" style="--d:0.04s">
-        <input type="checkbox" value="Cuir" data-price="30">
-        <svg class="icon" viewBox="0 0 24 24" fill="none"><rect x="5" y="4" width="14" height="16" rx="3" stroke="currentColor" stroke-width="1.6"/><path d="M9 9h6M9 13h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-        <h4>Cuir : nettoyage &amp; traitement</h4>
-        <p>Nourrit et protège les surfaces en cuir.</p>
+        <input type="checkbox" value="Encadrements de portes" data-price="15">
+        <svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M6 20V5a1 1 0 011-1h10a1 1 0 011 1v15" stroke="currentColor" stroke-width="1.6"/><path d="M6 11h12M15 14h1.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <h4>Encadrements de portes</h4>
+        <p>Nettoyage des encadrements de portes et du coffre.</p>
+        <span class="opt-price">15€</span>
+      </label>
+
+      <label class="opt reveal" style="--d:0.12s">
+        <input type="checkbox" value="Nettoyage sièges" data-price="30">
+        <svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M8 4h5a2 2 0 012 2v7H8z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M6 13h12v3H6zM8 16v4M16 16v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <h4>Nettoyage sièges</h4>
+        <p>Nettoyage en profondeur à la shampouineuse.</p>
         <span class="opt-price">30€</span>
       </label>
 
+      <label class="opt reveal" style="--d:0.20s">
+        <input type="checkbox" value="Nourrissant cuir" data-price="10">
+        <svg class="icon" viewBox="0 0 24 24" fill="none"><rect x="5" y="4" width="14" height="16" rx="3" stroke="currentColor" stroke-width="1.6"/><path d="M9 9h6M9 13h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <h4>Nourrissant cuir</h4>
+        <p>Nourrit et protège les sièges en cuir.</p><span class="opt-cond">Avec l'option Nettoyage sièges</span>
+        <span class="opt-price">10€</span>
+      </label>
+
+      <label class="opt reveal" style="--d:0.04s">
+        <input type="checkbox" value="Sent bon" data-price="2">
+        <svg class="icon" viewBox="0 0 24 24" fill="none"><rect x="7" y="9" width="10" height="11" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M10 9V6h4v3M12 3v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <h4>Sent bon</h4>
+        <p>Parfum d'habitacle au choix, selon le stock disponible.</p>
+        <span class="opt-price">2€</span>
+      </label>
+
       <label class="opt reveal" style="--d:0.12s">
-        <input type="checkbox" value="Compartiment moteur" data-price="25">
-        <svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M6 10V6h6l2 4" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><rect x="4" y="10" width="16" height="7" rx="1.5" stroke="currentColor" stroke-width="1.6"/><circle cx="8" cy="17" r="1.4" stroke="currentColor" stroke-width="1.4"/><circle cx="16" cy="17" r="1.4" stroke="currentColor" stroke-width="1.4"/></svg>
-        <h4>Compartiment moteur</h4>
-        <p>Dégraissage et nettoyage soigné du bloc moteur.</p>
-        <span class="opt-price">25€</span>
+        <input type="checkbox" value="Brillant pneus" data-price="5">
+        <svg class="icon" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.6"/><path d="M18 4l1 2 2 1-2 1-1 2-1-2-2-1 2-1z" fill="currentColor"/></svg>
+        <h4>Brillant pneus</h4>
+        <p>Pneus rajeunis et brillants.</p>
+        <span class="opt-price">5€</span>
       </label>
 
       <label class="opt reveal" style="--d:0.20s">
-        <input type="checkbox" value="Anti-odeur" data-price="20">
-        <svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M12 3s5 5.5 5 9.5a5 5 0 01-10 0C7 8.5 12 3 12 3z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
-        <h4>Traitement anti-odeur</h4>
-        <p>Désodorisation en profondeur de l'habitacle.</p>
-        <span class="opt-price">20€</span>
-      </label>
-
-      <label class="opt reveal" style="--d:0.28s">
-        <input type="checkbox" value="Cire de protection" data-price="25">
-        <svg class="icon" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.6"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <h4>Cire de protection</h4>
-        <p>Brillance et protection longue durée de la carrosserie.</p>
-        <span class="opt-price">25€</span>
+        <input type="checkbox" value="Brillant plastiques extérieurs" data-price="5">
+        <svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M4 15l3-6h10l3 6v3H4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M19 3l.8 1.6L21.4 5l-1.6.8L19 7.4l-.8-1.6L16.6 5l1.6-.8z" fill="currentColor"/></svg>
+        <h4>Brillant plastiques extérieurs</h4>
+        <p>Plastiques extérieurs rajeunis, retrouvant presque leur couleur d'origine.</p>
+        <span class="opt-price">5€</span>
       </label>
 
       <label class="opt opt-wide reveal" style="--d:0.04s">
-        <input type="checkbox" value="Déperlant vitres" data-price="15">
+        <input type="checkbox" value="Déperlant vitres" data-price="10">
         <div class="opt-video"><video muted loop playsinline preload="none" poster="img/deperlant-apercu.webp" data-lazy-video aria-label="Démonstration : l'eau perle et glisse sur un pare-brise traité"><source type="video/mp4" data-src="img/deperlant.mp4"></video><span class="opt-video-tag">Démonstration</span></div>
         <div class="opt-body">
           <span class="opt-new">Nouveau</span>
           <svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M3 18L7 6h10l4 12" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M10 10c0 1.2-1 2-1 2.6a1 1 0 002 0c0-.6-1-1.4-1-2.6zM14 13c0 1.2-1 2-1 2.6a1 1 0 002 0c0-.6-1-1.4-1-2.6z" fill="currentColor"/></svg>
           <h4>Déperlant pour vitres</h4>
-          <p>Un traitement hydrophobe appliqué sur le pare-brise et les vitres : la pluie perle et glisse toute seule, pour une meilleure visibilité par mauvais temps.</p>
-          <span class="opt-price">15€</span>
+          <p>Un traitement hydrophobe appliqué sur le pare-brise et les vitres : la pluie perle et glisse toute seule, pour une meilleure visibilité par mauvais temps. Efficace environ 4 mois.</p>
+          <span class="opt-price">10€</span>
         </div>
       </label>
 
@@ -1391,9 +1413,9 @@
           <fieldset>
             <legend>Formule</legend>
             <div class="radio-grid" id="pkgRadios">
-              <label class="radio-card"><input type="radio" name="Formule" value="Essentiel — 39€" data-price="39">Essentiel<br><span class="radio-price">39€</span></label>
-              <label class="radio-card"><input type="radio" name="Formule" value="Confort — 69€" data-price="69" checked>Confort<br><span class="radio-price">69€</span></label>
-              <label class="radio-card"><input type="radio" name="Formule" value="Prestige — 119€" data-price="119">Prestige<br><span class="radio-price">119€</span></label>
+              <label class="radio-card"><input type="radio" name="Formule" value="Extérieur — 40€" data-price="40">Extérieur<br><span class="radio-price">40€</span></label>
+              <label class="radio-card"><input type="radio" name="Formule" value="Intérieur — 110€" data-price="110">Intérieur<br><span class="radio-price">110€</span></label>
+              <label class="radio-card"><input type="radio" name="Formule" value="Extérieur + Intérieur — 130€" data-price="130" checked>Ext. + Int.<br><span class="radio-price">130€</span></label>
             </div>
             <div class="pkg-detail" id="pkgDetail" aria-live="polite"></div>
           </fieldset>
@@ -1403,16 +1425,18 @@
           <fieldset>
             <legend id="optLegend">Options en supplément <span class="optional">— facultatif</span></legend>
             <div class="check-grid" id="optionChecks">
-              <label><input type="checkbox" name="Options à la carte" value="Vitres" data-price="10"> Vitres <span class="opt-tag">10€</span></label>
-              <label><input type="checkbox" name="Options à la carte" value="Jantes détaillées" data-price="15"> Jantes détaillées <span class="opt-tag">15€</span></label>
-              <label><input type="checkbox" name="Options à la carte" value="Aspiration sièges/tapis" data-price="15"> Aspiration sièges/tapis <span class="opt-tag">15€</span></label>
-              <label><input type="checkbox" name="Options à la carte" value="Shampoing sièges" data-price="35"> Shampoing sièges <span class="opt-tag">35€</span></label>
-              <label><input type="checkbox" name="Options à la carte" value="Cuir" data-price="30"> Cuir <span class="opt-tag">30€</span></label>
-              <label><input type="checkbox" name="Options à la carte" value="Compartiment moteur" data-price="25"> Compartiment moteur <span class="opt-tag">25€</span></label>
-              <label><input type="checkbox" name="Options à la carte" value="Anti-odeur" data-price="20"> Anti-odeur <span class="opt-tag">20€</span></label>
-              <label><input type="checkbox" name="Options à la carte" value="Cire de protection" data-price="25"> Cire de protection <span class="opt-tag">25€</span></label>
-              <label><input type="checkbox" name="Options à la carte" value="Déperlant vitres" data-price="15"> Déperlant vitres <span class="opt-tag">15€</span></label>
+              <label><input type="checkbox" name="Options à la carte" value="Jante Hard" data-price="5"> Jante Hard <span class="opt-tag">5€</span></label>
+              <label><input type="checkbox" name="Options à la carte" value="Déperlant vitres" data-price="10"> Déperlant vitres <span class="opt-tag">10€</span></label>
+              <label><input type="checkbox" name="Options à la carte" value="Vitre intérieure" data-price="5"> Vitre intérieure <span class="opt-tag">5€</span></label>
+              <label><input type="checkbox" name="Options à la carte" value="Vitres intérieures &amp; extérieures" data-price="10"> Vitres intérieures &amp; extérieures <span class="opt-tag">10€</span></label>
+              <label><input type="checkbox" name="Options à la carte" value="Encadrements de portes" data-price="15"> Encadrements de portes <span class="opt-tag">15€</span></label>
+              <label><input type="checkbox" name="Options à la carte" value="Nettoyage sièges" data-price="30"> Nettoyage sièges <span class="opt-tag">30€</span></label>
+              <label><input type="checkbox" name="Options à la carte" value="Nourrissant cuir" data-price="10"> Nourrissant cuir <span class="opt-tag">10€</span></label>
+              <label><input type="checkbox" name="Options à la carte" value="Sent bon" data-price="2"> Sent bon <span class="opt-tag">2€</span></label>
+              <label><input type="checkbox" name="Options à la carte" value="Brillant pneus" data-price="5"> Brillant pneus <span class="opt-tag">5€</span></label>
+              <label><input type="checkbox" name="Options à la carte" value="Brillant plastiques extérieurs" data-price="5"> Brillant plastiques extérieurs <span class="opt-tag">5€</span></label>
             </div>
+            <p class="opt-rules" id="optRules"></p>
             <div class="dep-preview" id="depPreview" hidden>
               <video muted loop playsinline preload="none" poster="img/deperlant-apercu.webp"></video>
               <div><strong>Déperlant pour vitres</strong><br>La pluie perle et glisse toute seule sur le pare-brise.</div>
@@ -1422,9 +1446,9 @@
 
         <div class="total-box">
           <span>Total estimé</span>
-          <strong id="totalPrice">69€</strong>
+          <strong id="totalPrice">130€</strong>
         </div>
-        <input type="hidden" name="Total estimé" id="totalField" value="69€">
+        <input type="hidden" name="Total estimé" id="totalField" value="130€">
 
         <div class="field">
           <label for="message">Message (facultatif)</label>
@@ -1837,7 +1861,9 @@
     // « Tout le contenu de la formule X » est remplacé par le détail de la formule précédente
     let list = [];
     pkgCards[index].items.forEach(item => {
-      if (/^Tout le contenu de la formule/i.test(item) && index > 0) list = list.concat(itemsFor(index - 1));
+      const m = item.match(/^Toute la formule (.+)$/i);
+      const j = m ? pkgCards.findIndex(c => c.name.toLowerCase() === m[1].trim().toLowerCase()) : -1;
+      if (j >= 0 && j !== index) list = list.concat(itemsFor(j));
       else list.push(item);
     });
     return list;
@@ -1856,6 +1882,52 @@
   bookingForm.addEventListener('reset', () => setTimeout(updatePkgDetail, 0));
   document.querySelectorAll('.choose-pkg').forEach(btn => btn.addEventListener('click', updatePkgDetail));
   updatePkgDetail();
+
+  // ===== Règles des options selon la formule =====
+  const OPTIONS_PAR_FORMULE = {
+    'Extérieur — 40€': ['Jante Hard', 'Déperlant vitres', 'Vitre intérieure'],
+    'Intérieur — 110€': ['Encadrements de portes', 'Nettoyage sièges', 'Nourrissant cuir'],
+    'Extérieur + Intérieur — 130€': ['Déperlant vitres', 'Nettoyage sièges', 'Nourrissant cuir']
+  };
+  const SEULEMENT_AVEC_FORMULE = { 'Vitre intérieure': 'Extérieur — 40€' };   // jamais en « à la carte »
+  const DEPEND_DE = { 'Nourrissant cuir': 'Nettoyage sièges' };
+  function appliquerRegles(groupe, mode, formule){
+    const cbs = Array.from(document.querySelectorAll(groupe + ' input[type=checkbox]'));
+    const coche = v => cbs.some(c => c.value === v && c.checked && !c.disabled);
+    let change = true, n = 0;
+    while (change && n++ < 3) {   // 2 passes : une option qui se décoche peut en bloquer une autre
+      change = false;
+      cbs.forEach(cb => {
+        const v = cb.value; let ok = true, pourquoi = '';
+        if (mode === 'formule') {
+          const liste = OPTIONS_PAR_FORMULE[formule] || [];
+          if (!liste.includes(v)) { ok = false; pourquoi = 'Non disponible avec cette formule'; }
+        } else if (SEULEMENT_AVEC_FORMULE[v]) { ok = false; pourquoi = 'Uniquement avec la formule ' + SEULEMENT_AVEC_FORMULE[v].split(' — ')[0]; }
+        if (ok && DEPEND_DE[v] && !coche(DEPEND_DE[v])) { ok = false; pourquoi = 'Cochez d\'abord « ' + DEPEND_DE[v] + ' »'; }
+        if (!ok && cb.checked) { cb.checked = false; change = true; }
+        cb.disabled = !ok;
+        const lab = cb.closest('label'); lab.classList.toggle('is-off', !ok); lab.title = pourquoi;
+      });
+    }
+  }
+  function majOptions(){
+    const f = document.querySelector('#pkgRadios input:checked');
+    appliquerRegles('#optionChecks', currentMode, f ? f.value : '');
+    appliquerRegles('#pageOptionChecks', 'carte', '');
+    const r = document.getElementById('optRules');
+    if (r) r.textContent = currentMode === 'formule'
+      ? 'Les options grisées ne sont pas disponibles avec la formule choisie.'
+      : '« Vitre intérieure » est réservée à la formule Extérieur ; « Nourrissant cuir » demande « Nettoyage sièges ».';
+    updateTotal(); if (typeof updatePageTotal === 'function') updatePageTotal();
+  }
+  const setModeSansRegles = setMode;
+  setMode = function(m){ setModeSansRegles(m); majOptions(); };
+  document.getElementById('pkgRadios').addEventListener('change', majOptions);
+  document.getElementById('optionChecks').addEventListener('change', majOptions);
+  document.getElementById('pageOptionChecks').addEventListener('change', majOptions);
+  document.getElementById('bookingForm').addEventListener('reset', () => setTimeout(majOptions, 0));
+  document.getElementById('continueToBooking').addEventListener('click', () => setTimeout(majOptions, 0));
+  majOptions();
 
   // ===== Animations =====
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
