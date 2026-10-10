@@ -1791,7 +1791,7 @@
     // "no-cors" + text/plain : accepté par Google Apps Script sans configuration supplémentaire
     // réponse lue pour détecter un créneau déjà pris ; si l'agenda ne répond pas, on n'empêche pas la demande
     const ctrl = typeof AbortController !== 'undefined' ? new AbortController() : null;
-    const timer = ctrl ? setTimeout(() => ctrl.abort(), 10000) : null;
+    const timer = ctrl ? setTimeout(() => ctrl.abort(), 25000) : null;
     return fetch(GOOGLE_AGENDA_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload), signal: ctrl ? ctrl.signal : undefined })
       .then(r => r.json()).catch(() => ({})).finally(() => clearTimeout(timer));
   }
@@ -2052,7 +2052,7 @@
     else dispo[cle] = { etat: 'chargement', heure: Date.now(), occupe: {}, enCours: true };
     const de = cle + '-01', a = cle + '-' + pad2(new Date(y, m + 1, 0).getDate());
     const ctrl = typeof AbortController !== 'undefined' ? new AbortController() : null;
-    const timer = ctrl ? setTimeout(() => ctrl.abort(), 12000) : null;
+    const timer = ctrl ? setTimeout(() => ctrl.abort(), 25000) : null;
     fetch(GOOGLE_AGENDA_URL + '?action=dispo&cle=' + encodeURIComponent(GOOGLE_AGENDA_CLE) + '&from=' + de + '&to=' + a, { signal: ctrl ? ctrl.signal : undefined })
       .then(r => r.json())
       .then(out => {
