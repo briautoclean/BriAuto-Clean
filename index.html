@@ -443,9 +443,6 @@
   .base-detail:empty{display:none;}
   .base-detail b{color:var(--ink);}
   #pageOptionChecks .opt.is-na{order:1;}
-  #pageOptionChecks .opt-formule{order:-1;}
-  .opt-formule:not(:has(input:checked)){border-color:#BFD3F5;}
-  .opt-kind{align-self:flex-start;font-size:11.5px;font-weight:700;color:var(--blue-dark);background:rgba(46,107,230,.1);padding:3px 8px;border-radius:999px;}
   .opt.is-off[data-why]::after{content:attr(data-why);font-size:11.5px;font-weight:600;color:var(--slate);}
   @media (max-width:860px){ .base-grid{grid-template-columns:1fr 1fr;} }
   @media (max-width:520px){ .base-grid{grid-template-columns:1fr;} .base-card{padding:14px 14px 12px;} }
@@ -1093,36 +1090,23 @@
     <div class="section-head reveal">
       <span class="tag">À la carte</span>
       <h2>Composez votre nettoyage</h2>
-      <p>Cochez une formule pour partir d'une base complète, puis ajoutez vos options. Ou composez 100 % à la carte, prestation par prestation.</p>
+      <p>Vous ne savez pas par où commencer ? Partez d'une formule, on vous guide. Vous savez exactement ce qu'il vous faut ? Composez 100 % à la carte.</p>
+    </div>
+    <p class="carte-step reveal"><span>1</span> Choisissez votre point de départ</p>
+    <div class="base-grid reveal" id="pageBase">
+      <label class="base-card"><input type="radio" name="pageBase" value="" data-price="0" checked>
+        <strong>100 % à la carte</strong><em>0€</em><small>Vous savez exactement ce qu'il vous faut.</small></label>
+      <label class="base-card"><input type="radio" name="pageBase" value="Extérieur — 40€" data-price="40">
+        <strong>Formule Extérieur</strong><em>40€</em><small>La carrosserie est sale, l'intérieur est propre.</small></label>
+      <label class="base-card"><input type="radio" name="pageBase" value="Intérieur — 110€" data-price="110">
+        <strong>Formule Intérieur</strong><em>110€</em><small>L'habitacle a besoin d'un vrai coup de propre.</small></label>
+      <label class="base-card base-reco"><input type="radio" name="pageBase" value="Extérieur + Intérieur — 130€" data-price="130">
+        <span class="base-badge">Vous hésitez ? Prenez celle-ci</span>
+        <strong>Extérieur + Intérieur</strong><em>130€</em><small>Le nettoyage complet, dedans comme dehors.</small></label>
     </div>
     <p class="base-detail reveal" id="pageBaseDetail"></p>
+    <p class="carte-step reveal"><span>2</span> <b id="pageStep2">Choisissez vos prestations</b></p>
     <div class="options-grid" id="pageOptionChecks">
-
-      <label class="opt opt-formule reveal" style="--d:0.04s">
-        <input type="checkbox" class="base-cb" value="Extérieur — 40€" data-price="40">
-        <svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M3 15l2-5a2 2 0 012-1.4h10A2 2 0 0119 10l2 5v3H3z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="7.5" cy="18" r="1.6" stroke="currentColor" stroke-width="1.6"/><circle cx="16.5" cy="18" r="1.6" stroke="currentColor" stroke-width="1.6"/></svg>
-        <h4>Formule Extérieur</h4>
-        <p>La carrosserie est sale, l'intérieur est propre : lavage main complet, jantes et vitres extérieures.</p><span class="opt-kind">Formule complète</span>
-        <span class="opt-price">40€</span>
-      </label>
-
-      <label class="opt opt-formule reveal" style="--d:0.04s">
-        <input type="checkbox" class="base-cb" value="Intérieur — 110€" data-price="110">
-        <svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M8 4h5a2 2 0 012 2v7H8z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M6 13h12v3H6zM8 16v4M16 16v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <h4>Formule Intérieur</h4>
-        <p>L'habitacle a besoin d'un vrai coup de propre : désencombrement, plastiques et aspiration complète.</p><span class="opt-kind">Formule complète</span>
-        <span class="opt-price">110€</span>
-      </label>
-
-      <label class="opt opt-formule reveal" style="--d:0.04s">
-        <input type="checkbox" class="base-cb" value="Extérieur + Intérieur — 130€" data-price="130">
-        <span class="base-badge">Vous hésitez ? Prenez celle-ci</span>
-        <svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M12 3l2.4 5 5.6.8-4 3.9.9 5.5L12 15.6 7.1 18.2l.9-5.5-4-3.9 5.6-.8z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
-        <h4>Formule Extérieur + Intérieur</h4>
-        <p>Le nettoyage complet, dedans comme dehors, encadrements de portes et vitres inclus.</p><span class="opt-kind">Formule complète</span>
-        <span class="opt-price">130€</span>
-      </label>
-
 
       <label class="opt reveal" style="--d:0.04s">
         <input type="checkbox" value="Jante Hard" data-price="5">
@@ -1645,11 +1629,11 @@
   updateTotal();
 
   // Total en direct dans la section "À la carte" de la page
-  const pageChecks = document.querySelectorAll('#pageOptionChecks input[type=checkbox]:not(.base-cb)');
+  const pageChecks = document.querySelectorAll('#pageOptionChecks input[type=checkbox]');
   const pageTotalPrice = document.getElementById('pageTotalPrice');
 
   function updatePageTotal(){
-    const base = document.querySelector('#pageOptionChecks .base-cb:checked');
+    const base = document.querySelector('#pageBase input:checked');
     let total = base ? parseInt(base.dataset.price, 10) : 0;
     pageChecks.forEach(cb => { if(cb.checked && !cb.disabled) total += parseInt(cb.dataset.price, 10); });
     pageTotalPrice.textContent = total + '€';
@@ -1661,7 +1645,7 @@
 
   // Transfert des prestations sélectionnées vers le formulaire de réservation
   document.getElementById('continueToBooking').addEventListener('click', () => {
-    const base = document.querySelector('#pageOptionChecks .base-cb:checked');
+    const base = document.querySelector('#pageBase input:checked');
     const selectedValues = Array.from(pageChecks).filter(cb => cb.checked && !cb.disabled).map(cb => cb.value);
     const formCbs = Array.from(document.querySelectorAll('#optionChecks input[type=checkbox]'));
     formCbs.forEach(cb => { cb.checked = false; });
@@ -1979,7 +1963,7 @@
   const DEPEND_DE = { 'Nourrissant cuir': 'Nettoyage sièges' };
   const INCLUS = { 'Extérieur + Intérieur — 130€': ['Encadrements de portes', 'Vitres intérieures & extérieures'] };
   function appliquerRegles(groupe, mode, formule){
-    const cbs = Array.from(document.querySelectorAll(groupe + ' input[type=checkbox]:not(.base-cb)'));
+    const cbs = Array.from(document.querySelectorAll(groupe + ' input[type=checkbox]'));
     const coche = v => cbs.some(c => c.value === v && c.checked && !c.disabled);
     let change = true, n = 0;
     while (change && n++ < 3) {   // 2 passes : une option qui se décoche peut en bloquer une autre
@@ -2003,7 +1987,7 @@
   function majOptions(){
     const f = document.querySelector('#pkgRadios input:checked');
     appliquerRegles('#optionChecks', currentMode, f ? f.value : '');
-    const base = document.querySelector('#pageOptionChecks .base-cb:checked');
+    const base = document.querySelector('#pageBase input:checked');
     appliquerRegles('#pageOptionChecks', base && base.value ? 'formule' : 'carte', base ? base.value : '');
     const r = document.getElementById('optRules');
     if (r) r.textContent = currentMode === 'formule'
@@ -2022,24 +2006,22 @@
 
   // « À la carte » : point de départ (aucune formule ou une des 3 formules)
   (function(){
-    const detail = document.getElementById('pageBaseDetail');
+    const detail = document.getElementById('pageBaseDetail'), step2 = document.getElementById('pageStep2');
     function majBase(){
-      const base = document.querySelector('#pageOptionChecks .base-cb:checked');
+      const base = document.querySelector('#pageBase input:checked');
       const i = base && base.value ? pkgCards.findIndex(c => c.value === base.value) : -1;
       if (i < 0) {
         detail.innerHTML = '';
+        step2.textContent = 'Choisissez vos prestations';
       } else {
         const esc = t => t.replace(/&/g,'&amp;').replace(/</g,'&lt;');
         const items = itemsFor(i).filter(t => !/si l'option est choisie/i.test(t));
-        detail.innerHTML = '<b>Déjà compris dans la ' + esc(base.closest('label').querySelector('h4').textContent) + ' :</b> ' + items.map(esc).join(' · ') + '<br><b>Ajoutez des options si vous le souhaitez.</b>';
+        detail.innerHTML = '<b>Déjà compris dans la formule ' + esc(base.closest('label').querySelector('strong').textContent.replace(/^Formule /,'')) + ' :</b> ' + items.map(esc).join(' · ');
+        step2.textContent = 'Ajoutez des options si vous le souhaitez (facultatif)';
       }
       majOptions();
     }
-    const bases = Array.from(document.querySelectorAll('#pageOptionChecks .base-cb'));
-    bases.forEach(b => b.addEventListener('change', () => {   // une seule formule à la fois
-      if (b.checked) bases.forEach(o => { if (o !== b) o.checked = false; });
-      majBase();
-    }));
+    document.getElementById('pageBase').addEventListener('change', majBase);
     majBase();
   })();
 
