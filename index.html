@@ -427,6 +427,8 @@
   .pkg-opts strong{color:var(--ink);}
   /* options cochables directement dans les cartes formules */
   .check-grid label[hidden],.opt[hidden]{display:none!important;}
+  #continueToBooking:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none;filter:grayscale(.4);}
+  .carte-vide{font-size:13px;color:var(--slate);margin:10px 0 0;}
   .carte-step{display:flex;align-items:center;gap:10px;font-weight:600;color:var(--ink);font-size:16px;margin:0 0 14px;}
   .carte-step span{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--blue);color:#fff;font-size:14px;flex:none;}
   .carte-step b{font-weight:600;}
@@ -1208,6 +1210,7 @@
     </div>
     <div style="text-align:center;margin-top:20px;">
       <button type="button" class="btn btn-primary" id="continueToBooking">Continuer vers la réservation</button>
+      <p class="carte-vide" id="pageVide" hidden>Choisissez une formule ou au moins une prestation pour continuer.</p>
     </div>
   </div>
 </section>
@@ -1639,6 +1642,10 @@
     pageTotalPrice.textContent = total + '€';
     const lab = document.getElementById('pageTotalLabel');
     if (lab) lab.textContent = base && base.value ? 'Total : formule ' + base.value.split(' — ')[0] + ' + options' : 'Total sélectionné';
+    // 100 % à la carte sans rien de coché (0€) : pas de réservation possible
+    const vide = total <= 0, btn = document.getElementById('continueToBooking'), msg = document.getElementById('pageVide');
+    if (btn) { btn.disabled = vide; btn.classList.toggle('is-disabled', vide); }
+    if (msg) msg.hidden = !vide;
   }
   pageChecks.forEach(cb => cb.addEventListener('change', updatePageTotal));
   updatePageTotal();
@@ -2330,6 +2337,13 @@
   document.getElementById('dtNext').addEventListener('click', () => { if (++viewMonth > 11) { viewMonth = 0; viewYear++; } renderCalendar(); });
   bookingForm.addEventListener('reset', () => { selDate = null; selSlot = null; viewYear = today.getFullYear(); viewMonth = today.getMonth();
     setTimeout(() => { renderCalendar(); renderSlots(); syncFields(); }, 0); });
+  // « Uniquement à la carte » sans aucune prestation (0€) : envoi bloqué
+  bookingForm.addEventListener('submit', e => {
+    if (currentMode !== 'carte' || document.querySelector('#optionChecks input:checked')) return;
+    e.preventDefault(); e.stopImmediatePropagation();
+    showStatus('err', "Choisissez au moins une prestation (ou une formule complète) avant d'envoyer votre demande.");
+    document.querySelector('.options-block').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, true);
   // date + heure obligatoires : on bloque l'envoi tant que les deux ne sont pas choisies
   bookingForm.addEventListener('submit', e => {
     if (dateField.value && heureField.value) return;
