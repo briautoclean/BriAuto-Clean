@@ -426,7 +426,26 @@
   .pkg-opts{font-size:13px;color:var(--slate);margin:0 0 18px;line-height:1.5;}
   .pkg-opts strong{color:var(--ink);}
   /* options cochables directement dans les cartes formules */
-  .check-grid label[hidden]{display:none!important;}
+  .check-grid label[hidden],.opt[hidden]{display:none!important;}
+  .carte-step{display:flex;align-items:center;gap:10px;font-weight:600;color:var(--ink);font-size:16px;margin:0 0 14px;}
+  .carte-step span{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--blue);color:#fff;font-size:14px;flex:none;}
+  .carte-step b{font-weight:600;}
+  .base-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:12px;}
+  .base-card{position:relative;display:flex;flex-direction:column;gap:4px;background:#fff;border:1.5px solid #D6E2F5;border-radius:14px;padding:18px 16px 16px;cursor:pointer;transition:border-color .2s,box-shadow .2s,background .2s;}
+  .base-card:hover{border-color:rgba(46,107,230,.5);}
+  .base-card input{position:absolute;top:16px;right:16px;width:18px;height:18px;accent-color:var(--blue);margin:0;}
+  .base-card strong{font-size:15.5px;color:var(--ink);padding-right:24px;}
+  .base-card em{font-style:normal;font-family:'Oswald',sans-serif;font-size:20px;color:var(--blue-dark);}
+  .base-card small{font-size:13px;color:var(--slate);line-height:1.4;}
+  .base-card:has(input:checked){border-color:var(--blue);background:#F4F8FF;box-shadow:0 14px 28px -20px rgba(46,107,230,.7);}
+  .base-badge{position:absolute;top:-11px;left:14px;font-size:11px;font-weight:700;color:#fff;background:linear-gradient(90deg,#FF8A2B,#F06414);padding:3px 9px;border-radius:999px;white-space:nowrap;}
+  .base-detail{font-size:13.5px;color:var(--slate);background:#fff;border-radius:12px;padding:12px 14px;margin:0 0 26px;border:1px dashed #D6E2F5;}
+  .base-detail:empty{display:none;}
+  .base-detail b{color:var(--ink);}
+  #pageOptionChecks .opt.is-na{order:1;}
+  .opt.is-off[data-why]::after{content:attr(data-why);font-size:11.5px;font-weight:600;color:var(--slate);}
+  @media (max-width:860px){ .base-grid{grid-template-columns:1fr 1fr;} }
+  @media (max-width:520px){ .base-grid{grid-template-columns:1fr;} .base-card{padding:14px 14px 12px;} }
   .pkg-addons{margin:0 0 18px;}
   .pkg-addons-title{font-size:13px;font-weight:600;color:var(--ink);margin:0 0 8px;}
   .pkg-addons label{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--ink);padding:8px 10px;border:1px solid var(--line);border-radius:10px;margin-bottom:6px;cursor:pointer;transition:border-color .2s,background .2s;}
@@ -1070,9 +1089,23 @@
   <div class="wrap">
     <div class="section-head reveal">
       <span class="tag">À la carte</span>
-      <h2>Uniquement ce dont vous avez besoin</h2>
-      <p>Seules ou en complément d'une formule : sélectionnez une ou plusieurs options.</p>
+      <h2>Composez votre nettoyage</h2>
+      <p>Vous ne savez pas par où commencer ? Partez d'une formule, on vous guide. Vous savez exactement ce qu'il vous faut ? Composez 100 % à la carte.</p>
     </div>
+    <p class="carte-step reveal"><span>1</span> Choisissez votre point de départ</p>
+    <div class="base-grid reveal" id="pageBase">
+      <label class="base-card"><input type="radio" name="pageBase" value="" data-price="0" checked>
+        <strong>100 % à la carte</strong><em>0€</em><small>Vous savez exactement ce qu'il vous faut.</small></label>
+      <label class="base-card"><input type="radio" name="pageBase" value="Extérieur — 40€" data-price="40">
+        <strong>Formule Extérieur</strong><em>40€</em><small>La carrosserie est sale, l'intérieur est propre.</small></label>
+      <label class="base-card"><input type="radio" name="pageBase" value="Intérieur — 110€" data-price="110">
+        <strong>Formule Intérieur</strong><em>110€</em><small>L'habitacle a besoin d'un vrai coup de propre.</small></label>
+      <label class="base-card base-reco"><input type="radio" name="pageBase" value="Extérieur + Intérieur — 130€" data-price="130">
+        <span class="base-badge">Vous hésitez ? Prenez celle-ci</span>
+        <strong>Extérieur + Intérieur</strong><em>130€</em><small>Le nettoyage complet, dedans comme dehors.</small></label>
+    </div>
+    <p class="base-detail reveal" id="pageBaseDetail"></p>
+    <p class="carte-step reveal"><span>2</span> <b id="pageStep2">Choisissez vos prestations</b></p>
     <div class="options-grid" id="pageOptionChecks">
 
       <label class="opt reveal" style="--d:0.04s">
@@ -1080,6 +1113,22 @@
         <svg class="icon" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="7" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="2.2" stroke="currentColor" stroke-width="1.6"/><path d="M12 5v2M12 17v2M5 12h2M17 12h2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
         <h4>Jante Hard</h4>
         <p>Nettoyage à la brosse des 4 jantes.</p>
+        <span class="opt-price">5€</span>
+      </label>
+
+      <label class="opt reveal" style="--d:0.12s" hidden>
+        <input type="checkbox" value="Vitre intérieure" data-price="5">
+        <svg class="icon" viewBox="0 0 24 24" fill="none"><rect x="4" y="5" width="16" height="12" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M4 10h16" stroke="currentColor" stroke-width="1.6"/></svg>
+        <h4>Vitre intérieure</h4>
+        <p>Nettoyage des vitres intérieures.</p><span class="opt-cond">Avec la formule Extérieur</span>
+        <span class="opt-price">5€</span>
+      </label>
+
+      <label class="opt reveal" style="--d:0.12s" hidden>
+        <input type="checkbox" value="Vitre extérieure" data-price="5">
+        <svg class="icon" viewBox="0 0 24 24" fill="none"><rect x="4" y="5" width="16" height="12" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M4 10h16" stroke="currentColor" stroke-width="1.6"/></svg>
+        <h4>Vitre extérieure</h4>
+        <p>Nettoyage des vitres extérieures.</p><span class="opt-cond">Avec la formule Intérieur</span>
         <span class="opt-price">5€</span>
       </label>
 
@@ -1154,7 +1203,7 @@
     </div>
 
     <div class="total-box reveal" id="pageTotalBox" style="margin-top:20px;">
-      <span>Total sélectionné</span>
+      <span id="pageTotalLabel">Total sélectionné</span>
       <strong id="pageTotalPrice">0€</strong>
     </div>
     <div style="text-align:center;margin-top:20px;">
@@ -1584,19 +1633,30 @@
   const pageTotalPrice = document.getElementById('pageTotalPrice');
 
   function updatePageTotal(){
-    let total = 0;
-    pageChecks.forEach(cb => { if(cb.checked) total += parseInt(cb.dataset.price, 10); });
+    const base = document.querySelector('#pageBase input:checked');
+    let total = base ? parseInt(base.dataset.price, 10) : 0;
+    pageChecks.forEach(cb => { if(cb.checked && !cb.disabled) total += parseInt(cb.dataset.price, 10); });
     pageTotalPrice.textContent = total + '€';
+    const lab = document.getElementById('pageTotalLabel');
+    if (lab) lab.textContent = base && base.value ? 'Total : formule ' + base.value.split(' — ')[0] + ' + options' : 'Total sélectionné';
   }
   pageChecks.forEach(cb => cb.addEventListener('change', updatePageTotal));
   updatePageTotal();
 
   // Transfert des prestations sélectionnées vers le formulaire de réservation
   document.getElementById('continueToBooking').addEventListener('click', () => {
-    setMode('carte');
-    const selectedValues = Array.from(pageChecks).filter(cb => cb.checked).map(cb => cb.value);
-    document.querySelectorAll('#optionChecks input[type=checkbox]').forEach(cb => {
-      cb.checked = selectedValues.includes(cb.value);
+    const base = document.querySelector('#pageBase input:checked');
+    const selectedValues = Array.from(pageChecks).filter(cb => cb.checked && !cb.disabled).map(cb => cb.value);
+    const formCbs = Array.from(document.querySelectorAll('#optionChecks input[type=checkbox]'));
+    formCbs.forEach(cb => { cb.checked = false; });
+    if (base && base.value) {
+      setMode('formule');
+      document.querySelectorAll('#pkgRadios input[type=radio]').forEach(r => { r.checked = (r.value === base.value); });
+      document.getElementById('pkgRadios').dispatchEvent(new Event('change', {bubbles:true}));
+    } else setMode('carte');
+    selectedValues.forEach(v => {   // dans l'ordre : « Nettoyage sièges » avant « Nourrissant cuir »
+      const cb = formCbs.find(c => c.value === v);
+      if (cb) { cb.disabled = false; cb.checked = true; if (typeof majOptions === 'function') majOptions(); }
     });
     updateTotal();
     document.getElementById('rendez-vous').scrollIntoView({behavior:'smooth'});
@@ -1901,6 +1961,7 @@
   };
   const SEULEMENT_AVEC_FORMULE = { 'Vitre intérieure': 'Extérieur — 40€', 'Vitre extérieure': 'Intérieur — 110€' };   // jamais en « à la carte »
   const DEPEND_DE = { 'Nourrissant cuir': 'Nettoyage sièges' };
+  const INCLUS = { 'Extérieur + Intérieur — 130€': ['Encadrements de portes', 'Vitres intérieures & extérieures'] };
   function appliquerRegles(groupe, mode, formule){
     const cbs = Array.from(document.querySelectorAll(groupe + ' input[type=checkbox]'));
     const coche = v => cbs.some(c => c.value === v && c.checked && !c.disabled);
@@ -1911,12 +1972,14 @@
         const v = cb.value; let ok = true, pourquoi = '';
         if (mode === 'formule') {
           const liste = OPTIONS_PAR_FORMULE[formule] || [];
-          if (!liste.includes(v)) { ok = false; pourquoi = 'Non disponible avec cette formule'; }
+          if (!liste.includes(v)) { ok = false; pourquoi = (INCLUS[formule] || []).includes(v) ? 'Déjà inclus dans la formule' : 'Non disponible avec cette formule'; }
         } else if (SEULEMENT_AVEC_FORMULE[v]) { ok = false; pourquoi = 'Uniquement avec la formule ' + SEULEMENT_AVEC_FORMULE[v].split(' — ')[0]; }
         if (ok && DEPEND_DE[v] && !coche(DEPEND_DE[v])) { ok = false; pourquoi = 'Cochez d\'abord « ' + DEPEND_DE[v] + ' »'; }
         if (!ok && cb.checked) { cb.checked = false; change = true; }
         cb.disabled = !ok;
         const lab = cb.closest('label'); lab.classList.toggle('is-off', !ok); lab.title = pourquoi;
+        if (ok) lab.removeAttribute('data-why'); else lab.dataset.why = pourquoi;
+        lab.classList.toggle('is-na', !ok && !DEPEND_DE[v]);
         lab.hidden = !!SEULEMENT_AVEC_FORMULE[v] && !(mode === 'formule' && formule === SEULEMENT_AVEC_FORMULE[v]);   // visible seulement avec sa formule
       });
     }
@@ -1924,7 +1987,8 @@
   function majOptions(){
     const f = document.querySelector('#pkgRadios input:checked');
     appliquerRegles('#optionChecks', currentMode, f ? f.value : '');
-    appliquerRegles('#pageOptionChecks', 'carte', '');
+    const base = document.querySelector('#pageBase input:checked');
+    appliquerRegles('#pageOptionChecks', base && base.value ? 'formule' : 'carte', base ? base.value : '');
     const r = document.getElementById('optRules');
     if (r) r.textContent = currentMode === 'formule'
       ? 'Les options grisées ne sont pas disponibles avec la formule choisie.'
@@ -1939,6 +2003,27 @@
   document.getElementById('bookingForm').addEventListener('reset', () => setTimeout(majOptions, 0));
   document.getElementById('continueToBooking').addEventListener('click', () => setTimeout(majOptions, 0));
   majOptions();
+
+  // « À la carte » : point de départ (aucune formule ou une des 3 formules)
+  (function(){
+    const detail = document.getElementById('pageBaseDetail'), step2 = document.getElementById('pageStep2');
+    function majBase(){
+      const base = document.querySelector('#pageBase input:checked');
+      const i = base && base.value ? pkgCards.findIndex(c => c.value === base.value) : -1;
+      if (i < 0) {
+        detail.innerHTML = '';
+        step2.textContent = 'Choisissez vos prestations';
+      } else {
+        const esc = t => t.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+        const items = itemsFor(i).filter(t => !/si l'option est choisie/i.test(t));
+        detail.innerHTML = '<b>Déjà compris dans la formule ' + esc(base.closest('label').querySelector('strong').textContent.replace(/^Formule /,'')) + ' :</b> ' + items.map(esc).join(' · ');
+        step2.textContent = 'Ajoutez des options si vous le souhaitez (facultatif)';
+      }
+      majOptions();
+    }
+    document.getElementById('pageBase').addEventListener('change', majBase);
+    majBase();
+  })();
 
   // ===== Options cochables directement dans les cartes « Formules » =====
   (function(){
