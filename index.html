@@ -2544,7 +2544,7 @@
     const pageBases = () => Array.from(document.querySelectorAll('#pageBase input[type=radio]'));
     const pageOpts = () => Array.from(document.querySelectorAll('#pageOptionChecks input[type=checkbox]'));
     const formOpts = () => Array.from(document.querySelectorAll('#optionChecks input[type=checkbox]'));
-    let enCours = false;
+    let enCours = false, derniere = null;   // dernière formule vue (« » = 100 % à la carte)
     function copierCoches(source, cible){
       const voulues = source.filter(c => c.checked && !c.disabled).map(c => c.value);
       cible.forEach(c => { c.checked = voulues.includes(c.value); if (c.checked) c.disabled = false; });
@@ -2560,6 +2560,8 @@
       try {
         const base = pageBases().find(r => r.checked);
         const formule = base ? base.value : '';
+        if (derniere !== null && formule !== derniere) pageOpts().forEach(c => { c.checked = false; });   // nouvelle formule : options remises à zéro
+        derniere = formule;
         if (formule) {
           if (currentMode !== 'formule') setMode('formule');
           document.querySelectorAll('#pkgRadios input[type=radio]').forEach(r => { r.checked = (r.value === formule); });
@@ -2569,11 +2571,13 @@
         apres();
       } finally { enCours = false; }
     }
-    function formulaireVersPage(){
+    function formulaireVersPage(garderOptions){
       if (enCours) return; enCours = true;
       try {
         const r = document.querySelector('#pkgRadios input:checked');
         const formule = currentMode === 'formule' && r ? r.value : '';
+        if (derniere !== null && formule !== derniere && garderOptions !== true) formOpts().forEach(c => { c.checked = false; });   // nouvelle formule : options remises à zéro
+        derniere = formule;
         pageBases().forEach(b => { b.checked = (b.value === formule); });
         const detail = document.getElementById('pageBase');
         if (detail) detail.dispatchEvent(new Event('change'));   // texte « Déjà compris » + règles
@@ -2585,11 +2589,11 @@
     document.getElementById('pageBase').addEventListener('change', e => { if (e.isTrusted) pageVersFormulaire(); });
     document.getElementById('pageOptionChecks').addEventListener('change', pageVersFormulaire);
     // côté « Réservez »
-    document.getElementById('pkgRadios').addEventListener('change', formulaireVersPage);
+    document.getElementById('pkgRadios').addEventListener('change', () => formulaireVersPage());
     document.getElementById('optionChecks').addEventListener('change', e => { if (e.isTrusted) formulaireVersPage(); });
-    document.querySelectorAll('.mode-tab').forEach(t => t.addEventListener('click', formulaireVersPage));
-    document.querySelectorAll('.choose-pkg').forEach(b => b.addEventListener('click', () => setTimeout(formulaireVersPage, 0)));
-    document.getElementById('bookingForm').addEventListener('reset', () => setTimeout(formulaireVersPage, 30));
+    document.querySelectorAll('.mode-tab').forEach(t => t.addEventListener('click', () => formulaireVersPage()));
+    document.querySelectorAll('.choose-pkg').forEach(b => b.addEventListener('click', () => setTimeout(() => formulaireVersPage(true), 0)));   // garde les options cochées dans la carte
+    document.getElementById('bookingForm').addEventListener('reset', () => setTimeout(() => formulaireVersPage(), 30));
     formulaireVersPage();   // au chargement : les deux parties partent du même choix
   })();
 </script>
