@@ -2037,7 +2037,7 @@
   let selDate = null, selSlot = null;
 
   // ----- Disponibilités lues dans Google Agenda (seulement les heures occupées, aucun nom) -----
-  const DUREE_FORMULE = 300, DUREE_CARTE = 120;   // minutes bloquées : formule complète 5 h, à la carte 2 h
+  const DUREE_FORMULE = 300, DUREE_CARTE = 300, MARGE_AVANT_RDV = 30;   // toute réservation compte 5 h (intervention la plus longue) + 30 min de marge avant le rendez-vous suivant
   const dispo = {};   // 'AAAA-MM' -> { etat: 'chargement' | 'ok' | 'erreur', heure, occupe: { 'AAAA-MM-JJ': [[début, fin], …] } }
   const moisDe = d => d.getFullYear() + '-' + pad2(d.getMonth() + 1);
   const minutes = hhmm => { const [h, m] = hhmm.split(':').map(Number); return h * 60 + m; };
@@ -2088,10 +2088,9 @@
     const plages = c && c.occupe[isoOf(date)];
     if (!plages) return true;
     const [hh, mm] = slot.split('h').map(Number);
-    // un créneau est pris seulement si son heure de début tombe pendant un rendez-vous existant
-    // (la durée du nouveau rendez-vous n'entre pas en compte : n'importe quelle formule reste possible avant un rendez-vous)
-    const debut = hh * 60 + mm;
-    return !plages.some(([d0, f0]) => debut >= d0 && debut < f0);
+    // il faut 5 h libres + 30 min avant le rendez-vous suivant (ex. rendez-vous à 19h → plus de réservation après 13h30)
+    const debut = hh * 60 + mm, fin = debut + DUREE_FORMULE + MARGE_AVANT_RDV;
+    return !plages.some(([d0, f0]) => d0 < fin && f0 > debut);
   }
   function apresChargement(actualisation){
     // la sélection en cours devient impossible ? on la retire
