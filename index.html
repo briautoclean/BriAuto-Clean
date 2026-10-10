@@ -426,6 +426,7 @@
   .pkg-opts{font-size:13px;color:var(--slate);margin:0 0 18px;line-height:1.5;}
   .pkg-opts strong{color:var(--ink);}
   /* options cochables directement dans les cartes formules */
+  .check-grid label[hidden]{display:none!important;}
   .pkg-addons{margin:0 0 18px;}
   .pkg-addons-title{font-size:13px;font-weight:600;color:var(--ink);margin:0 0 8px;}
   .pkg-addons label{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--ink);padding:8px 10px;border:1px solid var(--line);border-radius:10px;margin-bottom:6px;cursor:pointer;transition:border-color .2s,background .2s;}
@@ -1076,14 +1077,6 @@
         <svg class="icon" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="7" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="2.2" stroke="currentColor" stroke-width="1.6"/><path d="M12 5v2M12 17v2M5 12h2M17 12h2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
         <h4>Jante Hard</h4>
         <p>Nettoyage à la brosse des 4 jantes.</p>
-        <span class="opt-price">5€</span>
-      </label>
-
-      <label class="opt reveal" style="--d:0.12s">
-        <input type="checkbox" value="Vitre intérieure" data-price="5">
-        <svg class="icon" viewBox="0 0 24 24" fill="none"><rect x="4" y="5" width="16" height="12" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M4 10h16" stroke="currentColor" stroke-width="1.6"/></svg>
-        <h4>Vitre intérieure</h4>
-        <p>Nettoyage des vitres intérieures.</p><span class="opt-cond">Avec la formule Extérieur uniquement</span>
         <span class="opt-price">5€</span>
       </label>
 
@@ -1920,6 +1913,7 @@
         if (!ok && cb.checked) { cb.checked = false; change = true; }
         cb.disabled = !ok;
         const lab = cb.closest('label'); lab.classList.toggle('is-off', !ok); lab.title = pourquoi;
+        lab.hidden = !!SEULEMENT_AVEC_FORMULE[v] && !(mode === 'formule' && formule === SEULEMENT_AVEC_FORMULE[v]);   // visible seulement avec sa formule
       });
     }
   }
@@ -1930,7 +1924,7 @@
     const r = document.getElementById('optRules');
     if (r) r.textContent = currentMode === 'formule'
       ? 'Les options grisées ne sont pas disponibles avec la formule choisie.'
-      : '« Vitre intérieure » est réservée à la formule Extérieur ; « Nourrissant cuir » demande « Nettoyage sièges ».';
+      : '« Nourrissant cuir » demande « Nettoyage sièges ».';
     updateTotal(); if (typeof updatePageTotal === 'function') updatePageTotal();
   }
   const setModeSansRegles = setMode;
