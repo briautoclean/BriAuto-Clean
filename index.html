@@ -425,6 +425,19 @@
   .pkg-note + .pkg-note{margin-top:0;}
   .pkg-opts{font-size:13px;color:var(--slate);margin:0 0 18px;line-height:1.5;}
   .pkg-opts strong{color:var(--ink);}
+  /* options cochables directement dans les cartes formules */
+  .pkg-addons{margin:0 0 18px;}
+  .pkg-addons-title{font-size:13px;font-weight:600;color:var(--ink);margin:0 0 8px;}
+  .pkg-addons label{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--ink);padding:8px 10px;border:1px solid var(--line);border-radius:10px;margin-bottom:6px;cursor:pointer;transition:border-color .2s,background .2s;}
+  .pkg-addons label:hover{border-color:var(--blue);}
+  .pkg-addons label:has(input:checked){border-color:var(--blue);background:rgba(46,107,230,0.06);}
+  .pkg-addons label.is-off{opacity:.5;cursor:not-allowed;}
+  .pkg-addons input{width:17px;height:17px;accent-color:var(--blue);flex:none;margin:0;cursor:inherit;}
+  .pkg-addons .pa-name{flex:1;}
+  .pkg-addons .pa-price{font-weight:600;color:var(--blue-dark);white-space:nowrap;}
+  .pkg-addons .pa-hint{display:block;font-size:11.5px;color:var(--slate);font-weight:400;}
+  .pkg-addons-total{display:flex;justify-content:space-between;align-items:baseline;font-size:14px;margin-top:10px;padding-top:10px;border-top:1px dashed var(--line);}
+  .pkg-addons-total strong{font-family:'Oswald',sans-serif;font-size:20px;color:var(--blue-dark);}
   .opt-cond{align-self:flex-start;font-size:11.5px;font-weight:600;color:#8A5A00;background:#FFF6E0;padding:3px 8px;border-radius:999px;}
   .opt.is-off{opacity:.5 !important;cursor:not-allowed;filter:grayscale(.6);}
   .opt.is-off:hover{transform:none;box-shadow:none;}
@@ -1928,6 +1941,50 @@
   document.getElementById('bookingForm').addEventListener('reset', () => setTimeout(majOptions, 0));
   document.getElementById('continueToBooking').addEventListener('click', () => setTimeout(majOptions, 0));
   majOptions();
+
+  // ===== Options cochables directement dans les cartes « Formules » =====
+  (function(){
+    const prix = {};
+    document.querySelectorAll('#optionChecks input').forEach(cb => { prix[cb.value] = parseInt(cb.dataset.price, 10); });
+    document.querySelectorAll('.pkg').forEach(card => {
+      const btn = card.querySelector('.choose-pkg'); if (!btn) return;
+      const formule = btn.dataset.pkg, base = parseInt(formule.split('— ')[1], 10) || 0;
+      const liste = OPTIONS_PAR_FORMULE[formule] || []; if (!liste.length) return;
+      const box = document.createElement('div'); box.className = 'pkg-addons';
+      box.innerHTML = '<p class="pkg-addons-title">Ajoutez vos options :</p>' +
+        liste.map(v => '<label><input type="checkbox" value="' + v + '"><span class="pa-name">' + v +
+          (DEPEND_DE[v] ? '<span class="pa-hint">avec « ' + DEPEND_DE[v] + ' »</span>' : '') +
+          '</span><span class="pa-price">+' + prix[v] + '€</span></label>').join('') +
+        '<div class="pkg-addons-total"><span>Total</span><strong>' + base + '€</strong></div>';
+      const ancien = card.querySelector('.pkg-opts');
+      if (ancien) ancien.replaceWith(box); else btn.before(box);
+      const cbs = Array.from(box.querySelectorAll('input')), totalEl = box.querySelector('.pkg-addons-total strong');
+      function maj(){
+        cbs.forEach(cb => {
+          const dep = DEPEND_DE[cb.value];
+          const ok = !dep || cbs.some(c => c.value === dep && c.checked);
+          if (!ok) cb.checked = false;
+          cb.disabled = !ok; cb.closest('label').classList.toggle('is-off', !ok);
+        });
+        const t = base + cbs.filter(c => c.checked).reduce((s, c) => s + prix[c.value], 0);
+        totalEl.textContent = t + '€';
+        btn.textContent = cbs.some(c => c.checked) ? 'Réserver cette formule — ' + t + '€' : 'Choisir cette formule';
+      }
+      box.addEventListener('change', maj); maj();
+      // « Choisir » : la formule ET les options cochées passent dans le formulaire
+      btn.addEventListener('click', () => {
+        const choisies = cbs.filter(c => c.checked).map(c => c.value);
+        document.querySelectorAll('#optionChecks input[type=checkbox]').forEach(cb => { cb.checked = false; });
+        majOptions();
+        choisies.forEach(v => {   // dans l'ordre : « Nettoyage sièges » avant « Nourrissant cuir »
+          const cb = Array.from(document.querySelectorAll('#optionChecks input')).find(c => c.value === v);
+          if (cb) { cb.disabled = false; cb.checked = true; majOptions(); }
+        });
+        updateTotal();
+        document.getElementById('optionChecks').dispatchEvent(new Event('change', {bubbles:true}));
+      });
+    });
+  })();
 
   // ===== Animations =====
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
