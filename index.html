@@ -2088,8 +2088,9 @@
     const plages = c && c.occupe[isoOf(date)];
     if (!plages) return true;
     const [hh, mm] = slot.split('h').map(Number);
-    // il faut 5 h libres + 30 min avant le rendez-vous suivant (ex. rendez-vous à 19h → plus de réservation après 13h30)
-    const debut = hh * 60 + mm, fin = debut + DUREE_FORMULE + MARGE_AVANT_RDV;
+    // 30 min de trajet avant chaque rendez-vous : il faut 30 min libres avant, 5 h d'intervention, puis 30 min avant le rendez-vous suivant
+    // (ex. rendez-vous à 19h → dernière réservation 13h30 ; rendez-vous fini à 13h → première réservation 13h30)
+    const debut = hh * 60 + mm - MARGE_AVANT_RDV, fin = hh * 60 + mm + DUREE_FORMULE + MARGE_AVANT_RDV;
     return !plages.some(([d0, f0]) => d0 < fin && f0 > debut);
   }
   function apresChargement(actualisation){
