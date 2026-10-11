@@ -2325,7 +2325,10 @@
       b.addEventListener('click', () => { selSlot = s; renderSlots(); syncFields(); });
       dtSlots.appendChild(b);
     });
-    // "Peu importe" : le client est flexible sur l'horaire
+    // "Peu importe" : le client est flexible sur l'horaire (inutile s'il ne reste qu'un seul horaire)
+    if (!enChargement && ok.length === 1) {
+      if (selSlot === 'Peu importe') { selSlot = null; syncFields(); }
+    } else {
     const any = document.createElement('button');
     any.type = 'button'; any.className = 'dt-slot dt-slot-any'; any.textContent = 'Peu importe';
     any.style.animationDelay = (slotsJour.length * 0.025) + 's';
@@ -2333,6 +2336,7 @@
     if (selSlot === 'Peu importe') { any.classList.add('sel'); any.setAttribute('aria-pressed', 'true'); }
     any.addEventListener('click', () => { selSlot = 'Peu importe'; renderSlots(); syncFields(); });
     dtSlots.appendChild(any);
+    }
     let note = document.getElementById('dtSlotsNote');
     if (!note) { note = document.createElement('div'); note.id = 'dtSlotsNote'; note.className = 'dt-slots-note'; dtSlots.after(note); }
     const extra = okCarte.filter(x => !ok.includes(x));
