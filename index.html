@@ -21,7 +21,7 @@
 <meta name="twitter:title" content="BriAuto Clean — Nettoyage auto avec récupération du véhicule">
 <meta name="twitter:description" content="BriAuto Clean, nettoyage automobile professionnel autour d'Oissery : nous récupérons votre véhicule chez vous pour le nettoyer. Formules et prestations à la carte, réservez en ligne.">
 <meta name="twitter:image" content="https://briautoclean.github.io/BriAuto-Clean/img/apercu-partage-v2.jpg">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "AutoWash", "name": "BriAuto Clean", "url": "https://briautoclean.github.io/BriAuto-Clean/", "image": "https://briautoclean.github.io/BriAuto-Clean/img/apercu-partage-v2.jpg", "logo": "https://briautoclean.github.io/BriAuto-Clean/img/icone-180.png", "description": "Nettoyage automobile intérieur et extérieur avec récupération du véhicule à domicile, autour d'Oissery (77).", "email": "briauto.cleaning@gmail.com", "priceRange": "2 € – 130 €", "address": {"@type": "PostalAddress", "addressLocality": "Oissery", "postalCode": "77178", "addressRegion": "Seine-et-Marne", "addressCountry": "FR"}, "geo": {"@type": "GeoCoordinates", "latitude": 49.0697, "longitude": 2.8158}, "areaServed": {"@type": "GeoCircle", "geoMidpoint": {"@type": "GeoCoordinates", "latitude": 49.0697, "longitude": 2.8158}, "geoRadius": "30000"}, "openingHoursSpecification": [{"@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"], "opens": "08:00", "closes": "15:00"}], "hasOfferCatalog": {"@type": "OfferCatalog", "name": "Formules de nettoyage", "itemListElement": [{"@type": "Offer", "price": "40", "priceCurrency": "EUR", "itemOffered": {"@type": "Service", "name": "Formule Extérieur"}}, {"@type": "Offer", "price": "110", "priceCurrency": "EUR", "itemOffered": {"@type": "Service", "name": "Formule Intérieur"}}, {"@type": "Offer", "price": "130", "priceCurrency": "EUR", "itemOffered": {"@type": "Service", "name": "Formule Extérieur + Intérieur"}}]}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "AutoWash", "name": "BriAuto Clean", "url": "https://briautoclean.github.io/BriAuto-Clean/", "image": "https://briautoclean.github.io/BriAuto-Clean/img/apercu-partage-v2.jpg", "logo": "https://briautoclean.github.io/BriAuto-Clean/img/icone-180.png", "description": "Nettoyage automobile intérieur et extérieur avec récupération du véhicule à domicile, autour d'Oissery (77).", "email": "briauto.cleaning@gmail.com", "priceRange": "2 € – 130 €", "address": {"@type": "PostalAddress", "addressLocality": "Oissery", "postalCode": "77178", "addressRegion": "Seine-et-Marne", "addressCountry": "FR"}, "geo": {"@type": "GeoCoordinates", "latitude": 49.0697, "longitude": 2.8158}, "areaServed": {"@type": "GeoCircle", "geoMidpoint": {"@type": "GeoCoordinates", "latitude": 49.0697, "longitude": 2.8158}, "geoRadius": "30000"}, "openingHoursSpecification": [{"@type": "OpeningHoursSpecification", "dayOfWeek": ["Tuesday", "Sunday"], "opens": "08:00", "closes": "15:00"}, {"@type": "OpeningHoursSpecification", "dayOfWeek": "Monday", "opens": "08:00", "closes": "09:30"}, {"@type": "OpeningHoursSpecification", "dayOfWeek": "Wednesday", "opens": "16:30", "closes": "17:00"}, {"@type": "OpeningHoursSpecification", "dayOfWeek": ["Thursday", "Friday"], "opens": "17:00", "closes": "17:30"}], "hasOfferCatalog": {"@type": "OfferCatalog", "name": "Formules de nettoyage", "itemListElement": [{"@type": "Offer", "price": "40", "priceCurrency": "EUR", "itemOffered": {"@type": "Service", "name": "Formule Extérieur"}}, {"@type": "Offer", "price": "110", "priceCurrency": "EUR", "itemOffered": {"@type": "Service", "name": "Formule Intérieur"}}, {"@type": "Offer", "price": "130", "priceCurrency": "EUR", "itemOffered": {"@type": "Service", "name": "Formule Extérieur + Intérieur"}}]}}</script>
 <meta name="description" content="BriAuto Clean, nettoyage automobile professionnel autour d'Oissery : nous récupérons votre véhicule chez vous pour le nettoyer. Formules et prestations à la carte, réservez en ligne.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -2177,6 +2177,27 @@
   const dtSummary = document.getElementById('dtSummary');
   const dateField = document.getElementById('date'), heureField = document.getElementById('heure');
   const SLOTS = ['8h00','8h30','9h00','9h30','10h00','10h30','11h00','11h30','12h00','12h30','13h00','13h30','14h00','14h30','15h00'];
+  // ===== Horaires de travail (autre emploi) : aucun rendez-vous pendant ces heures =====
+  // 0 = dimanche … 6 = samedi. « apres » : créneau ajouté juste après la fin du travail.
+  const HORAIRES = {
+    0: { travail: [] },                                         // dimanche : journée libre
+    1: { travail: [['15:00', '20:00']] },                       // lundi
+    2: { travail: [] },                                         // mardi : journée libre
+    3: { travail: [['07:30', '16:00']], apres: ['16h30'] },     // mercredi : créneau 30 min après le travail
+    4: { travail: [['07:30', '16:30']], apres: ['17h00'] },     // jeudi : créneau 30 min après le travail
+    5: { travail: [['07:30', '16:45']], apres: ['17h00'] },     // vendredi : créneau 15 min après le travail
+    6: { travail: [['11:00', '20:00']] }                        // samedi
+  };
+  function slotsDuJour(date){
+    const h = HORAIRES[date.getDay()] || { travail: [] };
+    const enMin = s => { const [a, b] = s.split(/[h:]/).map(Number); return a * 60 + (b || 0); };
+    const normaux = SLOTS.filter(s => {
+      const debut = enMin(s), fin = debut + DUREE_FORMULE;
+      // 5 h d'intervention + 30 min de trajet doivent tenir avant le travail, ou commencer 30 min après
+      return h.travail.every(([t0, t1]) => fin + MARGE_AVANT_RDV <= enMin(t0) || debut >= enMin(t1) + MARGE_AVANT_RDV);
+    });
+    return normaux.concat((h.apres || []).filter(s => !normaux.includes(s)));
+  }
   const pad2 = n => String(n).padStart(2, '0');
   const isoOf = d => d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate());
   const today = new Date(); today.setHours(0,0,0,0);
@@ -2276,7 +2297,7 @@
   function availableSlots(date, duree){
     // pour aujourd'hui, on masque les créneaux déjà passés ; partout, on retire les créneaux déjà réservés
     const now = new Date();
-    return SLOTS.filter(s => {
+    return slotsDuJour(date).filter(s => {
       if (!creneauLibre(date, s, duree)) return false;
       if (date.toDateString() !== now.toDateString()) return true;
       const [hh, mm] = s.split('h').map(Number);
@@ -2292,7 +2313,8 @@
     if (enChargement) dtSlotsTitle.textContent += ' — vérification des disponibilités…';
     const ok = enChargement ? [] : availableSlots(selDate);
     const okCarte = enChargement ? [] : availableSlots(selDate, DUREE_CARTE);
-    SLOTS.forEach((s, i) => {
+    const slotsJour = slotsDuJour(selDate);
+    slotsJour.forEach((s, i) => {
       const b = document.createElement('button');
       b.type = 'button'; b.className = 'dt-slot'; b.textContent = s; b.style.animationDelay = (i * 0.025) + 's';
       if (!ok.includes(s)) {
@@ -2306,7 +2328,7 @@
     // "Peu importe" : le client est flexible sur l'horaire
     const any = document.createElement('button');
     any.type = 'button'; any.className = 'dt-slot dt-slot-any'; any.textContent = 'Peu importe';
-    any.style.animationDelay = (SLOTS.length * 0.025) + 's';
+    any.style.animationDelay = (slotsJour.length * 0.025) + 's';
     if (!ok.length) any.disabled = true;
     if (selSlot === 'Peu importe') { any.classList.add('sel'); any.setAttribute('aria-pressed', 'true'); }
     any.addEventListener('click', () => { selSlot = 'Peu importe'; renderSlots(); syncFields(); });
