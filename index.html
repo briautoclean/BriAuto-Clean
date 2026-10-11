@@ -427,6 +427,8 @@
   .pkg-opts strong{color:var(--ink);}
   /* options cochables directement dans les cartes formules */
   .check-grid label[hidden],.opt[hidden]{display:none!important;}
+  .dt-jours-note{font-size:12.5px;font-weight:600;color:#8A5A00;background:#FFF6E0;border-radius:8px;padding:6px 10px;margin:10px 0 0;}
+  .dt-jours-note[hidden]{display:none;}
   #continueToBooking:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none;filter:grayscale(.4);}
   .carte-vide{font-size:13px;color:var(--slate);margin:10px 0 0;}
   .carte-step{display:flex;align-items:center;gap:10px;font-weight:600;color:var(--ink);font-size:16px;margin:0 0 14px;}
@@ -2188,6 +2190,27 @@
     5: { travail: [['07:30', '16:45']], apres: ['17h00'] },     // vendredi : créneau 15 min après le travail
     6: { travail: [['11:00', '20:00']] }                        // samedi
   };
+  // Formules Intérieur et Extérieur + Intérieur : uniquement sur les journées libres (sans travail)
+  const FORMULES_JOUR_LIBRE = ['Intérieur — 110€', 'Extérieur + Intérieur — 130€'];
+  const jourLibre = date => !((HORAIRES[date.getDay()] || {}).travail || []).length;
+  function formuleJourLibre(){
+    if (typeof currentMode === 'undefined' || currentMode !== 'formule') return false;
+    const r = document.querySelector('#pkgRadios input:checked');
+    return !!r && FORMULES_JOUR_LIBRE.includes(r.value);
+  }
+  function nomsJoursLibres(){
+    const noms = ['dimanche','lundi','mardi','mercredi','jeudi','vendredi','samedi'];
+    const l = [1,2,3,4,5,6,0].filter(i => !((HORAIRES[i] || {}).travail || []).length).map(i => noms[i]);
+    return l.length > 1 ? l.slice(0, -1).join(', le ') + ' et le ' + l[l.length - 1] : l.join('');
+  }
+  let alerteJour = false;   // date retirée parce que la formule se réserve seulement les journées libres
+  function majNoteJours(){
+    let n = document.getElementById('dtJoursNote');
+    if (!n) { n = document.createElement('p'); n.id = 'dtJoursNote'; n.className = 'dt-jours-note'; dtDays.after(n); }
+    const r = document.querySelector('#pkgRadios input:checked');
+    n.hidden = !formuleJourLibre();
+    if (!n.hidden) n.textContent = 'La formule ' + r.value.split(' — ')[0] + ' se réserve uniquement le ' + nomsJoursLibres() + '.';
+  }
   function slotsDuJour(date){
     const h = HORAIRES[date.getDay()] || { travail: [] };
     const enMin = s => { const [a, b] = s.split(/[h:]/).map(Number); return a * 60 + (b || 0); };
@@ -2265,8 +2288,10 @@
     // la sélection en cours devient impossible ? on la retire
     let perdu = false;
     if (selDate && selSlot && selSlot !== 'Peu importe' && !availableSlots(selDate).includes(selSlot)) { selSlot = null; perdu = true; }
-    if (selDate && !availableSlots(selDate, DUREE_CARTE).length) { selDate = null; selSlot = null; }
-    renderCalendar(); renderSlots(); syncFields();
+    if (selDate && !availableSlots(selDate, DUREE_CARTE).length) { if (formuleJourLibre() && !jourLibre(selDate)) alerteJour = true; selDate = null; selSlot = null; }
+    renderCalendar(); renderSlots(); syncFields(); majNoteJours();
+    if (selDate || !formuleJourLibre()) alerteJour = false;
+    if (alerteJour) { dtSummary.textContent = 'Cette formule se réserve uniquement le ' + nomsJoursLibres() + ' : choisissez une autre date'; dtSummary.className = 'dt-summary err'; }
     if (perdu && actualisation && window.briautoCreneauRetire) window.briautoCreneauRetire();
     else if (perdu) { dtSummary.textContent = "Ce créneau n'est pas disponible pour cette prestation, choisissez-en un autre"; dtSummary.className = 'dt-summary err'; }
   }
@@ -2297,6 +2322,7 @@
   function availableSlots(date, duree){
     // pour aujourd'hui, on masque les créneaux déjà passés ; partout, on retire les créneaux déjà réservés
     const now = new Date();
+    if (formuleJourLibre() && !jourLibre(date)) return [];
     return slotsDuJour(date).filter(s => {
       if (!creneauLibre(date, s, duree)) return false;
       if (date.toDateString() !== now.toDateString()) return true;
@@ -2380,6 +2406,7 @@
     dtPicker.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, true);
   renderCalendar(); renderSlots(); syncFields();
+  document.getElementById('pkgRadios').addEventListener('change', () => apresChargement());
   // formule (5 h) ou à la carte (2 h) : les créneaux possibles changent avec le mode choisi
   const setModeInitial = setMode;
   setMode = function(mode){ setModeInitial(mode); apresChargement(); };
@@ -2577,6 +2604,7 @@
     }
     function apres(){
       majOptions();
+      if (typeof apresChargement === 'function') apresChargement();
       if (typeof updatePkgDetail === 'function') updatePkgDetail();
       updateTotal(); updatePageTotal();
       if (window.briautoMajDeperlant) window.briautoMajDeperlant();
@@ -2622,6 +2650,15 @@
     document.getElementById('bookingForm').addEventListener('reset', () => setTimeout(() => formulaireVersPage(), 30));
     formulaireVersPage();   // au chargement : les deux parties partent du même choix
   })();
+
+  // Cartes « Formules » : rappel des jours de réservation pour Intérieur et Extérieur + Intérieur
+  document.querySelectorAll('.choose-pkg').forEach(btn => {
+    if (!FORMULES_JOUR_LIBRE.includes(btn.dataset.pkg)) return;
+    const ul = btn.closest('.pkg').querySelector('ul');
+    const n = document.createElement('p'); n.className = 'pkg-note';
+    n.innerHTML = '📅 Réservable uniquement le <b>' + nomsJoursLibres() + '</b>.';
+    ul.after(n);
+  });
 </script>
 
 </body>
