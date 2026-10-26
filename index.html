@@ -467,6 +467,35 @@ html.theme-noel{--nuit:#0E2A1E;--nuit2:#154330;--nuit3:#1E5A40;--creme:#FFF7EC;-
 #bookingForm > p[style*="display:none"] + .etape-form{border-top:0;padding-top:0;margin-top:0}
 .theme-halloween #rendez-vous.clair{background:var(--lavande)}
 
+/* Cartes formules : options repliées */
+details.pkg-addons{padding:0}
+details.pkg-addons>summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:48px;padding:10px 14px;margin:0;cursor:pointer;font-weight:800;font-size:16px;border-radius:14px}
+details.pkg-addons>summary::-webkit-details-marker{display:none}
+details.pkg-addons>summary:hover{background:rgba(255,255,255,.5)}
+details.pkg-addons>summary .pa-nb{font-size:13px;font-weight:600;opacity:.8}
+details.pkg-addons .pa-fermer,details.pkg-addons[open] .pa-ouvrir{display:none}
+details.pkg-addons[open] .pa-fermer{display:inline}
+details.pkg-addons[open]{padding:0 12px 12px}
+details.pkg-addons[open]>summary{margin:0 -12px 6px;border-radius:14px 14px 0 0}
+
+/* « À la carte » plus compact sur téléphone */
+@media (max-width:699px){
+  #pageOptionChecks{gap:10px}
+  #pageOptionChecks .opt:not(.opt-wide){display:grid;grid-template-columns:40px minmax(0,1fr) auto;column-gap:12px;row-gap:2px;align-items:start;padding:12px 50px 12px 12px}
+  #pageOptionChecks .opt:not(.opt-wide) .icon{grid-row:1/span 3;width:40px;height:40px;padding:7px}
+  #pageOptionChecks .opt:not(.opt-wide) h4{grid-column:2;font-size:17px;align-self:center}
+  #pageOptionChecks .opt:not(.opt-wide) .opt-price{grid-column:3;grid-row:1;font-size:18px;align-self:center}
+  #pageOptionChecks .opt:not(.opt-wide) p,#pageOptionChecks .opt:not(.opt-wide) .opt-cond{grid-column:2/4}
+  #pageOptionChecks .opt:not(.opt-wide) p{font-size:13.5px;line-height:1.35}
+  #pageOptionChecks .opt.is-off[data-why]::after{grid-column:2/4}
+  #pageOptionChecks .opt input[type=checkbox]{top:50%;margin-top:-12px}
+  .opt-wide .opt-video{aspect-ratio:auto;height:150px}
+  .opt-wide .opt-body p{font-size:13.5px}
+}
+details.pkg-addons>summary{flex-wrap:wrap;column-gap:10px;row-gap:0}
+.pa-ouvrir,.pa-fermer{white-space:nowrap}
+@media (max-width:979px){.pkg-grid{grid-template-columns:minmax(0,1fr)}}
+
 </style>
 </head>
 <body>
@@ -1372,8 +1401,8 @@ html.theme-noel{--nuit:#0E2A1E;--nuit2:#154330;--nuit3:#1E5A40;--creme:#FFF7EC;-
       const btn = card.querySelector('.choose-pkg'); if (!btn) return;
       const formule = btn.dataset.pkg, base = parseInt(formule.split('— ')[1], 10) || 0;
       const liste = OPTIONS_PAR_FORMULE[formule] || []; if (!liste.length) return;
-      const box = document.createElement('div'); box.className = 'pkg-addons';
-      box.innerHTML = '<p class="pkg-addons-title">Ajoutez vos options :</p>' +
+      const box = document.createElement('details'); box.className = 'pkg-addons';
+      box.innerHTML = '<summary class="pkg-addons-title"><span class="pa-ouvrir">+ Ajouter des options</span><span class="pa-fermer">− Masquer les options</span><span class="pa-nb">' + liste.length + ' au choix</span></summary>' +
         liste.map(v => '<label><input type="checkbox" value="' + v + '"><span class="pa-name">' + v +
           (DEPEND_DE[v] ? '<span class="pa-hint">avec « ' + DEPEND_DE[v] + ' »</span>' : '') +
           '</span><span class="pa-price">+' + prix[v] + '€</span></label>').join('') +
