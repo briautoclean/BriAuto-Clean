@@ -456,6 +456,10 @@ html.theme-noel{--nuit:#0E2A1E;--nuit2:#154330;--nuit3:#1E5A40;--creme:#FFF7EC;-
 }
 @media (prefers-reduced-motion:reduce){.neige{display:none}}
 
+/* « Comment ça marche » juste après le haut de page, avant les formules */
+#comment-ca-marche,#formules{border-top:4px solid #000}
+#comment-ca-marche{background:color-mix(in srgb,var(--nuit) 80%,#000)}
+
 </style>
 </head>
 <body>
@@ -465,10 +469,10 @@ html.theme-noel{--nuit:#0E2A1E;--nuit2:#154330;--nuit3:#1E5A40;--creme:#FFF7EC;-
   <nav class="nav" aria-label="Navigation principale">
     <a href="#" class="logo"><img src="img/icone-180.png" alt="" width="36" height="36">BriAuto Clean</a>
     <ul class="nav-links" id="navLinks">
+      <li><a href="#comment-ca-marche">Comment ça marche</a></li>
       <li><a href="#formules">Formules</a></li>
       <li><a href="#options">À la carte</a></li>
       <li><a href="#avant-apres">Avant / Après</a></li>
-      <li><a href="#comment-ca-marche">Comment ça marche</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
     <div class="nav-cta">
@@ -501,6 +505,20 @@ html.theme-noel{--nuit:#0E2A1E;--nuit2:#154330;--nuit3:#1E5A40;--creme:#FFF7EC;-
       <div class="only-hiv"><span class="fantome perso"><svg viewBox="0 0 96 96" aria-hidden="true"><path d="M14 30l34-18 34 18v40L48 88 14 70z" fill="#DDF6FF" stroke="#000" stroke-width="3" stroke-linejoin="round"/><path d="M14 30l34 18 34-18M48 48v40" stroke="#000" stroke-width="3" fill="none" stroke-linejoin="round"/><path d="M22 36l18 9" stroke="#fff" stroke-width="5" stroke-linecap="round"/><ellipse cx="58" cy="58" rx="3.5" ry="5" fill="#06172B"/><ellipse cx="72" cy="52" rx="3.5" ry="5" fill="#06172B"/><path d="M58 70q8 4 15-4" stroke="#06172B" stroke-width="3" fill="none" stroke-linecap="round"/><ellipse cx="54" cy="66" rx="4" ry="2.5" fill="#7FD8FF"/><ellipse cx="77" cy="60" rx="4" ry="2.5" fill="#7FD8FF"/></svg></span><svg class="congere" viewBox="0 0 400 60" preserveAspectRatio="none" aria-hidden="true"><path d="M0 60V34c40-18 70-22 110-10s70 14 110-2 80-24 120-6 60 8 60 8v36z" fill="#FFFFFF" stroke="#000" stroke-width="3"/></svg></div>
       <div class="only-noe"><span class="fantome perso"><svg viewBox="0 0 96 120" aria-hidden="true"><circle cx="48" cy="84" r="30" fill="#FFFFFF" stroke="#000" stroke-width="3"/><circle cx="48" cy="40" r="22" fill="#FFFFFF" stroke="#000" stroke-width="3"/><path d="M26 22h44v6H26z" fill="#10140F"/><path d="M33 6h30v18H33z" fill="#10140F"/><path d="M33 18h30v5H33z" fill="#FF6B5E"/><circle cx="41" cy="38" r="3" fill="#10140F"/><circle cx="55" cy="38" r="3" fill="#10140F"/><path d="M48 43l14 4-14 3z" fill="#FF8A2B" stroke="#000" stroke-width="1.5" stroke-linejoin="round"/><path d="M28 58q20 10 40 0l2 7q-22 10-44 0z" fill="#FF6B5E" stroke="#000" stroke-width="2.5"/><path d="M62 62l6 18 6-2-4-16z" fill="#2FBF71" stroke="#000" stroke-width="2.5"/><circle cx="48" cy="76" r="3" fill="#10140F"/><circle cx="48" cy="88" r="3" fill="#10140F"/></svg></span><svg class="citrouille" style="left:4%" viewBox="0 0 100 100" aria-hidden="true"><rect x="12" y="38" width="76" height="56" rx="6" fill="#FF6B5E" stroke="#000" stroke-width="4"/><rect x="6" y="26" width="88" height="18" rx="5" fill="#FF8F84" stroke="#000" stroke-width="4"/><path d="M50 26v68" stroke="#FFD34D" stroke-width="10"/><path d="M50 26c-10-18-30-16-26-4 3 8 26 4 26 4zm0 0c10-18 30-16 26-4-3 8-26 4-26 4z" fill="#FFD34D" stroke="#000" stroke-width="3"/></svg><svg class="citrouille c2" viewBox="0 0 100 100" aria-hidden="true"><rect x="12" y="38" width="76" height="56" rx="6" fill="#2FBF71" stroke="#000" stroke-width="4"/><rect x="6" y="26" width="88" height="18" rx="5" fill="#5ED497" stroke="#000" stroke-width="4"/><path d="M50 26v68" stroke="#FFD34D" stroke-width="10"/><path d="M50 26c-10-18-30-16-26-4 3 8 26 4 26 4zm0 0c10-18 30-16 26-4-3 8-26 4-26 4z" fill="#FFD34D" stroke="#000" stroke-width="3"/></svg></div>
     </div>
+  </div>
+</section>
+
+<section id="comment-ca-marche">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="tag">Comment ça marche</span>
+      <h2><span class="only-hal">Trois étapes, zéro sortilège</span><span class="only-hiv">Trois étapes, zéro glissade</span><span class="only-noe">Trois étapes, et c’est emballé</span></h2>
+    </div>
+    <ol class="etapes-grid">
+      <li class="etape"><span class="num">1</span><h3>Choisissez</h3><p>Une formule complète ou des options à la carte, selon les besoins de votre véhicule.</p></li>
+      <li class="etape"><span class="num">2</span><h3>Réservez</h3><p>Votre adresse, le jour et l’heure : le calendrier n’affiche que les créneaux vraiment libres.</p></li>
+      <li class="etape"><span class="num">3</span><h3>On s’occupe du reste</h3><p>Nous récupérons le véhicule chez vous et le nettoyons en station de lavage et/ou dans nos locaux.</p></li>
+    </ol>
   </div>
 </section>
 
@@ -711,20 +729,6 @@ html.theme-noel{--nuit:#0E2A1E;--nuit2:#154330;--nuit3:#1E5A40;--creme:#FFF7EC;-
       <button type="button" class="carte" aria-pressed="false" aria-label="Panneau de porte : voir l’après"><span class="retourne"><span class="face avant"><img src="img/avant-panneau-de-porte-terne.webp" alt="" decoding="async"><span class="etiquette">Avant · portière</span><span class="appel"><span class="only-hal">Touchez pour exorciser</span><span class="only-hiv">Touchez pour dégeler</span><span class="only-noe">Touchez pour déballer</span></span></span><span class="face apres"><img src="img/apres-panneau-de-porte-nettoye.webp" alt="" decoding="async"><span class="etiquette">Après · portière</span></span></span></button>
       <button type="button" class="carte" aria-pressed="false" aria-label="Boîte à gants : voir l’après"><span class="retourne"><span class="face avant"><img src="img/avant-boite-a-gants-utilitaire.webp" alt="" decoding="async"><span class="etiquette">Avant · boîte à gants</span><span class="appel"><span class="only-hal">Touchez pour exorciser</span><span class="only-hiv">Touchez pour dégeler</span><span class="only-noe">Touchez pour déballer</span></span></span><span class="face apres"><img src="img/apres-boite-a-gants-utilitaire.webp" alt="" decoding="async"><span class="etiquette">Après · boîte à gants</span></span></span></button>
     </div>
-  </div>
-</section>
-
-<section id="comment-ca-marche">
-  <div class="wrap">
-    <div class="section-head">
-      <span class="tag">Comment ça marche</span>
-      <h2><span class="only-hal">Trois étapes, zéro sortilège</span><span class="only-hiv">Trois étapes, zéro glissade</span><span class="only-noe">Trois étapes, et c’est emballé</span></h2>
-    </div>
-    <ol class="etapes-grid">
-      <li class="etape"><span class="num">1</span><h3>Choisissez</h3><p>Une formule complète ou des options à la carte, selon les besoins de votre véhicule.</p></li>
-      <li class="etape"><span class="num">2</span><h3>Réservez</h3><p>Votre adresse, le jour et l’heure : le calendrier n’affiche que les créneaux vraiment libres.</p></li>
-      <li class="etape"><span class="num">3</span><h3>On s’occupe du reste</h3><p>Nous récupérons le véhicule chez vous et le nettoyons en station de lavage et/ou dans nos locaux.</p></li>
-    </ol>
   </div>
 </section>
 
