@@ -34,13 +34,16 @@
   document.documentElement.classList.add('theme-' + t); document.documentElement.dataset.theme = t;
   var mt = document.querySelector('meta[name=theme-color]'); if (mt) mt.content = { halloween: '#24083F', hiver: '#0A1A33', noel: '#0E2A1E' }[t]; })();</script>
 <style>
+/* Police de repli calée sur Bricolage Grotesque : la page ne « saute » plus quand la vraie police arrive */
+@font-face{font-family:'Bricolage Repli';src:local('Arial'),local('ArialMT'),local('Helvetica');font-weight:100 500;size-adjust:92%;ascent-override:101%;descent-override:29%;line-gap-override:0%}
+@font-face{font-family:'Bricolage Repli';src:local('Arial Bold'),local('Arial-BoldMT'),local('Helvetica Bold'),local('Helvetica-Bold');font-weight:501 900;size-adjust:91%;ascent-override:102%;descent-override:30%;line-gap-override:0%}
 /* ===== BriAuto Clean — style « Halloween fun » =====
    Nuit violette, stickers bordés de noir, citrouille / lime / rose. Une colonne sur téléphone. */
 :root{
   --nuit:#24083F; --nuit2:#3A1263; --nuit3:#4A1B7A;
   --creme:#FFF4E6; --blanc:#FFFFFF; --lime:#C6FF3D; --citrouille:#FF7A1A; --orange:#FFB547; --rose:#FF5FA2;
   --encre:#160423; --lavande:#E5D6F5; --gris:#5A3D74; --ok:#0B7A3E; --err:#B3123E; --warn:#8A5A00;
-  --font:'Bricolage Grotesque','Arial Rounded MT Bold',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --font:'Bricolage Grotesque','Bricolage Repli','Arial Rounded MT Bold',system-ui,-apple-system,'Segoe UI',sans-serif;
   --ombre:5px 5px 0 #000; --bord:3px solid #000;
   color-scheme:dark;
 }
@@ -552,7 +555,7 @@ details.pkg-addons>summary{flex-wrap:wrap;column-gap:10px;row-gap:0}
     </div>
     <ol class="etapes-grid">
       <li class="etape"><span class="num">1</span><h3>Choisissez</h3><p>Une formule complète ou des options à la carte, selon les besoins de votre véhicule.</p></li>
-      <li class="etape"><span class="num">2</span><h3>Réservez</h3><p>Votre adresse, le jour et l’heure : le calendrier n’affiche que les créneaux vraiment libres.</p></li>
+      <li class="etape"><span class="num">2</span><h3>Réservez</h3><p>Le jour et l’heure (le calendrier n’affiche que les créneaux vraiment libres), puis votre adresse et vos coordonnées.</p></li>
       <li class="etape"><span class="num">3</span><h3>On s’occupe du reste</h3><p>Nous récupérons le véhicule chez vous et le nettoyons en station de lavage et/ou dans nos locaux.</p></li>
     </ol>
   </div>
@@ -573,13 +576,10 @@ details.pkg-addons>summary{flex-wrap:wrap;column-gap:10px;row-gap:0}
         <p class="desc">Un lavage à la main complet : carrosserie, jantes et vitres extérieures.</p>
         <ul>
           <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Prélavage, mousse active &amp; rinçage</li>
-          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Nettoyage des jantes (soft)</li>
           <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Lavage de la carrosserie à la main</li>
-          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Nettoyage au pinceau des détails et recoins</li>
-          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Rinçage complet de la carrosserie</li>
-          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Application d'un déperlant sur les vitres (si l'option est choisie)</li>
+          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Jantes (nettoyage soft) et vitres extérieures</li>
+          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Détails et recoins nettoyés au pinceau</li>
           <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Séchage à la serviette, sans traces</li>
-          <li><svg viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Nettoyage des vitres extérieures</li>
         </ul>
         <p class="pkg-note">Jantes très sales : l'option <b>Jante Hard</b> est nécessaire.</p><p class="pkg-note">Vitres intérieures sales : ajoutez l'option <b>Vitre intérieure</b>.</p><p class="pkg-opts"><strong>Options possibles :</strong> Jante Hard, Déperlant vitres, Vitre intérieure, Encadrements de portes, Sent bon, Brillant pneus, Brillant plastiques extérieurs</p>
         <button class="btn btn-ghost btn-block choose-pkg" data-pkg="Extérieur — 40€">Choisir cette formule</button>
