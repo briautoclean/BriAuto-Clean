@@ -27,7 +27,12 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 34 34'%3E%3Crect x='2' y='2' width='30' height='30' rx='7' fill='%2312233F'/%3E%3Cpath d='M12 9v16M12 9h6.5a4 4 0 010 8H12M12 17h7a4 4 0 010 8H12' stroke='%23fff' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3Cpath d='M9 25c3-2 13-2 16 0' stroke='%235FD6E8' stroke-width='1.6' stroke-linecap='round' fill='none'/%3E%3C/svg%3E">
-<script>document.documentElement.classList.add('js');</script>
+<script>document.documentElement.classList.add('js');
+// Saison du site : halloween (octobre), noel (1er décembre → 6 janvier), hiver (le reste). Aperçu : ?theme=halloween|hiver|noel
+(function(){ var q = location.search.match(/theme=(halloween|hiver|noel)/), d = new Date(), m = d.getMonth(), j = d.getDate(), t;
+  if (q) t = q[1]; else if (m === 9) t = 'halloween'; else if (m === 11 || (m === 0 && j <= 6)) t = 'noel'; else t = 'hiver';
+  document.documentElement.classList.add('theme-' + t); document.documentElement.dataset.theme = t;
+  var mt = document.querySelector('meta[name=theme-color]'); if (mt) mt.content = { halloween: '#24083F', hiver: '#0A1A33', noel: '#0E2A1E' }[t]; })();</script>
 <style>
 /* ===== BriAuto Clean — style « Halloween fun » =====
    Nuit violette, stickers bordés de noir, citrouille / lime / rose. Une colonne sur téléphone. */
@@ -75,7 +80,7 @@ section{scroll-margin-top:76px}
 
 /* En-tête */
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:41;background:var(--nuit)}
-#siteHeader{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:rgba(36,8,63,.94);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:2px solid #000}
+#siteHeader{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:color-mix(in srgb,var(--nuit) 94%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:2px solid #000}
 .nav{max-width:1180px;margin:0 auto;padding-block:10px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;align-items:center;gap:16px}
 .logo{display:flex;align-items:center;gap:10px;color:var(--creme);text-decoration:none;font-weight:800;font-size:20px;white-space:nowrap}
 .logo img{width:36px;height:36px;border-radius:10px;border:3px solid #000}
@@ -110,12 +115,12 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .scene{position:relative;height:420px;max-width:470px;width:100%;justify-self:center}
 .polaroid{position:absolute;width:58%;background:var(--creme);padding:10px 10px 44px;border:3px solid #000;box-shadow:8px 8px 0 #000}
 .polaroid img{display:block;width:100%;height:auto;aspect-ratio:3/4;object-fit:cover}
-.polaroid span{position:absolute;left:0;right:0;bottom:9px;text-align:center;color:var(--encre);font-weight:800;font-size:19px}
-.polaroid::before{content:"";position:absolute;top:-12px;left:50%;width:76px;height:24px;margin-left:-38px;background:rgba(198,255,61,.85)}
+.polaroid .legende{position:absolute;left:0;right:0;bottom:9px;text-align:center;color:var(--encre);font-weight:800;font-size:19px}
+.polaroid::before{content:"";position:absolute;top:-12px;left:50%;width:76px;height:24px;margin-left:-38px;background:color-mix(in srgb,var(--lime) 85%,transparent)}
 .p1{left:4%;top:16px;transform:rotate(-8deg)}
 .p1 img{filter:saturate(.7)}
 .p2{right:4%;top:80px;transform:rotate(7deg)}
-.p2::before{background:rgba(255,95,162,.85)}
+.p2::before{background:color-mix(in srgb,var(--rose) 85%,transparent)}
 .fantome{position:absolute;left:38%;top:-24px;width:96px;animation:flotte 4s ease-in-out infinite}
 @keyframes flotte{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-18px) rotate(4deg)}}
 .citrouille{position:absolute;bottom:-4px;width:92px;animation:rebond 1.8s cubic-bezier(.3,0,.3,1) infinite}
@@ -143,8 +148,8 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .pkg:nth-child(2){background:var(--rose)}
 .pkg:nth-child(3){background:var(--lime)}
 @media (hover:hover){.pkg:hover{transform:translateY(-6px)}}
-.pkg-eyebrow{font-weight:800;font-size:13px;text-transform:uppercase;letter-spacing:.08em}
-.pkg h3{font-size:31px;line-height:1.05}
+.pkg-eyebrow{font-weight:800;font-size:clamp(28px,7vw,34px);line-height:1.05;letter-spacing:-.025em}
+.pkg h3{font-size:18px;line-height:1.2;font-weight:600;font-style:italic;margin-top:-6px}
 .pkg .price{font-size:48px;font-weight:800;letter-spacing:-.03em;line-height:1}
 .pkg .price small{font-size:16px;font-weight:600;letter-spacing:0}
 .pkg .desc{font-size:16px}
@@ -389,11 +394,73 @@ footer a{color:var(--lime)}
 }
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 
+/* ===== Saisons : Halloween (octobre), hiver, Noël (1er décembre → 6 janvier) ===== */
+.only-hal,.only-hiv,.only-noe,.only-froid{display:none}
+.theme-halloween .only-hal,.theme-hiver .only-hiv,.theme-noel .only-noe,.theme-hiver .only-froid,.theme-noel .only-froid{display:revert}
+html:not(.theme-hiver):not(.theme-noel) .only-hal{display:revert}
+.only-hal>div.defile-bande,.only-hiv>div.defile-bande,.only-noe>div.defile-bande{display:block}
+
+/* Palettes : mêmes rôles, couleurs de saison */
+html.theme-hiver{--nuit:#0A1A33;--nuit2:#12305A;--nuit3:#1B4275;--creme:#F2FAFF;--lime:#BFF0FF;--citrouille:#4FD1FF;--orange:#E0F7FF;--rose:#C9D6FF;--encre:#06172B;--lavande:#CFE6FA;--gris:#3D5A78}
+html.theme-noel{--nuit:#0E2A1E;--nuit2:#154330;--nuit3:#1E5A40;--creme:#FFF7EC;--lime:#FFD34D;--citrouille:#FF7A6E;--orange:#FFC9C2;--rose:#8FE0B0;--encre:#10140F;--lavande:#E3F1E6;--gris:#4A5D50}
+
+/* Étapes du formulaire + légende du calendrier */
+.etape-form{display:flex;align-items:center;gap:10px;font-weight:800;font-size:20px;margin-top:6px;padding-top:16px;border-top:3px dashed rgba(0,0,0,.18)}
+.etape-form:first-of-type{border-top:0;padding-top:0;margin-top:0}
+.etape-form span{display:inline-grid;place-items:center;width:34px;height:34px;flex:none;border-radius:50%;background:var(--citrouille);color:var(--encre);border:2px solid #000;font-size:17px}
+.dt-legende{margin-top:10px;font-size:13.5px;color:var(--gris)}
+
+/* Personnages */
+.perso{display:block}
+.perso svg{display:block;width:100%;height:auto}
+.merci-perso svg{width:96px;height:auto;display:block;animation:flotte 4s ease-in-out infinite}
+.merci svg{animation:none}
+
+/* ===== Neige (hiver + Noël) ===== */
+.neige{position:fixed;inset:0;pointer-events:none;z-index:30;overflow:hidden}
+.neige span{position:absolute;top:-12px;border-radius:50%;background:#fff;box-shadow:0 0 6px rgba(255,255,255,.8);animation-name:tombe,balance;animation-timing-function:linear,ease-in-out;animation-iteration-count:infinite,infinite;animation-direction:normal,alternate}
+@keyframes tombe{to{transform:translateY(105vh)}}
+@keyframes balance{from{margin-left:-14px}to{margin-left:14px}}
+.theme-noel .neige span:nth-child(3n){display:none}
+.flocon{animation:tourne 9s linear infinite}
+@keyframes tourne{to{transform:rotate(360deg)}}
+
+/* ===== Hiver : stalactites, congère, givre, chapeaux de neige ===== */
+.stalactites{position:absolute;left:0;right:0;top:100%;height:22px;pointer-events:none;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='22' viewBox='0 0 120 22'%3E%3Cpath d='M0 0h120v3l-6 0-3 14-3-14-10 0-2 9-2-9-12 0-4 19-4-19-9 0-2 8-2-8-13 0-3 13-3-13-10 0-2 7-2-7-12 0-3 16-3-16H0z' fill='%23DDF6FF' stroke='%23000' stroke-width='1.5' stroke-linejoin='round'/%3E%3C/svg%3E") repeat-x;background-size:120px 22px;filter:drop-shadow(0 2px 0 rgba(0,0,0,.25))}
+.congere{position:absolute;left:0;bottom:-14px;width:100%;height:60px}
+.theme-hiver .scene .perso,.theme-noel .scene .perso{position:absolute;left:36%;top:-30px;width:104px;animation:flotte 4s ease-in-out infinite}
+.theme-noel .scene .perso{width:96px;top:-40px}
+.theme-hiver .pkg,.theme-noel .pkg{margin-top:10px}
+.theme-hiver .pkg::before{content:"";position:absolute;left:14px;right:14px;top:-13px;height:20px;background:#fff;border:3px solid #000;border-radius:22px 22px 12px 12px;box-shadow:0 3px 0 rgba(0,0,0,.15);pointer-events:none}
+.theme-hiver .recommended-badge,.theme-noel .recommended-badge{z-index:2;top:-24px}
+.theme-hiver .face.avant::after{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(220,245,255,.55),rgba(220,245,255,0) 55%);pointer-events:none}
+.theme-hiver .base-card,.theme-hiver .opt{box-shadow:5px 5px 0 #000,inset 0 3px 0 rgba(255,255,255,.9)}
+.theme-hiver .hero::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(600px 300px at 85% 0%,rgba(127,216,255,.18),transparent 70%),radial-gradient(500px 260px at 0% 100%,rgba(191,240,255,.12),transparent 70%)}
+
+/* ===== Noël : guirlande, boules, rubans ===== */
+.guirlande{position:absolute;left:0;right:0;top:100%;height:30px;pointer-events:none;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='30' viewBox='0 0 100 30'%3E%3Cpath d='M0 2q50 22 100 0' stroke='%23153' stroke-width='2.5' fill='none'/%3E%3C/svg%3E") repeat-x;background-size:4.1% 30px}
+.guirlande span{position:absolute;top:8px;width:11px;height:16px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;border:2px solid #000;animation:clignote 1.4s ease-in-out infinite}
+.guirlande .b0{background:#FF4D4D}.guirlande .b1{background:#FFD34D}.guirlande .b2{background:#3DDC84}.guirlande .b3{background:#5FB8FF}
+@keyframes clignote{0%,100%{opacity:1;box-shadow:0 0 10px 2px currentColor}50%{opacity:.35;box-shadow:none}}
+.guirlande .b0{color:#FF4D4D}.guirlande .b1{color:#FFD34D}.guirlande .b2{color:#3DDC84}.guirlande .b3{color:#5FB8FF}
+.boule{position:absolute;top:0;width:34px;height:130px;transform-origin:50% 0;animation:balance-boule 3.2s ease-in-out infinite;pointer-events:none;z-index:1}
+.boule svg{width:100%;height:100%;display:block}
+@keyframes balance-boule{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(6deg)}}
+.theme-noel .pkg::after{content:"";position:absolute;top:-14px;left:18px;width:46px;height:30px;pointer-events:none;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 46 30'%3E%3Cpath d='M23 15C14 0 1 2 4 11c2 6 19 4 19 4zm0 0c9-15 22-13 19-4-2 6-19 4-19 4z' fill='%23FF4D4D' stroke='%23000' stroke-width='2.5'/%3E%3Cpath d='M23 15l-8 14M23 15l8 14' stroke='%23000' stroke-width='5'/%3E%3Cpath d='M23 15l-8 14M23 15l8 14' stroke='%23FF4D4D' stroke-width='2.5'/%3E%3Ccircle cx='23' cy='15' r='4' fill='%23FFD34D' stroke='%23000' stroke-width='2'/%3E%3C/svg%3E") no-repeat center/contain}
+.theme-noel .hero::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(500px 260px at 80% 10%,rgba(255,211,77,.14),transparent 70%)}
+
+@media (max-width:600px){
+  .boule{width:26px;height:96px}
+  .hero .boule:first-child{display:none}
+  .theme-hiver .scene .perso,.theme-noel .scene .perso{width:84px;left:38%}
+}
+@media (prefers-reduced-motion:reduce){.neige{display:none}}
+
 </style>
 </head>
 <body>
 <div class="scroll-progress" id="scrollProgress"></div>
-<div class="defile-bande" aria-hidden="true"><div class="defile"><span>ADIEU POUSSIÈRE</span><span>•</span><span>BYE BYE LES MIETTES</span><span>•</span><span>ON VIENT CHERCHER VOTRE VOITURE</span><span>•</span><span>AUTOUR D’OISSERY (77)</span><span>•</span><span>RÉSERVATION EN LIGNE</span><span>•</span><span>ADIEU POUSSIÈRE</span><span>•</span><span>BYE BYE LES MIETTES</span><span>•</span><span>ON VIENT CHERCHER VOTRE VOITURE</span><span>•</span><span>AUTOUR D’OISSERY (77)</span><span>•</span><span>RÉSERVATION EN LIGNE</span><span>•</span></div></div>
+<div class="only-froid"><div class="neige" aria-hidden="true"><span style="left:69%;width:6px;height:6px;animation-duration:10s,5s;animation-delay:-17s,-6s;opacity:0.79"></span><span style="left:13%;width:5px;height:5px;animation-duration:18s,4s;animation-delay:-11s,-0s;opacity:0.72"></span><span style="left:8%;width:7px;height:7px;animation-duration:18s,3s;animation-delay:-6s,-3s;opacity:0.79"></span><span style="left:54%;width:4px;height:4px;animation-duration:14s,6s;animation-delay:-18s,-3s;opacity:0.63"></span><span style="left:31%;width:4px;height:4px;animation-duration:11s,4s;animation-delay:-2s,-4s;opacity:0.60"></span><span style="left:63%;width:9px;height:9px;animation-duration:14s,6s;animation-delay:-9s,-4s;opacity:0.94"></span><span style="left:15%;width:4px;height:4px;animation-duration:17s,6s;animation-delay:-5s,-6s;opacity:0.62"></span><span style="left:62%;width:6px;height:6px;animation-duration:15s,3s;animation-delay:-2s,-6s;opacity:0.73"></span><span style="left:40%;width:9px;height:9px;animation-duration:14s,5s;animation-delay:-15s,-4s;opacity:0.85"></span><span style="left:8%;width:4px;height:4px;animation-duration:10s,5s;animation-delay:-15s,-5s;opacity:0.78"></span><span style="left:7%;width:9px;height:9px;animation-duration:13s,6s;animation-delay:-9s,-5s;opacity:0.64"></span><span style="left:85%;width:5px;height:5px;animation-duration:14s,3s;animation-delay:-14s,-2s;opacity:0.53"></span><span style="left:14%;width:4px;height:4px;animation-duration:16s,3s;animation-delay:-6s,-6s;opacity:0.59"></span><span style="left:94%;width:4px;height:4px;animation-duration:12s,6s;animation-delay:-12s,-6s;opacity:0.70"></span><span style="left:21%;width:7px;height:7px;animation-duration:16s,6s;animation-delay:-17s,-2s;opacity:0.89"></span><span style="left:55%;width:7px;height:7px;animation-duration:17s,5s;animation-delay:-13s,-2s;opacity:0.79"></span><span style="left:48%;width:4px;height:4px;animation-duration:12s,4s;animation-delay:-2s,-1s;opacity:0.53"></span><span style="left:84%;width:5px;height:5px;animation-duration:12s,3s;animation-delay:-15s,-6s;opacity:0.74"></span><span style="left:33%;width:4px;height:4px;animation-duration:13s,3s;animation-delay:-4s,-3s;opacity:0.72"></span><span style="left:78%;width:9px;height:9px;animation-duration:18s,5s;animation-delay:-4s,-5s;opacity:0.88"></span><span style="left:79%;width:7px;height:7px;animation-duration:9s,6s;animation-delay:-17s,-3s;opacity:0.65"></span><span style="left:50%;width:4px;height:4px;animation-duration:10s,6s;animation-delay:-12s,-0s;opacity:0.55"></span><span style="left:26%;width:9px;height:9px;animation-duration:16s,4s;animation-delay:-3s,-2s;opacity:0.75"></span><span style="left:13%;width:4px;height:4px;animation-duration:9s,4s;animation-delay:-17s,-0s;opacity:0.92"></span><span style="left:78%;width:5px;height:5px;animation-duration:9s,3s;animation-delay:-6s,-4s;opacity:0.64"></span><span style="left:81%;width:9px;height:9px;animation-duration:13s,5s;animation-delay:-11s,-3s;opacity:0.51"></span><span style="left:62%;width:4px;height:4px;animation-duration:16s,6s;animation-delay:-15s,-2s;opacity:0.49"></span><span style="left:13%;width:9px;height:9px;animation-duration:14s,5s;animation-delay:-15s,-6s;opacity:0.80"></span><span style="left:66%;width:9px;height:9px;animation-duration:9s,4s;animation-delay:-16s,-2s;opacity:0.52"></span><span style="left:69%;width:7px;height:7px;animation-duration:9s,5s;animation-delay:-2s,-5s;opacity:0.87"></span><span style="left:66%;width:4px;height:4px;animation-duration:14s,4s;animation-delay:-11s,-6s;opacity:0.56"></span><span style="left:69%;width:5px;height:5px;animation-duration:17s,5s;animation-delay:-7s,-4s;opacity:0.86"></span><span style="left:97%;width:4px;height:4px;animation-duration:12s,4s;animation-delay:-12s,-5s;opacity:0.85"></span><span style="left:25%;width:9px;height:9px;animation-duration:17s,6s;animation-delay:-11s,-5s;opacity:0.46"></span><span style="left:3%;width:5px;height:5px;animation-duration:13s,6s;animation-delay:-8s,-1s;opacity:0.80"></span><span style="left:44%;width:6px;height:6px;animation-duration:16s,5s;animation-delay:-11s,-0s;opacity:0.56"></span><span style="left:29%;width:7px;height:7px;animation-duration:16s,4s;animation-delay:-10s,-1s;opacity:0.69"></span><span style="left:78%;width:5px;height:5px;animation-duration:9s,6s;animation-delay:-11s,-6s;opacity:0.77"></span></div></div><div class="only-hal"><div class="defile-bande" aria-hidden="true"><div class="defile"><span>ADIEU POUSSIÈRE</span><span>•</span><span>BYE BYE LES MIETTES</span><span>•</span><span>ON VIENT CHERCHER VOTRE VOITURE</span><span>•</span><span>AUTOUR D’OISSERY (77)</span><span>•</span><span>RÉSERVATION EN LIGNE</span><span>•</span><span>ADIEU POUSSIÈRE</span><span>•</span><span>BYE BYE LES MIETTES</span><span>•</span><span>ON VIENT CHERCHER VOTRE VOITURE</span><span>•</span><span>AUTOUR D’OISSERY (77)</span><span>•</span><span>RÉSERVATION EN LIGNE</span><span>•</span></div></div></div><div class="only-hiv"><div class="defile-bande" aria-hidden="true"><div class="defile"><span>ADIEU BOUE ET SEL D’HIVER</span><span>•</span><span>ON VIENT CHERCHER VOTRE VOITURE</span><span>•</span><span>DÉPERLANT : LA PLUIE GLISSE TOUTE SEULE</span><span>•</span><span>AUTOUR D’OISSERY (77)</span><span>•</span><span>RÉSERVATION EN LIGNE</span><span>•</span><span>ADIEU BOUE ET SEL D’HIVER</span><span>•</span><span>ON VIENT CHERCHER VOTRE VOITURE</span><span>•</span><span>DÉPERLANT : LA PLUIE GLISSE TOUTE SEULE</span><span>•</span><span>AUTOUR D’OISSERY (77)</span><span>•</span><span>RÉSERVATION EN LIGNE</span><span>•</span></div></div></div><div class="only-noe"><div class="defile-bande" aria-hidden="true"><div class="defile"><span>UNE VOITURE PROPRE POUR LES FÊTES</span><span>•</span><span>ON VIENT CHERCHER VOTRE VOITURE</span><span>•</span><span>JOYEUSES FÊTES</span><span>•</span><span>AUTOUR D’OISSERY (77)</span><span>•</span><span>RÉSERVATION EN LIGNE</span><span>•</span><span>UNE VOITURE PROPRE POUR LES FÊTES</span><span>•</span><span>ON VIENT CHERCHER VOTRE VOITURE</span><span>•</span><span>JOYEUSES FÊTES</span><span>•</span><span>AUTOUR D’OISSERY (77)</span><span>•</span><span>RÉSERVATION EN LIGNE</span><span>•</span></div></div></div>
 <header id="siteHeader">
   <nav class="nav" aria-label="Navigation principale">
     <a href="#" class="logo"><img src="img/icone-180.png" alt="" width="36" height="36">BriAuto Clean</a>
@@ -409,14 +476,18 @@ footer a{color:var(--lime)}
       <button class="nav-toggle" id="navToggle" type="button" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="navLinks"><span></span><span></span><span></span></button>
     </div>
   </nav>
+  <div class="only-noe"><div class="guirlande" aria-hidden="true"><span style="left:2.0%;animation-delay:0.0s" class="b0"></span><span style="left:6.1%;animation-delay:0.3s" class="b1"></span><span style="left:10.2%;animation-delay:0.7s" class="b2"></span><span style="left:14.3%;animation-delay:1.0s" class="b3"></span><span style="left:18.4%;animation-delay:0.0s" class="b0"></span><span style="left:22.5%;animation-delay:0.3s" class="b1"></span><span style="left:26.6%;animation-delay:0.7s" class="b2"></span><span style="left:30.7%;animation-delay:1.0s" class="b3"></span><span style="left:34.8%;animation-delay:0.0s" class="b0"></span><span style="left:38.9%;animation-delay:0.3s" class="b1"></span><span style="left:43.0%;animation-delay:0.7s" class="b2"></span><span style="left:47.1%;animation-delay:1.0s" class="b3"></span><span style="left:51.2%;animation-delay:0.0s" class="b0"></span><span style="left:55.3%;animation-delay:0.3s" class="b1"></span><span style="left:59.4%;animation-delay:0.7s" class="b2"></span><span style="left:63.5%;animation-delay:1.0s" class="b3"></span><span style="left:67.6%;animation-delay:0.0s" class="b0"></span><span style="left:71.7%;animation-delay:0.3s" class="b1"></span><span style="left:75.8%;animation-delay:0.7s" class="b2"></span><span style="left:79.9%;animation-delay:1.0s" class="b3"></span><span style="left:84.0%;animation-delay:0.0s" class="b0"></span><span style="left:88.1%;animation-delay:0.3s" class="b1"></span><span style="left:92.2%;animation-delay:0.7s" class="b2"></span><span style="left:96.3%;animation-delay:1.0s" class="b3"></span></div></div>
+  <div class="only-hiv"><div class="stalactites" aria-hidden="true"></div></div>
 </header>
 <main>
 <section class="hero">
-  <svg class="etoile" style="left:5%;top:16px" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 0l2.4 7.6L20 10l-7.6 2.4L10 20l-2.4-7.6L0 10l7.6-2.4z" fill="#C6FF3D"/></svg><svg class="etoile" style="right:6%;top:22px;animation-delay:.8s;width:14px" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 0l2.4 7.6L20 10l-7.6 2.4L10 20l-2.4-7.6L0 10l7.6-2.4z" fill="#FF5FA2"/></svg><svg class="etoile" style="right:4%;bottom:70px;animation-delay:1.4s" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 0l2.4 7.6L20 10l-7.6 2.4L10 20l-2.4-7.6L0 10l7.6-2.4z" fill="#FFF4E6"/></svg>
+  <div class="only-hal"><svg class="etoile" style="left:5%;top:16px" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 0l2.4 7.6L20 10l-7.6 2.4L10 20l-2.4-7.6L0 10l7.6-2.4z" fill="#C6FF3D"/></svg><svg class="etoile" style="right:6%;top:22px;animation-delay:.8s;width:14px" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 0l2.4 7.6L20 10l-7.6 2.4L10 20l-2.4-7.6L0 10l7.6-2.4z" fill="#FF5FA2"/></svg><svg class="etoile" style="right:4%;bottom:70px;animation-delay:1.4s" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 0l2.4 7.6L20 10l-7.6 2.4L10 20l-2.4-7.6L0 10l7.6-2.4z" fill="#FFF4E6"/></svg></div>
+  <div class="only-hiv"><svg class="etoile flocon" style="left:5%;top:14px;width:22px" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1v22M2.5 6.5l19 11M2.5 17.5l19-11M12 1l-3 3M12 1l3 3M12 23l-3-3M12 23l3-3" stroke="#BFF0FF" stroke-width="2" stroke-linecap="round" fill="none"/></svg><svg class="etoile flocon" style="right:6%;top:20px;width:18px;animation-delay:.8s" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1v22M2.5 6.5l19 11M2.5 17.5l19-11M12 1l-3 3M12 1l3 3M12 23l-3-3M12 23l3-3" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" fill="none"/></svg><svg class="etoile flocon" style="right:4%;bottom:70px;width:24px;animation-delay:1.4s" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1v22M2.5 6.5l19 11M2.5 17.5l19-11M12 1l-3 3M12 1l3 3M12 23l-3-3M12 23l3-3" stroke="#7FD8FF" stroke-width="2" stroke-linecap="round" fill="none"/></svg></div>
+  <div class="only-noe"><span class="boule" style="left:3%" aria-hidden="true"><svg viewBox="0 0 40 120"><path d="M20 0v78" stroke="#E3F1E6" stroke-width="1.5"/><rect x="14" y="74" width="12" height="8" rx="2" fill="#FFD34D" stroke="#000" stroke-width="2"/><circle cx="20" cy="98" r="18" fill="#FF6B5E" stroke="#000" stroke-width="3"/><path d="M10 94q10-8 20 0" stroke="#fff" stroke-width="3" fill="none" opacity=".7"/></svg></span><span class="boule" style="right:22%;animation-delay:-1.2s;height:110px" aria-hidden="true"><svg viewBox="0 0 40 120"><path d="M20 0v78" stroke="#E3F1E6" stroke-width="1.5"/><rect x="14" y="74" width="12" height="8" rx="2" fill="#FFD34D" stroke="#000" stroke-width="2"/><circle cx="20" cy="98" r="18" fill="#FFD34D" stroke="#000" stroke-width="3"/><path d="M10 94q10-8 20 0" stroke="#fff" stroke-width="3" fill="none" opacity=".7"/></svg></span><span class="boule" style="right:3%;animation-delay:-.6s;height:150px" aria-hidden="true"><svg viewBox="0 0 40 120"><path d="M20 0v78" stroke="#E3F1E6" stroke-width="1.5"/><rect x="14" y="74" width="12" height="8" rx="2" fill="#FFD34D" stroke="#000" stroke-width="2"/><circle cx="20" cy="98" r="18" fill="#2FBF71" stroke="#000" stroke-width="3"/><path d="M10 94q10-8 20 0" stroke="#fff" stroke-width="3" fill="none" opacity=".7"/></svg></span></div>
   <div class="wrap">
     <div style="min-width:0">
-      <h1>On chasse<br><span class="sticker s1">les fantômes</span><br>de <span class="sticker s2">poussière.</span></h1>
-      <p class="lead">Nous venons chercher votre voiture chez vous, autour d’Oissery, et nous vous la rendons propre comme un sou neuf. Promis, aucune malédiction.</p>
+      <h1><span class="only-hal">On chasse<br><span class="sticker s1">les fantômes</span><br>de <span class="sticker s2">poussière.</span></span><span class="only-hiv">On fait fondre<br><span class="sticker s1">la boue</span><br>et le <span class="sticker s2">sel d’hiver.</span></span><span class="only-noe">Une voiture<br><span class="sticker s1">propre</span><br>pour les <span class="sticker s2">fêtes.</span></span></h1>
+      <p class="lead"><span class="only-hal">Nous venons chercher votre voiture chez vous, autour d’Oissery, et nous vous la rendons propre comme un sou neuf. Promis, aucune malédiction.</span><span class="only-hiv">Nous venons chercher votre voiture chez vous, autour d’Oissery, et nous la débarrassons de la boue, du sel et de la grisaille de l’hiver.</span><span class="only-noe">Nous venons chercher votre voiture chez vous, autour d’Oissery, et nous vous la rendons propre pour les repas de famille et les trajets des fêtes.</span></p>
       <div class="hero-actions">
         <a href="#rendez-vous" class="btn btn-primary">Réserver mon nettoyage</a>
         <a href="#formules" class="btn">Voir les formules</a>
@@ -424,11 +495,11 @@ footer a{color:var(--lime)}
       <div class="hero-infos"><span>Récupération à domicile</span><span>Oissery + 30 km</span><span>Lavage à la main</span></div>
     </div>
     <div class="scene" aria-hidden="true">
-      <div class="polaroid p1"><img src="img/avant-siege-conducteur.webp" alt="" width="900" height="1200"><span>avant… beurk</span></div>
-      <div class="polaroid p2"><img src="img/apres-siege-conducteur.webp" alt="" width="900" height="1200"><span>après… wouaw</span></div>
-      <svg class="fantome" viewBox="0 0 80 96" aria-hidden="true"><path d="M40 4C20 4 8 20 8 40v50l9-8 8 8 8-8 7 8 7-8 8 8 8-8 9 8V40C72 20 60 4 40 4z" fill="#FFF4E6" stroke="#000" stroke-width="3"/><ellipse cx="29" cy="40" rx="5" ry="7" fill="#160423"/><ellipse cx="51" cy="40" rx="5" ry="7" fill="#160423"/><ellipse cx="40" cy="58" rx="6" ry="7" fill="#160423"/><ellipse cx="22" cy="52" rx="5" ry="3" fill="#FF5FA2" opacity=".7"/><ellipse cx="58" cy="52" rx="5" ry="3" fill="#FF5FA2" opacity=".7"/></svg>
-      <svg class="citrouille" style="left:4%" viewBox="0 0 120 100" aria-hidden="true"><path d="M58 22c0-10 6-16 14-18" stroke="#000" stroke-width="7" stroke-linecap="round" fill="none"/><ellipse cx="60" cy="62" rx="54" ry="34" fill="#FF7A1A" stroke="#000" stroke-width="4"/><path d="M36 54l10 8-10 5zM84 54l-10 8 10 5zM42 76q18 10 36 0" fill="#160423" stroke="#160423" stroke-width="3" stroke-linejoin="round"/></svg>
-      <svg class="citrouille c2" viewBox="0 0 120 100" aria-hidden="true"><path d="M58 22c0-10 6-16 14-18" stroke="#000" stroke-width="7" stroke-linecap="round" fill="none"/><ellipse cx="60" cy="62" rx="54" ry="34" fill="#FFB547" stroke="#000" stroke-width="4"/><path d="M36 54l10 8-10 5zM84 54l-10 8 10 5zM42 76q18 10 36 0" fill="#160423" stroke="#160423" stroke-width="3" stroke-linejoin="round"/></svg>
+      <div class="polaroid p1"><img src="img/avant-siege-conducteur.webp" alt="" width="900" height="1200"><span class="legende"><span class="only-hal">avant… beurk</span><span class="only-hiv">avant… brrr</span><span class="only-noe">avant… oups</span></span></div>
+      <div class="polaroid p2"><img src="img/apres-siege-conducteur.webp" alt="" width="900" height="1200"><span class="legende"><span class="only-hal">après… wouaw</span><span class="only-hiv">après… éclatant</span><span class="only-noe">après… cadeau !</span></span></div>
+      <div class="only-hal"><svg class="fantome" viewBox="0 0 80 96" aria-hidden="true"><path d="M40 4C20 4 8 20 8 40v50l9-8 8 8 8-8 7 8 7-8 8 8 8-8 9 8V40C72 20 60 4 40 4z" fill="#FFF4E6" stroke="#000" stroke-width="3"/><ellipse cx="29" cy="40" rx="5" ry="7" fill="#160423"/><ellipse cx="51" cy="40" rx="5" ry="7" fill="#160423"/><ellipse cx="40" cy="58" rx="6" ry="7" fill="#160423"/><ellipse cx="22" cy="52" rx="5" ry="3" fill="#FF5FA2" opacity=".7"/><ellipse cx="58" cy="52" rx="5" ry="3" fill="#FF5FA2" opacity=".7"/></svg><svg class="citrouille" style="left:4%" viewBox="0 0 120 100" aria-hidden="true"><path d="M58 22c0-10 6-16 14-18" stroke="#000" stroke-width="7" stroke-linecap="round" fill="none"/><ellipse cx="60" cy="62" rx="54" ry="34" fill="#FF7A1A" stroke="#000" stroke-width="4"/><path d="M36 54l10 8-10 5zM84 54l-10 8 10 5zM42 76q18 10 36 0" fill="#160423" stroke="#160423" stroke-width="3" stroke-linejoin="round"/></svg><svg class="citrouille c2" viewBox="0 0 120 100" aria-hidden="true"><path d="M58 22c0-10 6-16 14-18" stroke="#000" stroke-width="7" stroke-linecap="round" fill="none"/><ellipse cx="60" cy="62" rx="54" ry="34" fill="#FFB547" stroke="#000" stroke-width="4"/><path d="M36 54l10 8-10 5zM84 54l-10 8 10 5zM42 76q18 10 36 0" fill="#160423" stroke="#160423" stroke-width="3" stroke-linejoin="round"/></svg></div>
+      <div class="only-hiv"><span class="fantome perso"><svg viewBox="0 0 96 96" aria-hidden="true"><path d="M14 30l34-18 34 18v40L48 88 14 70z" fill="#DDF6FF" stroke="#000" stroke-width="3" stroke-linejoin="round"/><path d="M14 30l34 18 34-18M48 48v40" stroke="#000" stroke-width="3" fill="none" stroke-linejoin="round"/><path d="M22 36l18 9" stroke="#fff" stroke-width="5" stroke-linecap="round"/><ellipse cx="58" cy="58" rx="3.5" ry="5" fill="#06172B"/><ellipse cx="72" cy="52" rx="3.5" ry="5" fill="#06172B"/><path d="M58 70q8 4 15-4" stroke="#06172B" stroke-width="3" fill="none" stroke-linecap="round"/><ellipse cx="54" cy="66" rx="4" ry="2.5" fill="#7FD8FF"/><ellipse cx="77" cy="60" rx="4" ry="2.5" fill="#7FD8FF"/></svg></span><svg class="congere" viewBox="0 0 400 60" preserveAspectRatio="none" aria-hidden="true"><path d="M0 60V34c40-18 70-22 110-10s70 14 110-2 80-24 120-6 60 8 60 8v36z" fill="#FFFFFF" stroke="#000" stroke-width="3"/></svg></div>
+      <div class="only-noe"><span class="fantome perso"><svg viewBox="0 0 96 120" aria-hidden="true"><circle cx="48" cy="84" r="30" fill="#FFFFFF" stroke="#000" stroke-width="3"/><circle cx="48" cy="40" r="22" fill="#FFFFFF" stroke="#000" stroke-width="3"/><path d="M26 22h44v6H26z" fill="#10140F"/><path d="M33 6h30v18H33z" fill="#10140F"/><path d="M33 18h30v5H33z" fill="#FF6B5E"/><circle cx="41" cy="38" r="3" fill="#10140F"/><circle cx="55" cy="38" r="3" fill="#10140F"/><path d="M48 43l14 4-14 3z" fill="#FF8A2B" stroke="#000" stroke-width="1.5" stroke-linejoin="round"/><path d="M28 58q20 10 40 0l2 7q-22 10-44 0z" fill="#FF6B5E" stroke="#000" stroke-width="2.5"/><path d="M62 62l6 18 6-2-4-16z" fill="#2FBF71" stroke="#000" stroke-width="2.5"/><circle cx="48" cy="76" r="3" fill="#10140F"/><circle cx="48" cy="88" r="3" fill="#10140F"/></svg></span><svg class="citrouille" style="left:4%" viewBox="0 0 100 100" aria-hidden="true"><rect x="12" y="38" width="76" height="56" rx="6" fill="#FF6B5E" stroke="#000" stroke-width="4"/><rect x="6" y="26" width="88" height="18" rx="5" fill="#FF8F84" stroke="#000" stroke-width="4"/><path d="M50 26v68" stroke="#FFD34D" stroke-width="10"/><path d="M50 26c-10-18-30-16-26-4 3 8 26 4 26 4zm0 0c10-18 30-16 26-4-3 8-26 4-26 4z" fill="#FFD34D" stroke="#000" stroke-width="3"/></svg><svg class="citrouille c2" viewBox="0 0 100 100" aria-hidden="true"><rect x="12" y="38" width="76" height="56" rx="6" fill="#2FBF71" stroke="#000" stroke-width="4"/><rect x="6" y="26" width="88" height="18" rx="5" fill="#5ED497" stroke="#000" stroke-width="4"/><path d="M50 26v68" stroke="#FFD34D" stroke-width="10"/><path d="M50 26c-10-18-30-16-26-4 3 8 26 4 26 4zm0 0c10-18 30-16 26-4-3 8-26 4-26 4z" fill="#FFD34D" stroke="#000" stroke-width="3"/></svg></div>
     </div>
   </div>
 </section>
@@ -436,14 +507,14 @@ footer a{color:var(--lime)}
 <section id="formules">
   <div class="wrap">
     <div class="section-head reveal">
-      <span class="tag">Les sorts</span>
-      <h2>Choisissez votre sort</h2>
+      <span class="tag"><span class="only-hal">Les sorts</span><span class="only-hiv">Formules</span><span class="only-noe">Formules</span></span>
+      <h2><span class="only-hal">Choisissez votre sort</span><span class="only-hiv">Choisissez votre formule</span><span class="only-noe">Faites-vous plaisir</span></h2>
       <p>Trois formules, à compléter avec vos options. Tarifs indicatifs, confirmés selon le véhicule.</p>
     </div>
     <div class="pkg-grid">
       <div class="pkg reveal" style="--d:.05s">
         <span class="pkg-eyebrow">Extérieur</span>
-        <h3>Le Coup de Balai</h3>
+        <h3><span class="only-hal">Le Coup de Balai</span><span class="only-hiv">L’Anti-Gadoue</span><span class="only-noe">La Tournée du Traîneau</span></h3>
         <div class="price">40€<small> / véhicule</small></div>
         <p class="desc">Un lavage à la main complet : carrosserie, jantes et vitres extérieures.</p>
         <ul>
@@ -461,7 +532,7 @@ footer a{color:var(--lime)}
       </div>
       <div class="pkg reveal" style="--d:.18s">
         <span class="pkg-eyebrow">Intérieur</span>
-        <h3>Le Grand Ménage Hanté</h3>
+        <h3><span class="only-hal">Le Grand Ménage Hanté</span><span class="only-hiv">Le Cocon Douillet</span><span class="only-noe">Le Nid Douillet</span></h3>
         <div class="price">110€<small> / véhicule</small></div>
         <p class="desc">Un habitacle désencombré, dépoussiéré et aspiré de fond en comble.</p>
         <ul>
@@ -476,9 +547,9 @@ footer a{color:var(--lime)}
         <button class="btn btn-ghost btn-block choose-pkg" data-pkg="Intérieur — 110€">Choisir cette formule</button>
       </div>
       <div class="pkg featured reveal" style="--d:.31s">
-        <span class="recommended-badge">Le plus magique</span>
+        <span class="recommended-badge"><span class="only-hal">Le plus magique</span><span class="only-hiv">Le plus complet</span><span class="only-noe">Le plus beau cadeau</span></span>
         <span class="pkg-eyebrow">Extérieur + Intérieur</span>
-        <h3>Le Sort Complet</h3>
+        <h3><span class="only-hal">Le Sort Complet</span><span class="only-hiv">Le Grand Dégel</span><span class="only-noe">Le Cadeau Complet</span></h3>
         <div class="price">130€<small> / véhicule</small></div>
         <p class="desc">Le nettoyage complet, dedans comme dehors, avec encadrements de portes et vitres inclus.</p>
         <ul>
@@ -497,9 +568,9 @@ footer a{color:var(--lime)}
 <section id="options">
   <div class="wrap">
     <div class="section-head reveal">
-      <span class="tag">Le chaudron</span>
-      <h2>Composez votre potion</h2>
-      <p>Partez d'une formule si vous hésitez, ou composez 100 % à la carte, ingrédient par ingrédient.</p>
+      <span class="tag"><span class="only-hal">Le chaudron</span><span class="only-hiv">À la carte</span><span class="only-noe">La hotte</span></span>
+      <h2><span class="only-hal">Composez votre potion</span><span class="only-hiv">Composez votre nettoyage</span><span class="only-noe">Remplissez votre hotte</span></h2>
+      <p>Partez d'une formule si vous hésitez, ou composez 100 % à la carte, <span class="only-hal">ingrédient par ingrédient.</span><span class="only-hiv">option par option.</span><span class="only-noe">option par option.</span></p>
     </div>
     <p class="carte-step reveal"><span>1</span> Choisissez votre point de départ</p>
     <div class="base-grid reveal" id="pageBase">
@@ -627,18 +698,18 @@ footer a{color:var(--lime)}
     <div class="mur-tete">
       <div class="section-head">
         <span class="tag">Avant / Après</span>
-        <h2>Le mur des exorcismes</h2>
-        <p>Touchez une photo pour chasser la poussière. Ce sont nos vraies interventions.</p>
+        <h2><span class="only-hal">Le mur des exorcismes</span><span class="only-hiv">Le grand dégel</span><span class="only-noe">Le calendrier des surprises</span></h2>
+        <p><span class="only-hal">Touchez une photo pour chasser la poussière.</span><span class="only-hiv">Touchez une photo pour faire fondre la saleté.</span><span class="only-noe">Touchez une photo pour découvrir la surprise.</span> Ce sont nos vraies interventions.</p>
       </div>
       <button type="button" class="btn btn-lime" id="toutBtn">Tout exorciser</button>
     </div>
     <div class="grille-mur" id="murGrille">
-      <button type="button" class="carte" aria-pressed="false" aria-label="Siège conducteur : voir l’après"><span class="retourne"><span class="face avant"><img src="img/avant-siege-conducteur.webp" alt="" decoding="async"><span class="etiquette">Avant · siège</span><span class="appel">Touchez pour exorciser</span></span><span class="face apres"><img src="img/apres-siege-conducteur.webp" alt="" decoding="async"><span class="etiquette">Après · siège</span></span></span></button>
-      <button type="button" class="carte" aria-pressed="false" aria-label="Tableau de bord : voir l’après"><span class="retourne"><span class="face avant"><img src="img/avant-tableau-de-bord-poussiereux.webp" alt="" decoding="async"><span class="etiquette">Avant · tableau de bord</span><span class="appel">Touchez pour exorciser</span></span><span class="face apres"><img src="img/apres-tableau-de-bord-nettoye.webp" alt="" decoding="async"><span class="etiquette">Après · tableau de bord</span></span></span></button>
-      <button type="button" class="carte" aria-pressed="false" aria-label="Banquette passager : voir l’après"><span class="retourne"><span class="face avant"><img src="img/avant-banquette-passager.webp" alt="" decoding="async"><span class="etiquette">Avant · banquette</span><span class="appel">Touchez pour exorciser</span></span><span class="face apres"><img src="img/apres-banquette-passager.webp" alt="" decoding="async"><span class="etiquette">Après · banquette</span></span></span></button>
-      <button type="button" class="carte" aria-pressed="false" aria-label="Tapis conducteur : voir l’après"><span class="retourne"><span class="face avant"><img src="img/avant-tapis-conducteur-sale.webp" alt="" decoding="async"><span class="etiquette">Avant · tapis</span><span class="appel">Touchez pour exorciser</span></span><span class="face apres"><img src="img/apres-tapis-conducteur-propre.webp" alt="" decoding="async"><span class="etiquette">Après · tapis</span></span></span></button>
-      <button type="button" class="carte" aria-pressed="false" aria-label="Panneau de porte : voir l’après"><span class="retourne"><span class="face avant"><img src="img/avant-panneau-de-porte-terne.webp" alt="" decoding="async"><span class="etiquette">Avant · portière</span><span class="appel">Touchez pour exorciser</span></span><span class="face apres"><img src="img/apres-panneau-de-porte-nettoye.webp" alt="" decoding="async"><span class="etiquette">Après · portière</span></span></span></button>
-      <button type="button" class="carte" aria-pressed="false" aria-label="Boîte à gants : voir l’après"><span class="retourne"><span class="face avant"><img src="img/avant-boite-a-gants-utilitaire.webp" alt="" decoding="async"><span class="etiquette">Avant · boîte à gants</span><span class="appel">Touchez pour exorciser</span></span><span class="face apres"><img src="img/apres-boite-a-gants-utilitaire.webp" alt="" decoding="async"><span class="etiquette">Après · boîte à gants</span></span></span></button>
+      <button type="button" class="carte" aria-pressed="false" aria-label="Siège conducteur : voir l’après"><span class="retourne"><span class="face avant"><img src="img/avant-siege-conducteur.webp" alt="" decoding="async"><span class="etiquette">Avant · siège</span><span class="appel"><span class="only-hal">Touchez pour exorciser</span><span class="only-hiv">Touchez pour dégeler</span><span class="only-noe">Touchez pour déballer</span></span></span><span class="face apres"><img src="img/apres-siege-conducteur.webp" alt="" decoding="async"><span class="etiquette">Après · siège</span></span></span></button>
+      <button type="button" class="carte" aria-pressed="false" aria-label="Tableau de bord : voir l’après"><span class="retourne"><span class="face avant"><img src="img/avant-tableau-de-bord-poussiereux.webp" alt="" decoding="async"><span class="etiquette">Avant · tableau de bord</span><span class="appel"><span class="only-hal">Touchez pour exorciser</span><span class="only-hiv">Touchez pour dégeler</span><span class="only-noe">Touchez pour déballer</span></span></span><span class="face apres"><img src="img/apres-tableau-de-bord-nettoye.webp" alt="" decoding="async"><span class="etiquette">Après · tableau de bord</span></span></span></button>
+      <button type="button" class="carte" aria-pressed="false" aria-label="Banquette passager : voir l’après"><span class="retourne"><span class="face avant"><img src="img/avant-banquette-passager.webp" alt="" decoding="async"><span class="etiquette">Avant · banquette</span><span class="appel"><span class="only-hal">Touchez pour exorciser</span><span class="only-hiv">Touchez pour dégeler</span><span class="only-noe">Touchez pour déballer</span></span></span><span class="face apres"><img src="img/apres-banquette-passager.webp" alt="" decoding="async"><span class="etiquette">Après · banquette</span></span></span></button>
+      <button type="button" class="carte" aria-pressed="false" aria-label="Tapis conducteur : voir l’après"><span class="retourne"><span class="face avant"><img src="img/avant-tapis-conducteur-sale.webp" alt="" decoding="async"><span class="etiquette">Avant · tapis</span><span class="appel"><span class="only-hal">Touchez pour exorciser</span><span class="only-hiv">Touchez pour dégeler</span><span class="only-noe">Touchez pour déballer</span></span></span><span class="face apres"><img src="img/apres-tapis-conducteur-propre.webp" alt="" decoding="async"><span class="etiquette">Après · tapis</span></span></span></button>
+      <button type="button" class="carte" aria-pressed="false" aria-label="Panneau de porte : voir l’après"><span class="retourne"><span class="face avant"><img src="img/avant-panneau-de-porte-terne.webp" alt="" decoding="async"><span class="etiquette">Avant · portière</span><span class="appel"><span class="only-hal">Touchez pour exorciser</span><span class="only-hiv">Touchez pour dégeler</span><span class="only-noe">Touchez pour déballer</span></span></span><span class="face apres"><img src="img/apres-panneau-de-porte-nettoye.webp" alt="" decoding="async"><span class="etiquette">Après · portière</span></span></span></button>
+      <button type="button" class="carte" aria-pressed="false" aria-label="Boîte à gants : voir l’après"><span class="retourne"><span class="face avant"><img src="img/avant-boite-a-gants-utilitaire.webp" alt="" decoding="async"><span class="etiquette">Avant · boîte à gants</span><span class="appel"><span class="only-hal">Touchez pour exorciser</span><span class="only-hiv">Touchez pour dégeler</span><span class="only-noe">Touchez pour déballer</span></span></span><span class="face apres"><img src="img/apres-boite-a-gants-utilitaire.webp" alt="" decoding="async"><span class="etiquette">Après · boîte à gants</span></span></span></button>
     </div>
   </div>
 </section>
@@ -647,7 +718,7 @@ footer a{color:var(--lime)}
   <div class="wrap">
     <div class="section-head">
       <span class="tag">Comment ça marche</span>
-      <h2>Trois étapes, zéro sortilège</h2>
+      <h2><span class="only-hal">Trois étapes, zéro sortilège</span><span class="only-hiv">Trois étapes, zéro glissade</span><span class="only-noe">Trois étapes, et c’est emballé</span></h2>
     </div>
     <ol class="etapes-grid">
       <li class="etape"><span class="num">1</span><h3>Choisissez</h3><p>Une formule complète ou des options à la carte, selon les besoins de votre véhicule.</p></li>
@@ -661,12 +732,12 @@ footer a{color:var(--lime)}
   <div class="wrap">
     <div class="section-head reveal">
       <span class="tag">Réservation</span>
-      <h2>Lancez le sort</h2>
-      <p>Choisissez votre jour et votre heure : nous vous confirmons le rendez-vous rapidement.</p>
+      <h2><span class="only-hal">Lancez le sort</span><span class="only-hiv">Réservez votre créneau</span><span class="only-noe">Réservez avant les fêtes</span></h2>
+      <p>Trois étapes : votre formule, votre jour et votre heure, puis vos coordonnées. Nous vous confirmons le rendez-vous rapidement.</p>
     </div>
     <div class="merci" id="merci" hidden tabindex="-1">
-      <svg viewBox="0 0 80 96" aria-hidden="true"><path d="M40 4C20 4 8 20 8 40v50l9-8 8 8 8-8 7 8 7-8 8 8 8-8 9 8V40C72 20 60 4 40 4z" fill="#FFF4E6" stroke="#000" stroke-width="3"/><ellipse cx="29" cy="40" rx="5" ry="7" fill="#160423"/><ellipse cx="51" cy="40" rx="5" ry="7" fill="#160423"/><path d="M30 56q10 10 20 0" stroke="#160423" stroke-width="4" fill="none" stroke-linecap="round"/></svg>
-      <strong id="merciTitre">Sort lancé&nbsp;!</strong>
+      <div class="merci-perso"><span class="only-hal"><svg viewBox="0 0 80 96" aria-hidden="true"><path d="M40 4C20 4 8 20 8 40v50l9-8 8 8 8-8 7 8 7-8 8 8 8-8 9 8V40C72 20 60 4 40 4z" fill="#FFF4E6" stroke="#000" stroke-width="3"/><ellipse cx="29" cy="40" rx="5" ry="7" fill="#160423"/><ellipse cx="51" cy="40" rx="5" ry="7" fill="#160423"/><path d="M30 56q10 10 20 0" stroke="#160423" stroke-width="4" fill="none" stroke-linecap="round"/></svg></span><span class="only-hiv"><svg viewBox="0 0 96 96" aria-hidden="true"><path d="M14 30l34-18 34 18v40L48 88 14 70z" fill="#DDF6FF" stroke="#000" stroke-width="3" stroke-linejoin="round"/><path d="M14 30l34 18 34-18M48 48v40" stroke="#000" stroke-width="3" fill="none" stroke-linejoin="round"/><path d="M22 36l18 9" stroke="#fff" stroke-width="5" stroke-linecap="round"/><ellipse cx="58" cy="58" rx="3.5" ry="5" fill="#06172B"/><ellipse cx="72" cy="52" rx="3.5" ry="5" fill="#06172B"/><path d="M58 70q8 4 15-4" stroke="#06172B" stroke-width="3" fill="none" stroke-linecap="round"/><ellipse cx="54" cy="66" rx="4" ry="2.5" fill="#7FD8FF"/><ellipse cx="77" cy="60" rx="4" ry="2.5" fill="#7FD8FF"/></svg></span><span class="only-noe"><svg viewBox="0 0 96 120" aria-hidden="true"><circle cx="48" cy="84" r="30" fill="#FFFFFF" stroke="#000" stroke-width="3"/><circle cx="48" cy="40" r="22" fill="#FFFFFF" stroke="#000" stroke-width="3"/><path d="M26 22h44v6H26z" fill="#10140F"/><path d="M33 6h30v18H33z" fill="#10140F"/><path d="M33 18h30v5H33z" fill="#FF6B5E"/><circle cx="41" cy="38" r="3" fill="#10140F"/><circle cx="55" cy="38" r="3" fill="#10140F"/><path d="M48 43l14 4-14 3z" fill="#FF8A2B" stroke="#000" stroke-width="1.5" stroke-linejoin="round"/><path d="M28 58q20 10 40 0l2 7q-22 10-44 0z" fill="#FF6B5E" stroke="#000" stroke-width="2.5"/><path d="M62 62l6 18 6-2-4-16z" fill="#2FBF71" stroke="#000" stroke-width="2.5"/><circle cx="48" cy="76" r="3" fill="#10140F"/><circle cx="48" cy="88" r="3" fill="#10140F"/></svg></span></div>
+      <strong id="merciTitre">C’est réservé&nbsp;!</strong>
       <p id="merciTexte"></p>
       <button type="button" class="btn" id="merciOk">Réserver un autre nettoyage</button>
     </div>
@@ -691,55 +762,7 @@ footer a{color:var(--lime)}
         <input type="hidden" name="subject" id="mailSubject" value="Nouveau rendez-vous — BriAuto Clean">
         <p style="display:none"><label>Ne pas remplir : <input name="bot-field" tabindex="-1" autocomplete="off"></label></p>
 
-        <div class="field-row">
-          <div class="field">
-            <label for="nom">Nom et prénom</label>
-            <input type="text" id="nom" name="Nom" required>
-          </div>
-          <div class="field">
-            <label for="tel">Téléphone</label>
-            <input type="tel" id="tel" name="Téléphone" inputmode="tel" autocomplete="tel" placeholder="06 12 34 56 78" required>
-          </div>
-        </div>
-
-        <div class="field">
-          <label for="adresse">Votre adresse</label>
-          <div class="addr-wrap">
-            <input type="text" id="adresse" name="Adresse du client" placeholder="Commencez à taper : 13 rue Gaston Fontaine, Oissery…" autocomplete="off" required
-              role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="addrList" aria-describedby="adresseAide addrStatus">
-            <ul class="addr-list" id="addrList" role="listbox" hidden></ul>
-          </div>
-          <p class="addr-status" id="addrStatus" aria-live="polite"></p>
-          <p class="field-help" id="adresseAide">Nous venons récupérer votre véhicule à cette adresse pour le nettoyer en station de lavage et/ou dans nos locaux.</p>
-        </div>
-
-        <div class="field">
-          <label id="dtLabel">Date et heure de l'intervention</label>
-          <div class="dt-picker" id="dtPicker" role="group" aria-labelledby="dtLabel">
-            <div class="dt-cal">
-              <div class="dt-head">
-                <button type="button" class="dt-nav" id="dtPrev" aria-label="Mois précédent">‹</button>
-                <span class="dt-month" id="dtMonth"></span>
-                <button type="button" class="dt-nav" id="dtNext" aria-label="Mois suivant">›</button>
-              </div>
-              <div class="dt-week"><span>L</span><span>M</span><span>M</span><span>J</span><span>V</span><span>S</span><span>D</span></div>
-              <div class="dt-days" id="dtDays"></div>
-            </div>
-            <div class="dt-slots">
-              <div class="dt-slots-title" id="dtSlotsTitle">Choisissez d'abord une date</div>
-              <div class="dt-slot-grid" id="dtSlots"></div>
-            </div>
-          </div>
-          <div class="dt-summary" id="dtSummary" aria-live="polite">Aucun créneau sélectionné</div>
-          <input type="hidden" id="date" name="Date souhaitée">
-          <input type="hidden" id="heure" name="Heure souhaitée">
-        </div>
-
-        <div class="field">
-          <label for="vehicule">Véhicule (marque, modèle) <span class="optional">— facultatif</span></label>
-          <input type="text" id="vehicule" name="Véhicule" placeholder="Ex : Peugeot 208">
-        </div>
-
+        <p class="etape-form"><span>1</span> Votre formule</p>
         <div class="mode-tabs" role="tablist">
           <button type="button" class="mode-tab active" data-mode="formule">Une formule complète</button>
           <button type="button" class="mode-tab" data-mode="carte">Uniquement à la carte</button>
@@ -751,9 +774,9 @@ footer a{color:var(--lime)}
           <fieldset>
             <legend>Formule</legend>
             <div class="radio-grid" id="pkgRadios">
-              <label class="radio-card"><input type="radio" name="Formule" value="Extérieur — 40€" data-price="40">Extérieur<br><span class="radio-price">40€</span></label>
+              <label class="radio-card"><input type="radio" name="Formule" value="Extérieur — 40€" data-price="40" checked>Extérieur<br><span class="radio-price">40€</span></label>
               <label class="radio-card"><input type="radio" name="Formule" value="Intérieur — 110€" data-price="110">Intérieur<br><span class="radio-price">110€</span></label>
-              <label class="radio-card"><input type="radio" name="Formule" value="Extérieur + Intérieur — 130€" data-price="130" checked>Ext. + Int.<br><span class="radio-price">130€</span></label>
+              <label class="radio-card"><input type="radio" name="Formule" value="Extérieur + Intérieur — 130€" data-price="130">Ext. + Int.<br><span class="radio-price">130€</span></label>
             </div>
             <div class="pkg-detail" id="pkgDetail" aria-live="polite"></div>
           </fieldset>
@@ -785,9 +808,61 @@ footer a{color:var(--lime)}
 
         <div class="total-box">
           <span>Total estimé</span>
-          <strong id="totalPrice">130€</strong>
+          <strong id="totalPrice">40€</strong>
         </div>
-        <input type="hidden" name="Total estimé" id="totalField" value="130€">
+        <input type="hidden" name="Total estimé" id="totalField" value="40€">
+
+        <p class="etape-form"><span>2</span> Le jour et l’heure</p>
+        <div class="field">
+          <label id="dtLabel">Date et heure de l'intervention</label>
+          <div class="dt-picker" id="dtPicker" role="group" aria-labelledby="dtLabel">
+            <div class="dt-cal">
+              <div class="dt-head">
+                <button type="button" class="dt-nav" id="dtPrev" aria-label="Mois précédent">‹</button>
+                <span class="dt-month" id="dtMonth"></span>
+                <button type="button" class="dt-nav" id="dtNext" aria-label="Mois suivant">›</button>
+              </div>
+              <div class="dt-week"><span>L</span><span>M</span><span>M</span><span>J</span><span>V</span><span>S</span><span>D</span></div>
+              <div class="dt-days" id="dtDays"></div>
+              <p class="dt-legende" id="dtLegende">Jours grisés : complets ou fermés.</p>
+            </div>
+            <div class="dt-slots">
+              <div class="dt-slots-title" id="dtSlotsTitle">Choisissez d'abord une date</div>
+              <div class="dt-slot-grid" id="dtSlots"></div>
+            </div>
+          </div>
+          <div class="dt-summary" id="dtSummary" aria-live="polite">Aucun créneau sélectionné</div>
+          <input type="hidden" id="date" name="Date souhaitée">
+          <input type="hidden" id="heure" name="Heure souhaitée">
+        </div>
+
+        <p class="etape-form"><span>3</span> Vos coordonnées</p>
+        <div class="field-row">
+          <div class="field">
+            <label for="nom">Nom et prénom</label>
+            <input type="text" id="nom" name="Nom" required>
+          </div>
+          <div class="field">
+            <label for="tel">Téléphone</label>
+            <input type="tel" id="tel" name="Téléphone" inputmode="tel" autocomplete="tel" placeholder="06 12 34 56 78" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="adresse">Votre adresse</label>
+          <div class="addr-wrap">
+            <input type="text" id="adresse" name="Adresse du client" placeholder="Commencez à taper : 13 rue Gaston Fontaine, Oissery…" autocomplete="off" required
+              role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="addrList" aria-describedby="adresseAide addrStatus">
+            <ul class="addr-list" id="addrList" role="listbox" hidden></ul>
+          </div>
+          <p class="addr-status" id="addrStatus" aria-live="polite"></p>
+          <p class="field-help" id="adresseAide">Nous venons récupérer votre véhicule à cette adresse pour le nettoyer en station de lavage et/ou dans nos locaux.</p>
+        </div>
+
+        <div class="field">
+          <label for="vehicule">Véhicule (marque, modèle) <span class="optional">— facultatif</span></label>
+          <input type="text" id="vehicule" name="Véhicule" placeholder="Ex : Peugeot 208">
+        </div>
 
         <div class="field">
           <label for="message">Message (facultatif)</label>
@@ -814,7 +889,7 @@ footer a{color:var(--lime)}
   </div>
 </footer>
 <div class="barre" id="barre">
-  <div><span class="t" id="barreNom">Le Sort Complet</span><strong id="barreTotal">130€</strong></div>
+  <div><span class="t" id="barreNom">Extérieur</span><strong id="barreTotal">40€</strong></div>
   <a class="btn btn-primary" href="#rendez-vous">Réserver</a>
 </div>
 
@@ -1186,7 +1261,7 @@ footer a{color:var(--lime)}
     return {
       value: btn.dataset.pkg,
       name: card.querySelector('.pkg-eyebrow').textContent.trim(),
-      title: card.querySelector('h3').textContent.trim(),
+      title: card.querySelector('h3').innerText.trim(),
       desc: card.querySelector('.desc').textContent.trim(),
       items: Array.from(card.querySelectorAll('li')).map(li => li.textContent.trim())
     };
@@ -1916,12 +1991,19 @@ footer a{color:var(--lime)}
   });
 </script>
 <script>
-  // ===== Style « Halloween fun » : mur, confirmation, barre du bas =====
+  // ===== Style saisonnier (Halloween / hiver / Noël) : mur, confirmation, barre du bas =====
   (function(){
+    const THEME = document.documentElement.dataset.theme || 'hiver';
+    const TXT = {
+      halloween: { tout: 'Tout exorciser', remettre: 'Remettre la poussière', merci: 'Sort lancé' },
+      hiver: { tout: 'Tout dégeler', remettre: 'Tout regeler', merci: 'C’est réservé' },
+      noel: { tout: 'Tout déballer', remettre: 'Tout remballer', merci: 'C’est dans la hotte' }
+    }[THEME];
     // Mur des exorcismes : les photos se retournent
     const grille = document.getElementById('murGrille'), toutBtn = document.getElementById('toutBtn');
     const cartes = Array.from(grille.querySelectorAll('.carte'));
-    function majTout(){ toutBtn.textContent = cartes.every(c => c.classList.contains('vue')) ? 'Remettre la poussière' : 'Tout exorciser'; }
+    function majTout(){ toutBtn.textContent = cartes.every(c => c.classList.contains('vue')) ? TXT.remettre : TXT.tout; }
+    majTout();
     function poser(c, vue){
       c.classList.toggle('vue', vue); c.setAttribute('aria-pressed', vue);
       c.setAttribute('aria-label', c.getAttribute('aria-label').replace(/voir l’(avant|après)$/, vue ? 'voir l’avant' : 'voir l’après'));
@@ -1933,7 +2015,7 @@ footer a{color:var(--lime)}
     const merci = document.getElementById('merci');
     window.briautoMerci = p => {
       const prenom = (p.nom || '').trim().split(' ')[0];
-      document.getElementById('merciTitre').textContent = 'Sort lancé' + (prenom ? ', ' + prenom : '') + '\u00a0!';
+      document.getElementById('merciTitre').textContent = TXT.merci + (prenom ? ', ' + prenom : '') + '\u00a0!';
       document.getElementById('merciTexte').textContent = 'Votre demande pour le ' + p.date.charAt(0).toLowerCase() + p.date.slice(1) +
         (p.heure === "n'importe quelle heure" ? ' (horaire indifférent)' : ' à ' + p.heure) + ' est bien partie. Nous vous confirmons le rendez-vous par message au ' + p.telephone + '.';
       merci.hidden = false;
@@ -1945,7 +2027,14 @@ footer a{color:var(--lime)}
     });
 
     // Barre du bas (téléphone) : formule choisie + total, cachée pendant le formulaire
-    const NOMS = { 'Extérieur — 40€': 'Le Coup de Balai', 'Intérieur — 110€': 'Le Grand Ménage Hanté', 'Extérieur + Intérieur — 130€': 'Le Sort Complet' };
+    const NOMS = { 'Extérieur — 40€': 'Extérieur', 'Intérieur — 110€': 'Intérieur', 'Extérieur + Intérieur — 130€': 'Extérieur + Intérieur' };
+
+    // Légende du calendrier : jours toujours fermés (calculés depuis les horaires)
+    try {
+      const noms = ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'];
+      const fermes = [1, 2, 3, 4, 5, 6, 0].filter(j => { const d = new Date(2026, 0, 4 + j); return !slotsDuJour(d).length; }).map(j => noms[j]);
+      document.getElementById('dtLegende').textContent = 'Jours grisés : complets ou fermés.' + (fermes.length ? ' Fermé le ' + fermes.join(' et le ') + '.' : '');
+    } catch (e) {}
     const barre = document.getElementById('barre'), bNom = document.getElementById('barreNom'), bTotal = document.getElementById('barreTotal');
     function majBarre(){
       const r = document.querySelector('#pkgRadios input:checked');
