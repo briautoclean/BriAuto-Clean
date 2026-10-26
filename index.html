@@ -1319,7 +1319,7 @@ html.theme-noel{--nuit:#0E2A1E;--nuit2:#154330;--nuit3:#1E5A40;--creme:#FFF7EC;-
         const lab = cb.closest('label'); lab.classList.toggle('is-off', !ok); lab.title = pourquoi;
         if (ok) lab.removeAttribute('data-why'); else lab.dataset.why = pourquoi;
         lab.classList.toggle('is-na', !ok && !DEPEND_DE[v]);
-        lab.hidden = !!SEULEMENT_AVEC_FORMULE[v] && !(mode === 'formule' && formule === SEULEMENT_AVEC_FORMULE[v]);   // visible seulement avec sa formule
+        lab.hidden = mode === 'formule' ? !(OPTIONS_PAR_FORMULE[formule] || []).includes(v) : !!SEULEMENT_AVEC_FORMULE[v];   // hors formule : masquée   // visible seulement avec sa formule
       });
     }
   }
@@ -1330,7 +1330,7 @@ html.theme-noel{--nuit:#0E2A1E;--nuit2:#154330;--nuit3:#1E5A40;--creme:#FFF7EC;-
     appliquerRegles('#pageOptionChecks', base && base.value ? 'formule' : 'carte', base ? base.value : '');
     const r = document.getElementById('optRules');
     if (r) r.textContent = currentMode === 'formule'
-      ? 'Les options grisées ne sont pas disponibles avec la formule choisie.'
+      ? 'Seules les options possibles avec cette formule sont affichées.'
       : '« Nourrissant cuir » demande « Nettoyage sièges ».';
     updateTotal(); if (typeof updatePageTotal === 'function') updatePageTotal();
   }
