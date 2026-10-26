@@ -588,22 +588,11 @@ html.theme-noel{--nuit:#0E2A1E;--nuit2:#154330;--nuit3:#1E5A40;--creme:#FFF7EC;-
     <div class="section-head reveal">
       <span class="tag"><span class="only-hal">Le chaudron</span><span class="only-hiv">À la carte</span><span class="only-noe">La hotte</span></span>
       <h2><span class="only-hal">Composez votre potion</span><span class="only-hiv">Composez votre nettoyage</span><span class="only-noe">Remplissez votre hotte</span></h2>
-      <p>Partez d'une formule si vous hésitez, ou composez 100 % à la carte, <span class="only-hal">ingrédient par ingrédient.</span><span class="only-hiv">option par option.</span><span class="only-noe">option par option.</span></p>
+      <p>100 % à la carte : choisissez seulement les prestations dont vous avez besoin, <span class="only-hal">ingrédient par ingrédient.</span><span class="only-hiv">option par option.</span><span class="only-noe">option par option.</span> Pour une formule complète, voir plus haut.</p>
     </div>
-    <p class="carte-step reveal"><span>1</span> Choisissez votre point de départ</p>
-    <div class="base-grid reveal" id="pageBase">
-      <label class="base-card"><input type="radio" name="pageBase" value="" data-price="0" checked>
-        <strong>100 % à la carte</strong><em>0€</em><small>Vous savez exactement ce qu'il vous faut.</small></label>
-      <label class="base-card"><input type="radio" name="pageBase" value="Extérieur — 40€" data-price="40">
-        <strong>Formule Extérieur</strong><em>40€</em><small>La carrosserie est sale, l'intérieur est propre.</small></label>
-      <label class="base-card"><input type="radio" name="pageBase" value="Intérieur — 110€" data-price="110">
-        <strong>Formule Intérieur</strong><em>110€</em><small>L'habitacle a besoin d'un vrai coup de propre.</small></label>
-      <label class="base-card base-reco"><input type="radio" name="pageBase" value="Extérieur + Intérieur — 130€" data-price="130">
-        <span class="base-badge">Vous hésitez ? Prenez celle-ci</span>
-        <strong>Extérieur + Intérieur</strong><em>130€</em><small>Le nettoyage complet, dedans comme dehors.</small></label>
-    </div>
+    <div id="pageBase" hidden><input type="radio" name="pageBase" value="" data-price="0" checked aria-hidden="true" tabindex="-1"></div>
     <p class="base-detail reveal" id="pageBaseDetail"></p>
-    <p class="carte-step reveal"><span>2</span> <b id="pageStep2">Choisissez vos prestations</b></p>
+    <p class="carte-step reveal" hidden><b id="pageStep2"></b></p>
     <div class="options-grid" id="pageOptionChecks">
 
       <label class="opt reveal" style="--d:0.04s">
@@ -1948,7 +1937,7 @@ html.theme-noel{--nuit:#0E2A1E;--nuit2:#154330;--nuit3:#1E5A40;--creme:#FFF7EC;-
       try {
         const base = pageBases().find(r => r.checked);
         const formule = base ? base.value : '';
-        if (derniere !== null && formule !== derniere) pageOpts().forEach(c => { c.checked = false; });   // nouvelle formule : options remises à zéro
+   // nouvelle formule : options remises à zéro
         derniere = formule;
         if (formule) {
           if (currentMode !== 'formule') setMode('formule');
@@ -1966,10 +1955,10 @@ html.theme-noel{--nuit:#0E2A1E;--nuit2:#154330;--nuit3:#1E5A40;--creme:#FFF7EC;-
         const formule = currentMode === 'formule' && r ? r.value : '';
         if (derniere !== null && formule !== derniere && garderOptions !== true) formOpts().forEach(c => { c.checked = false; });   // nouvelle formule : options remises à zéro
         derniere = formule;
-        pageBases().forEach(b => { b.checked = (b.value === formule); });
+        pageBases().forEach(b => { b.checked = true; });
         const detail = document.getElementById('pageBase');
         if (detail) detail.dispatchEvent(new Event('change'));   // texte « Déjà compris » + règles
-        copierCoches(formOpts(), pageOpts());
+        if (formule) pageOpts().forEach(c => { c.checked = false; }); else copierCoches(formOpts(), pageOpts());
         apres();
       } finally { enCours = false; }
     }
