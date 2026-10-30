@@ -54,6 +54,21 @@
   .btn.sombre{background:var(--nuit); color:#fff}
   .mail{display:inline-block; margin-top:20px; font-size:15px; color:var(--gris); text-decoration:underline; text-underline-offset:3px}
   @media (prefers-reduced-motion:reduce){.btn{transition:none}}
+  /* petits écrans (iPhone SE, texte agrandi) : tout tient sur un écran, boutons sur une ligne */
+  @media (max-width:350px){
+    .carte{padding:22px 16px 18px}
+    h1{font-size:30px}
+    .tel{font-size:27px}
+    .btn{font-size:16.5px; gap:8px; padding:12px 12px}
+  }
+  @media (max-height:620px){
+    body{padding-top:max(12px, env(safe-area-inset-top)); padding-bottom:max(12px, env(safe-area-inset-bottom))}
+    h1{margin-top:14px}
+    .tel{margin-top:14px}
+    .actions{margin-top:14px; gap:10px}
+    .btn{min-height:52px}
+    .mail{margin-top:14px}
+  }
 </style>
 </head>
 <body>
