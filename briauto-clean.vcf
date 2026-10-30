@@ -1,14 +1,15 @@
 BEGIN:VCARD
 VERSION:3.0
-N:Lefevre;Alexandre;;;
-FN:Alexandre Lefevre
+N:BriAuto Clean;;;;
+FN:BriAuto Clean
+NICKNAME:Alexandre Lefevre
 ORG:BriAuto Clean
 TITLE:Nettoyage auto avec récupération du véhicule
 TEL;TYPE=CELL,VOICE:+33783671916
 EMAIL;TYPE=INTERNET:briauto.cleaning@gmail.com
 URL:https://briautoclean.github.io/BriAuto-Clean/
 ADR;TYPE=WORK:;;;Oissery;;77178;France
-NOTE:Nettoyage intérieur et extérieur. Récupération du véhicule à Oissery et 30 km autour. Réservation en ligne sur le site.
+NOTE:Alexandre Lefevre. Nettoyage intérieur et extérieur avec récupération du véhicule\, Oissery et 30 km autour. Réservation en ligne sur le site.
 PHOTO;ENCODING=b;TYPE=PNG:iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAIAAACyr5FlAAAIb
  ElEQVR4nO3da2xUZR7H8bmdTjunLe3MtAXaItALFgcogqvLKizskmgICoIafKEveLNujBc2riR
  Gd+Nms8nuZpN1Y0LcuL6pmiqBbNisiUTrVmDRyC5iBcqllF4oSC+2ZaaXmc7xhYZUw5+Z85z/8
