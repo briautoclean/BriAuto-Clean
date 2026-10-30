@@ -302,6 +302,8 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .dt-slot-any{grid-column:span 2}
 .dt-slots-note{font-size:14px;color:var(--warn);margin-top:10px}
 .dt-slots-note:empty{display:none}
+.dt-mois-note{margin:10px 0 0;font-size:14px;font-weight:800;color:var(--encre);background:var(--creme);border:2px solid #000;border-radius:10px;padding:6px 10px}
+.dt-mois-note[hidden]{display:none}
 .dt-jours-note{margin-top:10px;font-size:14px;font-weight:800;color:var(--encre);background:var(--orange);border:2px solid #000;border-radius:10px;padding:6px 10px}
 .dt-summary{font-size:15px;font-weight:700;color:var(--gris)}
 .dt-summary.ok{color:var(--ok)}
@@ -748,11 +750,11 @@ details.pkg-addons>summary{flex-wrap:wrap;column-gap:10px;row-gap:0}
     </div>
     <div class="grille-mur" id="murGrille">
       <button type="button" class="carte" aria-pressed="false" aria-label="Siège conducteur : voir l’après"><span class="retourne"><span class="face avant"><img src="img/avant-siege-conducteur.webp" alt="" decoding="async"><span class="etiquette">Avant · siège</span><span class="appel"><span class="only-hal">Touchez pour exorciser</span><span class="only-hiv">Touchez pour dégeler</span><span class="only-noe">Touchez pour déballer</span></span></span><span class="face apres"><img src="img/apres-siege-conducteur.webp" alt="" decoding="async"><span class="etiquette">Après · siège</span></span></span></button>
-      <button type="button" class="carte" aria-pressed="false" aria-label="Tableau de bord : voir l’après"><span class="retourne"><span class="face avant"><img src="img/avant-tableau-de-bord-poussiereux.webp" alt="" decoding="async"><span class="etiquette">Avant · tableau de bord</span><span class="appel"><span class="only-hal">Touchez pour exorciser</span><span class="only-hiv">Touchez pour dégeler</span><span class="only-noe">Touchez pour déballer</span></span></span><span class="face apres"><img src="img/apres-tableau-de-bord-nettoye.webp" alt="" decoding="async"><span class="etiquette">Après · tableau de bord</span></span></span></button>
-      <button type="button" class="carte" aria-pressed="false" aria-label="Banquette passager : voir l’après"><span class="retourne"><span class="face avant"><img src="img/avant-banquette-passager.webp" alt="" decoding="async"><span class="etiquette">Avant · banquette</span><span class="appel"><span class="only-hal">Touchez pour exorciser</span><span class="only-hiv">Touchez pour dégeler</span><span class="only-noe">Touchez pour déballer</span></span></span><span class="face apres"><img src="img/apres-banquette-passager.webp" alt="" decoding="async"><span class="etiquette">Après · banquette</span></span></span></button>
-      <button type="button" class="carte" aria-pressed="false" aria-label="Tapis conducteur : voir l’après"><span class="retourne"><span class="face avant"><img src="img/avant-tapis-conducteur-sale.webp" alt="" decoding="async"><span class="etiquette">Avant · tapis</span><span class="appel"><span class="only-hal">Touchez pour exorciser</span><span class="only-hiv">Touchez pour dégeler</span><span class="only-noe">Touchez pour déballer</span></span></span><span class="face apres"><img src="img/apres-tapis-conducteur-propre.webp" alt="" decoding="async"><span class="etiquette">Après · tapis</span></span></span></button>
-      <button type="button" class="carte" aria-pressed="false" aria-label="Panneau de porte : voir l’après"><span class="retourne"><span class="face avant"><img src="img/avant-panneau-de-porte-terne.webp" alt="" decoding="async"><span class="etiquette">Avant · portière</span><span class="appel"><span class="only-hal">Touchez pour exorciser</span><span class="only-hiv">Touchez pour dégeler</span><span class="only-noe">Touchez pour déballer</span></span></span><span class="face apres"><img src="img/apres-panneau-de-porte-nettoye.webp" alt="" decoding="async"><span class="etiquette">Après · portière</span></span></span></button>
-      <button type="button" class="carte" aria-pressed="false" aria-label="Boîte à gants : voir l’après"><span class="retourne"><span class="face avant"><img src="img/avant-boite-a-gants-utilitaire.webp" alt="" decoding="async"><span class="etiquette">Avant · boîte à gants</span><span class="appel"><span class="only-hal">Touchez pour exorciser</span><span class="only-hiv">Touchez pour dégeler</span><span class="only-noe">Touchez pour déballer</span></span></span><span class="face apres"><img src="img/apres-boite-a-gants-utilitaire.webp" alt="" decoding="async"><span class="etiquette">Après · boîte à gants</span></span></span></button>
+      <button type="button" class="carte" aria-pressed="false" aria-label="Tableau de bord : voir l’après"><span class="retourne"><span class="face avant"><img data-src="img/avant-tableau-de-bord-poussiereux.webp" alt="" decoding="async"><span class="etiquette">Avant · tableau de bord</span><span class="appel"><span class="only-hal">Touchez pour exorciser</span><span class="only-hiv">Touchez pour dégeler</span><span class="only-noe">Touchez pour déballer</span></span></span><span class="face apres"><img data-src="img/apres-tableau-de-bord-nettoye.webp" alt="" decoding="async"><span class="etiquette">Après · tableau de bord</span></span></span></button>
+      <button type="button" class="carte" aria-pressed="false" aria-label="Banquette passager : voir l’après"><span class="retourne"><span class="face avant"><img data-src="img/avant-banquette-passager.webp" alt="" decoding="async"><span class="etiquette">Avant · banquette</span><span class="appel"><span class="only-hal">Touchez pour exorciser</span><span class="only-hiv">Touchez pour dégeler</span><span class="only-noe">Touchez pour déballer</span></span></span><span class="face apres"><img data-src="img/apres-banquette-passager.webp" alt="" decoding="async"><span class="etiquette">Après · banquette</span></span></span></button>
+      <button type="button" class="carte" aria-pressed="false" aria-label="Tapis conducteur : voir l’après"><span class="retourne"><span class="face avant"><img data-src="img/avant-tapis-conducteur-sale.webp" alt="" decoding="async"><span class="etiquette">Avant · tapis</span><span class="appel"><span class="only-hal">Touchez pour exorciser</span><span class="only-hiv">Touchez pour dégeler</span><span class="only-noe">Touchez pour déballer</span></span></span><span class="face apres"><img data-src="img/apres-tapis-conducteur-propre.webp" alt="" decoding="async"><span class="etiquette">Après · tapis</span></span></span></button>
+      <button type="button" class="carte" aria-pressed="false" aria-label="Panneau de porte : voir l’après"><span class="retourne"><span class="face avant"><img data-src="img/avant-panneau-de-porte-terne.webp" alt="" decoding="async"><span class="etiquette">Avant · portière</span><span class="appel"><span class="only-hal">Touchez pour exorciser</span><span class="only-hiv">Touchez pour dégeler</span><span class="only-noe">Touchez pour déballer</span></span></span><span class="face apres"><img data-src="img/apres-panneau-de-porte-nettoye.webp" alt="" decoding="async"><span class="etiquette">Après · portière</span></span></span></button>
+      <button type="button" class="carte" aria-pressed="false" aria-label="Boîte à gants : voir l’après"><span class="retourne"><span class="face avant"><img data-src="img/avant-boite-a-gants-utilitaire.webp" alt="" decoding="async"><span class="etiquette">Avant · boîte à gants</span><span class="appel"><span class="only-hal">Touchez pour exorciser</span><span class="only-hiv">Touchez pour dégeler</span><span class="only-noe">Touchez pour déballer</span></span></span><span class="face apres"><img data-src="img/apres-boite-a-gants-utilitaire.webp" alt="" decoding="async"><span class="etiquette">Après · boîte à gants</span></span></span></button>
     </div>
   </div>
 </section>
@@ -1677,6 +1679,29 @@ details.pkg-addons>summary{flex-wrap:wrap;column-gap:10px;row-gap:0}
       b.addEventListener('click', () => { selDate = date; selSlot = null; renderCalendar(); renderSlots(); syncFields(); });
       dtDays.appendChild(b);
     }
+    moisAutomatique();
+  }
+  // Plus aucune disponibilité ce mois-ci ? On affiche directement le mois suivant (une seule fois, tant que le client n'a pas changé de mois lui-même).
+  // Si une disponibilité réapparaît ce mois-ci (autre formule, agenda mis à jour), on revient au mois en cours.
+  let navManuelle = false, moisAuto = false;
+  function moisAvecDispo(y, m){
+    const n = new Date(y, m + 1, 0).getDate();
+    for (let d = 1; d <= n; d++) { const date = new Date(y, m, d); if (date >= today && availableSlots(date, DUREE_CARTE).length) return true; }
+    return false;
+  }
+  function moisAutomatique(){
+    let note = document.getElementById('dtMoisNote');
+    if (!note) { note = document.createElement('p'); note.id = 'dtMoisNote'; note.className = 'dt-mois-note'; note.setAttribute('role', 'status'); dtDays.after(note); }
+    const ty = today.getFullYear(), tm = today.getMonth();
+    const courant = viewYear === ty && viewMonth === tm;
+    if (!navManuelle && etatJour(new Date(ty, tm, 1)) !== 'chargement') {
+      const vide = !moisAvecDispo(ty, tm);
+      if (courant && vide && !moisAuto) { moisAuto = true; if (++viewMonth > 11) { viewMonth = 0; viewYear++; } renderCalendar(); return; }
+      if (moisAuto && !courant && !vide && !selDate) { moisAuto = false; viewYear = ty; viewMonth = tm; renderCalendar(); return; }
+    }
+    const montrer = moisAuto && !courant && !navManuelle;
+    note.hidden = !montrer;
+    if (montrer) note.textContent = 'Plus de créneau disponible en ' + new Date(ty, tm, 1).toLocaleDateString('fr-FR', { month: 'long' }) + ' : voici ' + new Date(viewYear, viewMonth, 1).toLocaleDateString('fr-FR', { month: 'long' }) + '.';
   }
   function availableSlots(date, duree){
     // pour aujourd'hui, on masque les créneaux déjà passés ; partout, on retire les créneaux déjà réservés
@@ -1744,9 +1769,9 @@ details.pkg-addons>summary{flex-wrap:wrap;column-gap:10px;row-gap:0}
       dtSummary.className = 'dt-summary';
     }
   }
-  document.getElementById('dtPrev').addEventListener('click', () => { if (--viewMonth < 0) { viewMonth = 11; viewYear--; } renderCalendar(); });
-  document.getElementById('dtNext').addEventListener('click', () => { if (++viewMonth > 11) { viewMonth = 0; viewYear++; } renderCalendar(); });
-  bookingForm.addEventListener('reset', () => { selDate = null; selSlot = null; viewYear = today.getFullYear(); viewMonth = today.getMonth();
+  document.getElementById('dtPrev').addEventListener('click', () => { navManuelle = true; if (--viewMonth < 0) { viewMonth = 11; viewYear--; } renderCalendar(); });
+  document.getElementById('dtNext').addEventListener('click', () => { navManuelle = true; if (++viewMonth > 11) { viewMonth = 0; viewYear++; } renderCalendar(); });
+  bookingForm.addEventListener('reset', () => { selDate = null; selSlot = null; navManuelle = false; moisAuto = false; viewYear = today.getFullYear(); viewMonth = today.getMonth();
     setTimeout(() => { renderCalendar(); renderSlots(); syncFields(); }, 0); });
   // « Uniquement à la carte » sans aucune prestation (0€) : envoi bloqué
   bookingForm.addEventListener('submit', e => {
@@ -2083,5 +2108,18 @@ details.pkg-addons>summary{flex-wrap:wrap;column-gap:10px;row-gap:0}
   })();
 </script>
 
+<script>
+  // Mur avant / après : les photos se chargent seulement quand on s'approche de la section (page plus rapide à ouvrir).
+  (function(){
+    const mur = document.getElementById('avant-apres');
+    const imgs = mur ? Array.from(mur.querySelectorAll('img[data-src]')) : [];
+    if (!imgs.length) return;
+    const charger = () => { imgs.forEach(i => { if (i.dataset.src) { i.src = i.dataset.src; i.removeAttribute('data-src'); } }); };
+    if (!('IntersectionObserver' in window)) { charger(); return; }
+    const io = new IntersectionObserver(e => { if (e.some(x => x.isIntersecting)) { io.disconnect(); charger(); } }, { rootMargin: '600px 0px' });
+    io.observe(mur);
+    window.addEventListener('load', () => setTimeout(charger, 4000));   // et de toute façon peu après le chargement complet
+  })();
+</script>
 </body>
 </html>
