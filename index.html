@@ -21,7 +21,7 @@
 <meta name="twitter:title" content="BriAuto Clean — Nettoyage auto avec récupération du véhicule">
 <meta name="twitter:description" content="Nettoyage auto à Oissery (77) et 30 km autour : nous récupérons votre véhicule chez vous. Formules ou prestations à la carte, réservation en ligne.">
 <meta name="twitter:image" content="https://briautoclean.github.io/BriAuto-Clean/img/apercu-partage-v2.jpg">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "AutoWash", "name": "BriAuto Clean", "url": "https://briautoclean.github.io/BriAuto-Clean/", "image": "https://briautoclean.github.io/BriAuto-Clean/img/apercu-partage-v2.jpg", "logo": "https://briautoclean.github.io/BriAuto-Clean/img/icone-180.png", "description": "Nettoyage automobile intérieur et extérieur avec récupération du véhicule à domicile, autour d'Oissery (77).", "email": "briauto.cleaning@gmail.com", "priceRange": "2 € – 130 €", "address": {"@type": "PostalAddress", "addressLocality": "Oissery", "postalCode": "77178", "addressRegion": "Seine-et-Marne", "addressCountry": "FR"}, "geo": {"@type": "GeoCoordinates", "latitude": 49.0697, "longitude": 2.8158}, "areaServed": {"@type": "GeoCircle", "geoMidpoint": {"@type": "GeoCoordinates", "latitude": 49.0697, "longitude": 2.8158}, "geoRadius": "30000"}, "openingHoursSpecification": [{"@type": "OpeningHoursSpecification", "dayOfWeek": ["Tuesday", "Sunday"], "opens": "08:00", "closes": "15:00"}, {"@type": "OpeningHoursSpecification", "dayOfWeek": "Monday", "opens": "08:00", "closes": "09:30"}, {"@type": "OpeningHoursSpecification", "dayOfWeek": "Wednesday", "opens": "16:30", "closes": "17:00"}, {"@type": "OpeningHoursSpecification", "dayOfWeek": ["Thursday", "Friday"], "opens": "17:00", "closes": "17:30"}], "hasOfferCatalog": {"@type": "OfferCatalog", "name": "Formules de nettoyage", "itemListElement": [{"@type": "Offer", "price": "40", "priceCurrency": "EUR", "itemOffered": {"@type": "Service", "name": "Formule Extérieur"}}, {"@type": "Offer", "price": "110", "priceCurrency": "EUR", "itemOffered": {"@type": "Service", "name": "Formule Intérieur"}}, {"@type": "Offer", "price": "130", "priceCurrency": "EUR", "itemOffered": {"@type": "Service", "name": "Formule Extérieur + Intérieur"}}]}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "AutoWash", "name": "BriAuto Clean", "url": "https://briautoclean.github.io/BriAuto-Clean/", "image": "https://briautoclean.github.io/BriAuto-Clean/img/apercu-partage-v2.jpg", "logo": "https://briautoclean.github.io/BriAuto-Clean/img/icone-180.png", "description": "Nettoyage automobile intérieur et extérieur avec récupération du véhicule à domicile, autour d'Oissery (77).", "email": "briauto.cleaning@gmail.com", "telephone": "+33783671916", "priceRange": "2 € – 130 €", "address": {"@type": "PostalAddress", "addressLocality": "Oissery", "postalCode": "77178", "addressRegion": "Seine-et-Marne", "addressCountry": "FR"}, "geo": {"@type": "GeoCoordinates", "latitude": 49.0697, "longitude": 2.8158}, "areaServed": {"@type": "GeoCircle", "geoMidpoint": {"@type": "GeoCoordinates", "latitude": 49.0697, "longitude": 2.8158}, "geoRadius": "30000"}, "openingHoursSpecification": [{"@type": "OpeningHoursSpecification", "dayOfWeek": ["Tuesday", "Sunday"], "opens": "08:00", "closes": "15:00"}, {"@type": "OpeningHoursSpecification", "dayOfWeek": "Monday", "opens": "08:00", "closes": "09:30"}, {"@type": "OpeningHoursSpecification", "dayOfWeek": "Wednesday", "opens": "16:30", "closes": "17:00"}, {"@type": "OpeningHoursSpecification", "dayOfWeek": ["Thursday", "Friday"], "opens": "17:00", "closes": "17:30"}], "hasOfferCatalog": {"@type": "OfferCatalog", "name": "Formules de nettoyage", "itemListElement": [{"@type": "Offer", "price": "40", "priceCurrency": "EUR", "itemOffered": {"@type": "Service", "name": "Formule Extérieur"}}, {"@type": "Offer", "price": "110", "priceCurrency": "EUR", "itemOffered": {"@type": "Service", "name": "Formule Intérieur"}}, {"@type": "Offer", "price": "130", "priceCurrency": "EUR", "itemOffered": {"@type": "Service", "name": "Formule Extérieur + Intérieur"}}]}}</script>
 <meta name="description" content="Nettoyage auto à Oissery (77) et 30 km autour : nous récupérons votre véhicule chez vous. Formules ou prestations à la carte, réservation en ligne.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -92,6 +92,13 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .nav-links a:hover,.nav-links a.active{background:var(--nuit3);color:var(--lime)}
 .nav-cta{display:flex;align-items:center;gap:10px}
 .nav-cta .btn{min-height:44px;font-size:16px;padding:6px 16px;background:var(--lime)}
+.nav-cta .btn-appel-mini{background:var(--creme);gap:6px;padding:6px 12px}
+.btn svg{width:22px;height:22px;flex:none}
+.btn-appel{background:var(--creme)}
+.lien-tel{font-weight:800;color:inherit;white-space:nowrap}
+.pied-appel{background:var(--lime);color:var(--encre)!important}
+.barre-actions{display:flex;gap:10px;align-items:center}
+.barre .barre-appel{min-width:52px;padding:10px 12px;background:var(--creme)}
 .nav-toggle{display:none;width:48px;height:48px;border:var(--bord);border-radius:14px;background:var(--creme);box-shadow:3px 3px 0 #000;cursor:pointer;flex-direction:column;align-items:center;justify-content:center;gap:5px}
 .nav-toggle span{display:block;width:20px;height:3px;border-radius:2px;background:var(--encre)}
 @media (max-width:1180px){
@@ -101,7 +108,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
   .nav-cta{margin-left:auto}
   .nav-toggle{display:flex}
 }
-@media (max-width:420px){.nav-cta .btn{display:none}.logo{font-size:18px}}
+@media (max-width:420px){.nav-cta .btn{display:none}.nav-cta .btn-appel-mini{display:inline-flex;padding:6px 10px}.nav-cta .btn-appel-mini span{display:none}.logo{font-size:18px}}
 
 /* Haut de page */
 .hero{position:relative;overflow:hidden}
@@ -517,6 +524,7 @@ details.pkg-addons>summary{flex-wrap:wrap;column-gap:10px;row-gap:0}
       <li><a href="#contact">Contact</a></li>
     </ul>
     <div class="nav-cta">
+      <a href="tel:+33783671916" class="btn btn-appel-mini" aria-label="Appeler BriAuto Clean au 07 83 67 19 16"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg><span>Appeler</span></a>
       <a href="#rendez-vous" class="btn">Réserver</a>
       <button class="nav-toggle" id="navToggle" type="button" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="navLinks"><span></span><span></span><span></span></button>
     </div>
@@ -535,6 +543,7 @@ details.pkg-addons>summary{flex-wrap:wrap;column-gap:10px;row-gap:0}
       <p class="lead"><span class="only-hal">Nous venons chercher votre voiture chez vous, autour d’Oissery, et nous vous la rendons propre comme un sou neuf. Promis, aucune malédiction.</span><span class="only-hiv">Nous venons chercher votre voiture chez vous, autour d’Oissery, et nous la débarrassons de la boue, du sel et de la grisaille de l’hiver.</span><span class="only-noe">Nous venons chercher votre voiture chez vous, autour d’Oissery, et nous vous la rendons propre pour les repas de famille et les trajets des fêtes.</span></p>
       <div class="hero-actions">
         <a href="#rendez-vous" class="btn btn-primary">Réserver mon nettoyage</a>
+        <a href="tel:+33783671916" class="btn btn-appel"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>Appeler le 07&nbsp;83&nbsp;67&nbsp;19&nbsp;16</a>
         <a href="#formules" class="btn">Voir les formules</a>
       </div>
       <div class="hero-infos"><span>Récupération à domicile</span><span>Oissery + 30 km</span><span>Lavage à la main</span></div>
@@ -780,7 +789,7 @@ details.pkg-addons>summary{flex-wrap:wrap;column-gap:10px;row-gap:0}
         </div>
         <div class="item">
           <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M3 7l9 6 9-6" stroke="currentColor" stroke-width="1.6"/></svg>
-          <div><h3>Réponse par email</h3><p>Chaque demande est traitée à l'adresse briauto.cleaning@gmail.com.</p></div>
+          <div><h3>Une question ?</h3><p>Appelez-nous au <a class="lien-tel" href="tel:+33783671916">07&nbsp;83&nbsp;67&nbsp;19&nbsp;16</a> ou écrivez à briauto.cleaning@gmail.com.</p></div>
         </div>
         <div class="item">
           <svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M4 9h16" stroke="currentColor" stroke-width="1.6"/><path d="M8 3v3M16 3v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
@@ -915,13 +924,14 @@ details.pkg-addons>summary{flex-wrap:wrap;column-gap:10px;row-gap:0}
     <div class="pied-liens">
       <a href="#formules">Formules</a><a href="#options">À la carte</a><a href="#avant-apres">Avant / Après</a><a href="#rendez-vous">Rendez-vous</a>
     </div>
-    <p>Contact : <a href="mailto:briauto.cleaning@gmail.com">briauto.cleaning@gmail.com</a></p>
+    <a href="tel:+33783671916" class="btn btn-appel pied-appel"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>Appeler le 07&nbsp;83&nbsp;67&nbsp;19&nbsp;16</a>
+    <p>Téléphone : <a href="tel:+33783671916">07&nbsp;83&nbsp;67&nbsp;19&nbsp;16</a> (appel, SMS ou WhatsApp)<br>E-mail : <a href="mailto:briauto.cleaning@gmail.com">briauto.cleaning@gmail.com</a></p>
     <div class="footer-bottom">© <span id="year"></span> BriAuto Clean. Tous droits réservés.</div>
   </div>
 </footer>
 <div class="barre" id="barre">
   <div><span class="t" id="barreNom">Extérieur</span><strong id="barreTotal">40€</strong></div>
-  <a class="btn btn-primary" href="#rendez-vous">Réserver</a>
+  <div class="barre-actions"><a class="btn barre-appel" href="tel:+33783671916" aria-label="Appeler le 07 83 67 19 16"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a><a class="btn btn-primary" href="#rendez-vous">Réserver</a></div>
 </div>
 
 <script>
