@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Alexandre Lefevre — BriAuto Clean</title>
+<meta name="description" content="Alexandre Lefevre, BriAuto Clean : nettoyage auto avec récupération du véhicule, Oissery (77) et 30 km autour. 07 83 67 19 16.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0A1A33">
+<link rel="icon" href="img/icone-180.png">
+<link rel="apple-touch-icon" href="img/icone-180.png">
+<meta property="og:title" content="Alexandre Lefevre — BriAuto Clean">
+<meta property="og:description" content="Nettoyage auto avec récupération du véhicule. Oissery (77) et 30 km autour.">
+<meta property="og:image" content="https://briautoclean.github.io/BriAuto-Clean/img/apercu-partage-v2.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&display=swap" rel="stylesheet">
+<style>
+  @font-face{font-family:'Bricolage Repli';src:local('Arial'),local('ArialMT'),local('Helvetica');font-weight:100 500;size-adjust:92%;ascent-override:101%;descent-override:29%;line-gap-override:0%}
+  @font-face{font-family:'Bricolage Repli';src:local('Arial Bold'),local('Arial-BoldMT'),local('Helvetica Bold'),local('Helvetica-Bold');font-weight:501 900;size-adjust:91%;ascent-override:102%;descent-override:30%;line-gap-override:0%}
+  :root{
+    --nuit:#0A1A33; --nuit2:#12284A; --glace:#BFF0FF; --cyan:#4FD1FF; --creme:#F2FAFF; --encre:#0A1A33; --gris:#4A5B73;
+    --font:'Bricolage Grotesque','Bricolage Repli',system-ui,-apple-system,'Segoe UI',sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    min-height:100vh; min-height:100dvh; font-family:var(--font); color:var(--encre);
+    background:radial-gradient(120% 70% at 50% 0%, var(--nuit2) 0%, var(--nuit) 60%);
+    display:flex; align-items:center; justify-content:center;
+    padding:max(24px, env(safe-area-inset-top)) 16px max(24px, env(safe-area-inset-bottom));
+  }
+  .carte{
+    width:100%; max-width:400px; background:var(--creme); border:3px solid #000; border-radius:22px;
+    box-shadow:8px 8px 0 #000; padding:28px 22px 22px; text-align:center;
+  }
+  .marque{display:inline-flex; align-items:center; gap:10px; font-weight:800; font-size:18px; color:var(--encre); text-decoration:none}
+  .marque img{width:40px; height:40px; border-radius:10px; border:2px solid #000}
+  h1{font-size:34px; line-height:1.05; margin:22px 0 8px; font-weight:800; letter-spacing:-.01em}
+  .titre{margin:0; font-size:17px; font-weight:600; color:var(--encre)}
+  .zone{margin:8px 0 0; font-size:15px; color:var(--gris)}
+  .tel{display:block; margin:22px 0 4px; font-size:30px; font-weight:800; color:var(--encre); text-decoration:none; letter-spacing:.01em}
+  .actions{display:grid; gap:12px; margin-top:20px}
+  .btn{
+    display:flex; align-items:center; justify-content:center; gap:10px; min-height:56px; padding:14px 18px;
+    border:3px solid #000; border-radius:14px; box-shadow:4px 4px 0 #000;
+    font:800 18px/1.1 var(--font); text-decoration:none; color:var(--encre); background:#fff;
+    transition:transform .08s ease, box-shadow .08s ease;
+  }
+  .btn:active{transform:translate(3px,3px); box-shadow:1px 1px 0 #000}
+  .btn:focus-visible{outline:3px solid var(--cyan); outline-offset:3px}
+  .btn svg{width:22px; height:22px; flex:none}
+  .btn.principal{background:var(--glace)}
+  .btn.sombre{background:var(--nuit); color:#fff}
+  .mail{display:inline-block; margin-top:20px; font-size:15px; color:var(--gris); text-decoration:underline; text-underline-offset:3px}
+  @media (prefers-reduced-motion:reduce){.btn{transition:none}}
+</style>
+</head>
+<body>
+<main class="carte">
+  <a class="marque" href="./"><img src="img/icone-180.png" alt="" width="40" height="40">BriAuto Clean</a>
+  <h1>Alexandre Lefevre</h1>
+  <p class="titre">Nettoyage auto avec récupération du véhicule</p>
+  <p class="zone">Oissery (77) et 30&nbsp;km autour</p>
+  <a class="tel" href="tel:+33783671916">07&nbsp;83&nbsp;67&nbsp;19&nbsp;16</a>
+
+  <div class="actions">
+    <a class="btn principal" href="tel:+33783671916">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+      Appeler
+    </a>
+    <a class="btn" href="alexandre-lefevre-briauto.vcf" download="Alexandre Lefevre - BriAuto Clean.vcf">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10" cy="8" r="4" stroke="currentColor" stroke-width="2"/><path d="M3 20c0-3.5 3-6 7-6s7 2.5 7 6M19 8v6M16 11h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      Ajouter aux contacts
+    </a>
+    <a class="btn sombre" href="./#rendez-vous">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2" stroke="currentColor" stroke-width="2"/><path d="M3 10h18M8 3v4M16 3v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      Réserver en ligne
+    </a>
+  </div>
+
+  <a class="mail" href="mailto:briauto.cleaning@gmail.com">briauto.cleaning@gmail.com</a>
+</main>
+</body>
+</html>
