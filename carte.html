@@ -52,6 +52,10 @@
   .btn svg{width:22px; height:22px; flex:none}
   .btn.principal{background:var(--glace)}
   .btn.sombre{background:var(--nuit); color:#fff}
+  .deja{margin:-2px 0 0; font-size:15px; color:var(--gris)}
+  .deja a{color:var(--encre); font-weight:800; text-decoration:underline; text-underline-offset:3px; display:inline-block; padding:6px 2px}
+  .deja-aide{margin:0; font-size:14px; line-height:1.4; color:var(--encre); background:#fff; border:2px solid #000; border-radius:12px; padding:10px 12px; text-align:left}
+  .deja-aide[hidden]{display:none}
   .mail{display:inline-block; margin-top:20px; font-size:15px; color:var(--gris); text-decoration:underline; text-underline-offset:3px}
   @media (prefers-reduced-motion:reduce){.btn{transition:none}}
   /* petits écrans (iPhone SE, texte agrandi) : tout tient sur un écran, boutons sur une ligne */
@@ -88,6 +92,8 @@
       <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10" cy="8" r="4" stroke="currentColor" stroke-width="2"/><path d="M3 20c0-3.5 3-6 7-6s7 2.5 7 6M19 8v6M16 11h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
       Ajouter aux contacts
     </a>
+    <p class="deja">Vous avez déjà mon numéro ? <a href="briauto-clean-maj.vcf" download="Alexandre Lefevre - BriAuto Clean.vcf" id="majFiche">Compléter ma fiche</a></p>
+    <p class="deja-aide" id="majAide" hidden>Sur iPhone, touchez <b>« Ajouter à un contact existant »</b> puis choisissez ma fiche : l'e-mail, le site et le surnom « BriAuto Clean » s'ajoutent, sans changer le nom que vous m'avez donné. Sur Android, si un doublon apparaît, acceptez la proposition <b>« Fusionner »</b>.</p>
     <a class="btn sombre" href="./#rendez-vous">
       <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2" stroke="currentColor" stroke-width="2"/><path d="M3 10h18M8 3v4M16 3v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
       Réserver en ligne
@@ -96,5 +102,8 @@
 
   <a class="mail" href="mailto:briauto.cleaning@gmail.com">briauto.cleaning@gmail.com</a>
 </main>
+<script>
+  document.getElementById('majFiche').addEventListener('click', function(){ document.getElementById('majAide').hidden = false; });
+</script>
 </body>
 </html>
