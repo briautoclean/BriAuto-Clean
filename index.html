@@ -375,6 +375,16 @@ legend{font-weight:800;font-size:16px;margin-bottom:10px;padding:0}
 .check-grid label.is-off{opacity:.4;cursor:not-allowed}
 .check-grid label[hidden]{display:none!important}
 .opt-tag{margin-left:auto;font-weight:800}
+.check-grid .opt-i{flex:none;position:relative;width:30px;height:30px;padding:0;border-radius:50%;border:2px solid #000;background:var(--creme);color:var(--encre);font:italic 800 16px/1 Georgia,serif;display:grid;place-items:center;cursor:pointer}
+.check-grid .opt-i::before{content:"";position:absolute;inset:-9px}
+.check-grid .opt-i[aria-expanded="true"]{background:var(--encre);color:var(--creme)}
+.check-grid .opt-i:focus-visible{outline:3px solid var(--citrouille);outline-offset:2px}
+.opt-info{grid-column:1/-1;border:2px solid #000;border-radius:12px;background:var(--creme);color:var(--encre);padding:10px 12px;font-size:14.5px;line-height:1.45;display:grid;gap:8px}
+.opt-info strong{font-size:15.5px}
+.opt-info video{width:100%;max-height:260px;object-fit:cover;border-radius:10px;border:2px solid #000;background:#000}
+@media (max-width:699px){
+  #options{display:none}   /* téléphone : le « 100 % à la carte » se fait dans la réservation */
+}
 .opt-rules{font-size:13.5px;color:var(--gris);margin-top:8px}
 .opt-rules:empty{display:none}
 .dep-preview{display:flex;gap:12px;align-items:center;margin-top:12px;background:var(--creme);border:2px solid #000;border-radius:14px;padding:10px;font-size:14.5px}
@@ -2279,6 +2289,50 @@ details.pkg-addons>summary{flex-wrap:wrap;column-gap:10px;row-gap:0}
     }
     let t = null; grille.addEventListener('scroll', () => { cancelAnimationFrame(t); t = requestAnimationFrame(maj); }, { passive: true });
     window.addEventListener('resize', maj); maj();
+  })();
+</script>
+<script>
+  // Options du formulaire : petit « i » pour voir la présentation de chaque option (et la vidéo du déperlant)
+  (function(){
+    const grille = document.getElementById('optionChecks'); if (!grille) return;
+    const infos = {};
+    document.querySelectorAll('#pageOptionChecks .opt').forEach(o => {
+      const i = o.querySelector('input'), p = o.querySelector('p'), t = o.querySelector('h3'); if (!i || !p) return;
+      const v = o.querySelector('video');
+      infos[i.value] = { titre: t ? t.textContent.trim() : i.value, texte: p.textContent.trim(),
+        video: v ? { poster: v.getAttribute('poster'), src: (v.querySelector('source') || {}).dataset ? v.querySelector('source').dataset.src || v.querySelector('source').getAttribute('src') : null, label: v.getAttribute('aria-label') } : null };
+    });
+    let ouvert = null;
+    function fermer(){ if (!ouvert) return; ouvert.panneau.remove(); ouvert.bouton.setAttribute('aria-expanded', 'false'); ouvert = null; }
+    grille.querySelectorAll('label').forEach((lab, k) => {
+      const input = lab.querySelector('input'); const info = input && infos[input.value]; if (!info) return;
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'opt-i'; b.textContent = 'i';
+      b.setAttribute('aria-label', 'Présentation : ' + info.titre); b.setAttribute('aria-expanded', 'false'); b.setAttribute('aria-controls', 'optInfo' + k);
+      lab.appendChild(b);
+      b.addEventListener('click', e => {
+        e.preventDefault(); e.stopPropagation();
+        const deja = ouvert && ouvert.bouton === b; fermer(); if (deja) return;
+        const pan = document.createElement('div'); pan.className = 'opt-info'; pan.id = 'optInfo' + k; pan.setAttribute('role', 'region'); pan.setAttribute('aria-label', info.titre);
+        const t = document.createElement('strong'); t.textContent = info.titre; pan.appendChild(t);
+        const p = document.createElement('p'); p.style.margin = '0'; p.textContent = info.texte; pan.appendChild(p);
+        if (info.video && info.video.src) {
+          const v = document.createElement('video'); v.muted = true; v.loop = true; v.playsInline = true; v.setAttribute('playsinline', ''); v.autoplay = true;
+          v.poster = info.video.poster || ''; v.src = info.video.src; if (info.video.label) v.setAttribute('aria-label', info.video.label);
+          pan.appendChild(v); v.play && v.play().catch(() => {});
+        }
+        lab.after(pan); b.setAttribute('aria-expanded', 'true'); ouvert = { bouton: b, panneau: pan };
+      });
+    });
+    // changer de formule ou d'onglet referme la présentation (les options affichées changent)
+    document.querySelectorAll('input[name="Formule"], .mode-tab').forEach(x => x.addEventListener(x.tagName === 'INPUT' ? 'change' : 'click', fermer));
+    // téléphone : la section « À la carte » est masquée, ses liens mènent à la réservation, onglet « Uniquement à la carte »
+    document.querySelectorAll('a[href="#options"]').forEach(a => a.addEventListener('click', e => {
+      if (!window.matchMedia('(max-width:699px)').matches) return;
+      e.preventDefault();
+      const tab = document.querySelector('.mode-tab[data-mode="carte"]'); if (tab && !tab.classList.contains('active')) tab.click();
+      const bloc = document.querySelector('#bookingForm .options-block') || document.getElementById('rendez-vous');
+      bloc.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }));
   })();
 </script>
 </body>
