@@ -233,9 +233,26 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .mur-tete{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:28px}
 .mur-tete .section-head{margin-bottom:0}
 .grille-mur{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;perspective:1200px}
-.carte{position:relative;height:250px;padding:0;border:0;background:none;cursor:pointer;color:inherit}
-.carte:nth-child(odd){transform:rotate(-1.5deg)}
-.carte:nth-child(even){transform:rotate(1.5deg)}
+.carte-cadre{position:relative}
+.carte-cadre:nth-child(odd){transform:rotate(-1.5deg)}
+.carte-cadre:nth-child(even){transform:rotate(1.5deg)}
+.carte{position:relative;display:block;width:100%;height:250px;padding:0;border:0;background:none;cursor:pointer;color:inherit}
+.loupe{position:absolute;left:8px;bottom:8px;z-index:3;width:38px;height:38px;padding:0;border-radius:50%;border:2px solid #000;background:var(--creme);color:var(--encre);box-shadow:2px 2px 0 #000;display:grid;place-items:center;cursor:pointer}
+.loupe svg{width:20px;height:20px}
+.loupe:focus-visible{outline:3px solid var(--lime);outline-offset:2px}
+.zoom{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.94);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:max(14px,env(safe-area-inset-top)) 12px max(14px,env(safe-area-inset-bottom))}
+.zoom[hidden]{display:none}
+.zoom-fig{margin:0;display:flex;flex-direction:column;align-items:center;gap:10px;min-height:0;max-width:100%}
+.zoom-fig img{display:block;max-width:100%;max-height:calc(100vh - 170px);max-height:calc(100dvh - 170px);object-fit:contain;border-radius:12px;border:3px solid #fff;touch-action:pan-y;cursor:pointer}
+.zoom-fig figcaption{color:#fff;font-weight:800;font-size:17px;text-align:center}
+.zoom-fermer{position:absolute;top:max(10px,env(safe-area-inset-top));right:10px;width:48px;height:48px;border-radius:50%;border:2px solid #000;background:var(--creme);color:var(--encre);display:grid;place-items:center;cursor:pointer;box-shadow:2px 2px 0 #000}
+.zoom-fermer svg{width:22px;height:22px}
+.zoom-bas{display:flex;align-items:center;gap:12px}
+.zoom-nav{width:48px;height:48px;border-radius:50%;border:2px solid #000;background:var(--creme);color:var(--encre);font-size:28px;font-weight:800;line-height:1;cursor:pointer;box-shadow:2px 2px 0 #000}
+.zoom-bascule{display:flex;border:2px solid #000;border-radius:999px;overflow:hidden;box-shadow:2px 2px 0 #000}
+.zoom-bascule button{min-height:48px;min-width:92px;padding:0 16px;border:0;background:var(--creme);color:var(--encre);font:800 17px var(--font,inherit);cursor:pointer}
+.zoom-bascule button[aria-pressed="true"]{background:var(--lime);color:var(--encre)}
+.zoom button:focus-visible{outline:3px solid var(--lime);outline-offset:2px}
 .retourne{position:absolute;inset:0;transition:transform .8s cubic-bezier(.3,1.4,.5,1);transform-style:preserve-3d}
 .carte.vue .retourne{transform:rotateY(180deg)}
 .face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:#fff;border:4px solid #000;border-radius:16px;box-shadow:6px 6px 0 #000;overflow:hidden}
@@ -247,7 +264,8 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .appel{position:absolute;right:8px;bottom:8px;display:inline-flex;align-items:center;gap:5px;background:var(--citrouille);color:var(--encre);font-weight:800;font-size:13px;line-height:1;padding:6px 11px 6px 8px;border-radius:999px;border:2px solid #000;box-shadow:2px 2px 0 #000}
 .appel svg{width:15px;height:15px;flex:none}
 @media (min-width:700px){.appel{font-size:14px;padding:7px 13px 7px 10px}.appel svg{width:17px;height:17px}}
-@media (max-width:699px){.etiquette{font-size:12px;padding:3px 8px;left:8px;top:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}
+@media (max-width:699px){.etiquette{font-size:12px;padding:3px 8px;left:8px;top:8px;}}
+@media (max-width:379px){.appel{padding:7px}.appel span{display:none!important}}
 
 /* ===== Comment ça marche ===== */
 #comment-ca-marche .wrap{padding-block:64px}
@@ -762,12 +780,12 @@ details.pkg-addons>summary{flex-wrap:wrap;column-gap:10px;row-gap:0}
       <button type="button" class="btn btn-lime" id="toutBtn">Tout exorciser</button>
     </div>
     <div class="grille-mur" id="murGrille">
-      <button type="button" class="carte" aria-pressed="false" aria-label="Siège conducteur : voir l’après"><span class="retourne"><span class="face avant"><img src="img/avant-siege-conducteur.webp" alt="" decoding="async"><span class="etiquette">Avant · siège</span><span class="appel"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12a8 8 0 0113.7-5.6L20 8.7M20 4v4.7h-4.7M20 12a8 8 0 01-13.7 5.6L4 15.3M4 20v-4.7h4.7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="only-hal">Exorciser</span><span class="only-hiv">Dégeler</span><span class="only-noe">Déballer</span></span></span><span class="face apres"><img src="img/apres-siege-conducteur.webp" alt="" decoding="async"><span class="etiquette">Après · siège</span></span></span></button>
-      <button type="button" class="carte" aria-pressed="false" aria-label="Tableau de bord : voir l’après"><span class="retourne"><span class="face avant"><img data-src="img/avant-tableau-de-bord-poussiereux.webp" alt="" decoding="async"><span class="etiquette">Avant · tableau de bord</span><span class="appel"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12a8 8 0 0113.7-5.6L20 8.7M20 4v4.7h-4.7M20 12a8 8 0 01-13.7 5.6L4 15.3M4 20v-4.7h4.7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="only-hal">Exorciser</span><span class="only-hiv">Dégeler</span><span class="only-noe">Déballer</span></span></span><span class="face apres"><img data-src="img/apres-tableau-de-bord-nettoye.webp" alt="" decoding="async"><span class="etiquette">Après · tableau de bord</span></span></span></button>
-      <button type="button" class="carte" aria-pressed="false" aria-label="Banquette passager : voir l’après"><span class="retourne"><span class="face avant"><img data-src="img/avant-banquette-passager.webp" alt="" decoding="async"><span class="etiquette">Avant · banquette</span><span class="appel"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12a8 8 0 0113.7-5.6L20 8.7M20 4v4.7h-4.7M20 12a8 8 0 01-13.7 5.6L4 15.3M4 20v-4.7h4.7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="only-hal">Exorciser</span><span class="only-hiv">Dégeler</span><span class="only-noe">Déballer</span></span></span><span class="face apres"><img data-src="img/apres-banquette-passager.webp" alt="" decoding="async"><span class="etiquette">Après · banquette</span></span></span></button>
-      <button type="button" class="carte" aria-pressed="false" aria-label="Tapis conducteur : voir l’après"><span class="retourne"><span class="face avant"><img data-src="img/avant-tapis-conducteur-sale.webp" alt="" decoding="async"><span class="etiquette">Avant · tapis</span><span class="appel"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12a8 8 0 0113.7-5.6L20 8.7M20 4v4.7h-4.7M20 12a8 8 0 01-13.7 5.6L4 15.3M4 20v-4.7h4.7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="only-hal">Exorciser</span><span class="only-hiv">Dégeler</span><span class="only-noe">Déballer</span></span></span><span class="face apres"><img data-src="img/apres-tapis-conducteur-propre.webp" alt="" decoding="async"><span class="etiquette">Après · tapis</span></span></span></button>
-      <button type="button" class="carte" aria-pressed="false" aria-label="Panneau de porte : voir l’après"><span class="retourne"><span class="face avant"><img data-src="img/avant-panneau-de-porte-terne.webp" alt="" decoding="async"><span class="etiquette">Avant · portière</span><span class="appel"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12a8 8 0 0113.7-5.6L20 8.7M20 4v4.7h-4.7M20 12a8 8 0 01-13.7 5.6L4 15.3M4 20v-4.7h4.7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="only-hal">Exorciser</span><span class="only-hiv">Dégeler</span><span class="only-noe">Déballer</span></span></span><span class="face apres"><img data-src="img/apres-panneau-de-porte-nettoye.webp" alt="" decoding="async"><span class="etiquette">Après · portière</span></span></span></button>
-      <button type="button" class="carte" aria-pressed="false" aria-label="Boîte à gants : voir l’après"><span class="retourne"><span class="face avant"><img data-src="img/avant-boite-a-gants-utilitaire.webp" alt="" decoding="async"><span class="etiquette">Avant · boîte à gants</span><span class="appel"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12a8 8 0 0113.7-5.6L20 8.7M20 4v4.7h-4.7M20 12a8 8 0 01-13.7 5.6L4 15.3M4 20v-4.7h4.7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="only-hal">Exorciser</span><span class="only-hiv">Dégeler</span><span class="only-noe">Déballer</span></span></span><span class="face apres"><img data-src="img/apres-boite-a-gants-utilitaire.webp" alt="" decoding="async"><span class="etiquette">Après · boîte à gants</span></span></span></button>
+      <div class="carte-cadre"><button type="button" class="carte" aria-pressed="false" aria-label="Siège conducteur : voir l’après"><span class="retourne"><span class="face avant"><img src="img/avant-siege-conducteur.webp" alt="" decoding="async"><span class="etiquette">Avant · siège</span><span class="appel"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12a8 8 0 0113.7-5.6L20 8.7M20 4v4.7h-4.7M20 12a8 8 0 01-13.7 5.6L4 15.3M4 20v-4.7h4.7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="only-hal">Exorciser</span><span class="only-hiv">Dégeler</span><span class="only-noe">Déballer</span></span></span><span class="face apres"><img src="img/apres-siege-conducteur.webp" alt="" decoding="async"><span class="etiquette">Après · siège</span></span></span></button><button type="button" class="loupe" aria-label="Agrandir la photo : Siège conducteur"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" stroke="currentColor" stroke-width="2.4"/><path d="M15.5 15.5L21 21M10.5 7.5v6M7.5 10.5h6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button></div>
+      <div class="carte-cadre"><button type="button" class="carte" aria-pressed="false" aria-label="Tableau de bord : voir l’après"><span class="retourne"><span class="face avant"><img data-src="img/avant-tableau-de-bord-poussiereux.webp" alt="" decoding="async"><span class="etiquette">Avant · tableau de bord</span><span class="appel"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12a8 8 0 0113.7-5.6L20 8.7M20 4v4.7h-4.7M20 12a8 8 0 01-13.7 5.6L4 15.3M4 20v-4.7h4.7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="only-hal">Exorciser</span><span class="only-hiv">Dégeler</span><span class="only-noe">Déballer</span></span></span><span class="face apres"><img data-src="img/apres-tableau-de-bord-nettoye.webp" alt="" decoding="async"><span class="etiquette">Après · tableau de bord</span></span></span></button><button type="button" class="loupe" aria-label="Agrandir la photo : Tableau de bord"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" stroke="currentColor" stroke-width="2.4"/><path d="M15.5 15.5L21 21M10.5 7.5v6M7.5 10.5h6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button></div>
+      <div class="carte-cadre"><button type="button" class="carte" aria-pressed="false" aria-label="Banquette passager : voir l’après"><span class="retourne"><span class="face avant"><img data-src="img/avant-banquette-passager.webp" alt="" decoding="async"><span class="etiquette">Avant · banquette</span><span class="appel"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12a8 8 0 0113.7-5.6L20 8.7M20 4v4.7h-4.7M20 12a8 8 0 01-13.7 5.6L4 15.3M4 20v-4.7h4.7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="only-hal">Exorciser</span><span class="only-hiv">Dégeler</span><span class="only-noe">Déballer</span></span></span><span class="face apres"><img data-src="img/apres-banquette-passager.webp" alt="" decoding="async"><span class="etiquette">Après · banquette</span></span></span></button><button type="button" class="loupe" aria-label="Agrandir la photo : Banquette passager"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" stroke="currentColor" stroke-width="2.4"/><path d="M15.5 15.5L21 21M10.5 7.5v6M7.5 10.5h6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button></div>
+      <div class="carte-cadre"><button type="button" class="carte" aria-pressed="false" aria-label="Tapis conducteur : voir l’après"><span class="retourne"><span class="face avant"><img data-src="img/avant-tapis-conducteur-sale.webp" alt="" decoding="async"><span class="etiquette">Avant · tapis</span><span class="appel"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12a8 8 0 0113.7-5.6L20 8.7M20 4v4.7h-4.7M20 12a8 8 0 01-13.7 5.6L4 15.3M4 20v-4.7h4.7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="only-hal">Exorciser</span><span class="only-hiv">Dégeler</span><span class="only-noe">Déballer</span></span></span><span class="face apres"><img data-src="img/apres-tapis-conducteur-propre.webp" alt="" decoding="async"><span class="etiquette">Après · tapis</span></span></span></button><button type="button" class="loupe" aria-label="Agrandir la photo : Tapis conducteur"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" stroke="currentColor" stroke-width="2.4"/><path d="M15.5 15.5L21 21M10.5 7.5v6M7.5 10.5h6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button></div>
+      <div class="carte-cadre"><button type="button" class="carte" aria-pressed="false" aria-label="Panneau de porte : voir l’après"><span class="retourne"><span class="face avant"><img data-src="img/avant-panneau-de-porte-terne.webp" alt="" decoding="async"><span class="etiquette">Avant · portière</span><span class="appel"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12a8 8 0 0113.7-5.6L20 8.7M20 4v4.7h-4.7M20 12a8 8 0 01-13.7 5.6L4 15.3M4 20v-4.7h4.7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="only-hal">Exorciser</span><span class="only-hiv">Dégeler</span><span class="only-noe">Déballer</span></span></span><span class="face apres"><img data-src="img/apres-panneau-de-porte-nettoye.webp" alt="" decoding="async"><span class="etiquette">Après · portière</span></span></span></button><button type="button" class="loupe" aria-label="Agrandir la photo : Panneau de porte"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" stroke="currentColor" stroke-width="2.4"/><path d="M15.5 15.5L21 21M10.5 7.5v6M7.5 10.5h6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button></div>
+      <div class="carte-cadre"><button type="button" class="carte" aria-pressed="false" aria-label="Boîte à gants : voir l’après"><span class="retourne"><span class="face avant"><img data-src="img/avant-boite-a-gants-utilitaire.webp" alt="" decoding="async"><span class="etiquette">Avant · boîte à gants</span><span class="appel"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12a8 8 0 0113.7-5.6L20 8.7M20 4v4.7h-4.7M20 12a8 8 0 01-13.7 5.6L4 15.3M4 20v-4.7h4.7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="only-hal">Exorciser</span><span class="only-hiv">Dégeler</span><span class="only-noe">Déballer</span></span></span><span class="face apres"><img data-src="img/apres-boite-a-gants-utilitaire.webp" alt="" decoding="async"><span class="etiquette">Après · boîte à gants</span></span></span></button><button type="button" class="loupe" aria-label="Agrandir la photo : Boîte à gants"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" stroke="currentColor" stroke-width="2.4"/><path d="M15.5 15.5L21 21M10.5 7.5v6M7.5 10.5h6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button></div>
     </div>
   </div>
 </section>
@@ -2133,6 +2151,78 @@ details.pkg-addons>summary{flex-wrap:wrap;column-gap:10px;row-gap:0}
     const io = new IntersectionObserver(e => { if (e.some(x => x.isIntersecting)) { io.disconnect(); charger(); } }, { rootMargin: '600px 0px' });
     io.observe(mur);
     window.addEventListener('load', () => setTimeout(charger, 4000));   // et de toute façon peu après le chargement complet
+  })();
+</script>
+<div class="zoom" id="zoom" role="dialog" aria-modal="true" aria-label="Photo agrandie" hidden>
+  <button type="button" class="zoom-fermer" id="zoomFermer" aria-label="Fermer"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></button>
+  <figure class="zoom-fig"><img id="zoomImg" alt=""><figcaption id="zoomLegende"></figcaption></figure>
+  <div class="zoom-bas">
+    <button type="button" class="zoom-nav" id="zoomPrec" aria-label="Photo précédente">‹</button>
+    <div class="zoom-bascule" role="group" aria-label="Avant ou après"><button type="button" id="zoomAvant" aria-pressed="true">Avant</button><button type="button" id="zoomApres" aria-pressed="false">Après</button></div>
+    <button type="button" class="zoom-nav" id="zoomSuiv" aria-label="Photo suivante">›</button>
+  </div>
+</div>
+<script>
+  // Mur avant / après : agrandir une photo (presque plein écran), basculer avant / après, passer aux autres
+  (function(){
+    const zoom = document.getElementById('zoom'); if (!zoom) return;
+    const img = document.getElementById('zoomImg'), leg = document.getElementById('zoomLegende');
+    const bAv = document.getElementById('zoomAvant'), bAp = document.getElementById('zoomApres');
+    const cadres = Array.from(document.querySelectorAll('#murGrille .carte-cadre'));
+    const src = i => i.dataset.src || i.getAttribute('src');
+    const paires = cadres.map(c => ({ nom: c.querySelector('.carte').getAttribute('aria-label').split(' : ')[0],
+      avant: src(c.querySelector('.face.avant img')), apres: src(c.querySelector('.face.apres img')) }));
+    let idx = 0, apres = false, retour = null, historique = false;
+    function afficher(){
+      const p = paires[idx];
+      img.src = apres ? p.apres : p.avant;
+      img.alt = p.nom + (apres ? ' après nettoyage' : ' avant nettoyage');
+      leg.textContent = p.nom + ' · ' + (apres ? 'après' : 'avant') + ' (' + (idx + 1) + '/' + paires.length + ')';
+      bAv.setAttribute('aria-pressed', !apres); bAp.setAttribute('aria-pressed', apres);
+    }
+    function ouvrir(i, cote, depuis){
+      idx = i; apres = cote; retour = depuis; afficher();
+      zoom.hidden = false; document.documentElement.style.overflow = 'hidden';
+      try { history.pushState({ zoom: 1 }, ''); historique = true; } catch (e) { historique = false; }
+      document.getElementById('zoomFermer').focus();
+    }
+    function fermer(depuisRetour){
+      if (zoom.hidden) return;
+      zoom.hidden = true; document.documentElement.style.overflow = '';
+      if (historique && !depuisRetour) { historique = false; history.back(); }
+      historique = false;
+      if (retour) retour.focus({ preventScroll: true });
+    }
+    const aller = d => { idx = (idx + d + paires.length) % paires.length; afficher(); };
+    cadres.forEach((c, i) => c.querySelector('.loupe').addEventListener('click', e => {
+      e.stopPropagation(); ouvrir(i, c.querySelector('.carte').classList.contains('vue'), e.currentTarget);
+    }));
+    document.getElementById('zoomFermer').addEventListener('click', () => fermer());
+    document.getElementById('zoomPrec').addEventListener('click', () => aller(-1));
+    document.getElementById('zoomSuiv').addEventListener('click', () => aller(1));
+    bAv.addEventListener('click', () => { apres = false; afficher(); });
+    bAp.addEventListener('click', () => { apres = true; afficher(); });
+    img.addEventListener('click', () => { apres = !apres; afficher(); });
+    zoom.addEventListener('click', e => { if (e.target === zoom) fermer(); });
+    window.addEventListener('popstate', () => { if (!zoom.hidden) fermer(true); });
+    document.addEventListener('keydown', e => {
+      if (zoom.hidden) return;
+      if (e.key === 'Escape') fermer();
+      else if (e.key === 'ArrowLeft') aller(-1);
+      else if (e.key === 'ArrowRight') aller(1);
+      else if (e.key === 'Tab') {   // le focus reste dans la fenêtre
+        const f = Array.from(zoom.querySelectorAll('button')); const i = f.indexOf(document.activeElement);
+        if (e.shiftKey && i <= 0) { e.preventDefault(); f[f.length - 1].focus(); }
+        else if (!e.shiftKey && i === f.length - 1) { e.preventDefault(); f[0].focus(); }
+      }
+    });
+    // glisser du doigt : gauche / droite = photo suivante / précédente
+    let x0 = null, y0 = null;
+    img.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }, { passive: true });
+    img.addEventListener('touchend', e => {
+      if (x0 === null) return; const dx = e.changedTouches[0].clientX - x0, dy = e.changedTouches[0].clientY - y0; x0 = null;
+      if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) { e.preventDefault(); aller(dx < 0 ? 1 : -1); }
+    });
   })();
 </script>
 </body>
