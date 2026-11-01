@@ -536,6 +536,29 @@ details.pkg-addons[open]>summary{margin:0 -12px 6px;border-radius:14px 14px 0 0}
 details.pkg-addons>summary{flex-wrap:wrap;column-gap:10px;row-gap:0}
 .pa-ouvrir,.pa-fermer{white-space:nowrap}
 @media (max-width:979px){.pkg-grid{grid-template-columns:minmax(0,1fr)}}
+/* ===== Téléphone seulement (moins de 700 px) : page plus courte ===== */
+@media (max-width:699px){
+  /* « Comment ça marche » compact : numéro à gauche, texte à droite */
+  #comment-ca-marche .wrap{padding-block:36px}
+  .etapes-grid{gap:10px}
+  .etape{grid-template-columns:38px minmax(0,1fr);column-gap:12px;row-gap:2px;padding:14px 14px 14px 12px;box-shadow:4px 4px 0 #000;align-items:start}
+  .etape .num{width:36px;height:36px;font-size:17px;border-width:2px;grid-row:span 2}
+  .etape h3{font-size:18px;line-height:1.2}
+  .etape p{font-size:14.5px;line-height:1.4}
+  /* Formules en carrousel : on fait glisser les cartes */
+  #formules .wrap{padding-block:40px}
+  .pkg-grid{display:flex;align-items:flex-start;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;
+    margin-inline:calc(-1 * max(16px,env(safe-area-inset-left,0px)));padding:28px max(16px,env(safe-area-inset-left,0px)) 14px;scroll-padding-inline:max(16px,env(safe-area-inset-left,0px))}
+  .pkg-grid::-webkit-scrollbar{display:none}
+  .pkg-grid > .pkg{flex:0 0 86%;scroll-snap-align:start;transform:none!important}
+  .pkg-points{display:flex;justify-content:center;align-items:center;gap:8px;margin-top:4px}
+  .pkg-points button{width:12px;height:12px;padding:0;border-radius:50%;border:2px solid #000;background:var(--creme);cursor:pointer;position:relative}
+  .pkg-points button::before{content:"";position:absolute;inset:-12px}
+  .pkg-points button[aria-current="true"]{width:30px;border-radius:999px;background:var(--lime)}
+  .pkg-glisse{text-align:center;font-size:14px;font-weight:700;margin:8px 0 0;opacity:.85}
+}
+@media (min-width:700px){.pkg-points,.pkg-glisse{display:none}}
+
 
 </style>
 </head>
@@ -2230,6 +2253,32 @@ details.pkg-addons>summary{flex-wrap:wrap;column-gap:10px;row-gap:0}
       if (x0 === null) return; const dx = e.changedTouches[0].clientX - x0, dy = e.changedTouches[0].clientY - y0; x0 = null;
       if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) { e.preventDefault(); aller(dx < 0 ? 1 : -1); }
     });
+  })();
+</script>
+<script>
+  // Formules en carrousel sur téléphone : points de navigation
+  (function(){
+    const grille = document.querySelector('#formules .pkg-grid'); if (!grille) return;
+    const cartes = Array.from(grille.querySelectorAll(':scope > .pkg')); if (cartes.length < 2) return;
+    const points = document.createElement('div'); points.className = 'pkg-points'; points.setAttribute('role', 'group'); points.setAttribute('aria-label', 'Choisir une formule à afficher');
+    const boutons = cartes.map((c, i) => {
+      const b = document.createElement('button'); b.type = 'button';
+      const nom = (c.querySelector('.pkg-eyebrow') || {}).textContent || ('Formule ' + (i + 1));
+      b.setAttribute('aria-label', 'Voir la formule ' + nom.trim());
+      b.addEventListener('click', () => grille.scrollTo({ left: c.offsetLeft - grille.offsetLeft - parseFloat(getComputedStyle(grille).paddingLeft), behavior: 'smooth' }));
+      points.appendChild(b); return b;
+    });
+    const aide = document.createElement('p'); aide.className = 'pkg-glisse'; aide.textContent = 'Glissez pour voir les 3 formules';
+    grille.after(points); points.after(aide);
+    function maj(){
+      const centre = grille.scrollLeft + grille.clientWidth / 2; let i = 0, d = Infinity;
+      cartes.forEach((c, k) => { const m = c.offsetLeft - grille.offsetLeft + c.offsetWidth / 2; const e = Math.abs(m - centre); if (e < d) { d = e; i = k; } });
+      if (grille.scrollLeft < 8) i = 0;
+      if (grille.scrollLeft + grille.clientWidth >= grille.scrollWidth - 8) i = cartes.length - 1;
+      boutons.forEach((b, k) => b.setAttribute('aria-current', k === i ? 'true' : 'false'));
+    }
+    let t = null; grille.addEventListener('scroll', () => { cancelAnimationFrame(t); t = requestAnimationFrame(maj); }, { passive: true });
+    window.addEventListener('resize', maj); maj();
   })();
 </script>
 </body>
