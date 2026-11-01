@@ -238,8 +238,12 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .carte-cadre:nth-child(even){transform:rotate(1.5deg)}
 .carte{position:relative;display:block;width:100%;height:250px;padding:0;border:0;background:none;cursor:pointer;color:inherit}
 .loupe-deco,.loupe{position:absolute;left:8px;bottom:8px;width:38px;height:38px;border-radius:50%;display:grid;place-items:center}
-.loupe-deco{left:4px;bottom:4px;z-index:2;border:2px solid #000;background:var(--creme);color:var(--encre);box-shadow:2px 2px 0 #000;pointer-events:none}
+.loupe-deco{left:4px;bottom:4px;border:2px solid #000;background:var(--creme);color:var(--encre);box-shadow:2px 2px 0 #000;pointer-events:none}
 .loupe-deco svg{width:20px;height:20px}
+/* Safari (iPhone) laisse voir les éléments de la face cachée : on masque ceux de la face de dos, à mi-rotation */
+.face .loupe-deco,.face .appel,.face .etiquette{-webkit-backface-visibility:hidden;backface-visibility:hidden;transition:visibility 0s .4s}
+.carte.vue .face.avant .loupe-deco,.carte.vue .face.avant .appel,.carte.vue .face.avant .etiquette,
+.carte:not(.vue) .face.apres .loupe-deco,.carte:not(.vue) .face.apres .etiquette{visibility:hidden}
 .loupe{z-index:3;padding:0;border:0;background:transparent;cursor:pointer}
 .loupe svg{display:none}
 .loupe:focus-visible{outline:3px solid var(--lime);outline-offset:2px}
