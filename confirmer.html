@@ -22,7 +22,7 @@
   .recap dd{margin:0;font-weight:600;}
   .recap a{color:var(--blue-dark);text-decoration:none;}
   label{display:block;font-size:14px;font-weight:600;margin-bottom:8px;}
-  textarea{width:100%;min-height:340px;padding:14px;border:1px solid var(--line);border-radius:10px;font-family:inherit;font-size:15px;line-height:1.5;color:var(--ink);background:#FAFBFC;resize:vertical;}
+  textarea{width:100%;min-height:340px;padding:14px;border:1px solid var(--line);border-radius:10px;font-family:inherit;font-size:16px;line-height:1.5;color:var(--ink);background:#FAFBFC;resize:vertical;}
   textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 4px rgba(46,107,230,.15);background:#fff;}
   .hint{font-size:13px;color:var(--slate);margin:8px 0 0;}
   .slots{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
@@ -44,7 +44,7 @@
   .actions{display:grid;gap:10px;}
   .btn{display:flex;align-items:center;justify-content:center;gap:10px;padding:15px 18px;border-radius:12px;font-size:16px;font-weight:700;text-decoration:none;border:none;cursor:pointer;font-family:inherit;}
   .btn-sms{background:var(--blue);color:#fff;box-shadow:0 12px 24px -12px rgba(46,107,230,.8);}
-  .btn-wa{background:#1FAF5B;color:#fff;}
+  .btn-wa{background:#15803D;color:#fff;}
   .btn-copy{background:#fff;color:var(--ink);border:1.5px solid var(--line);}
   .btn svg{width:20px;height:20px;flex:none;}
   .toast{text-align:center;font-size:14px;font-weight:600;color:#14532D;min-height:20px;margin-top:4px;}
@@ -64,7 +64,7 @@
 <header>
   <div class="wrap">
     <div class="brand">
-      <svg width="30" height="30" viewBox="0 0 34 34" fill="none"><rect x="2" y="2" width="30" height="30" rx="7" fill="#5FD6E8"/><path d="M12 9v16M12 9h6.5a4 4 0 010 8H12M12 17h7a4 4 0 010 8H12" stroke="#12233F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg aria-hidden="true" width="30" height="30" viewBox="0 0 34 34" fill="none"><rect x="2" y="2" width="30" height="30" rx="7" fill="#5FD6E8"/><path d="M12 9v16M12 9h6.5a4 4 0 010 8H12M12 17h7a4 4 0 010 8H12" stroke="#12233F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       BriAuto Clean
     </div>
     <h1 id="pageTitle">Confirmer le rendez-vous</h1>
@@ -109,11 +109,11 @@
 
     <div class="actions">
       <a class="btn btn-sms" id="btnSms" href="#">
-        <svg viewBox="0 0 24 24" fill="none"><path d="M4 5h16v11H8l-4 4V5z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M4 5h16v11H8l-4 4V5z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
         Envoyer par SMS
       </a>
       <a class="btn btn-wa" id="btnWa" href="#" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="none"><path d="M4 20l1.3-4A8 8 0 1 1 8 18.7L4 20z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M4 20l1.3-4A8 8 0 1 1 8 18.7L4 20z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
         Envoyer par WhatsApp
       </a>
       <button class="btn btn-copy" id="btnCopy" type="button">Copier le message</button>
@@ -122,7 +122,7 @@
       <button class="btn btn-back" id="btnBack" type="button">← Revenir à la confirmation</button>
     </div>
   </div>
-  <p style="text-align:center;font-size:12px;color:#8C97AC;margin:18px 0 0;">Page de confirmation — version 6 (annulation)</p>
+  <p style="text-align:center;font-size:12px;color:#5F6B80;margin:18px 0 0;">Page de confirmation — version 6 (annulation)</p>
 </main>
 
 <script>
