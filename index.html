@@ -57,7 +57,7 @@ button,input,select,textarea{font:inherit}
 [hidden]{display:none!important}
 :focus-visible{outline:3px solid var(--lime);outline-offset:3px}
 h1,h2,h3,h4,h5{margin:0;font-weight:800;letter-spacing:-.02em;text-wrap:balance}
-p{margin:0}
+p{margin:0;text-wrap:pretty}
 .wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 section{scroll-margin-top:76px}
 
@@ -300,6 +300,11 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .card textarea{min-height:110px;resize:vertical}
 .card input:focus,.card textarea:focus{outline:none;box-shadow:0 0 0 4px var(--lime)}
 .card input.valid{border-color:var(--ok)}
+.card input[aria-invalid="true"]{border-color:var(--err);background:#FFF0F4}
+.field-err{display:flex;gap:8px;align-items:flex-start;margin:0;font-size:14px;font-weight:700;color:var(--err)}
+.field-err[hidden]{display:none}
+.field-err-ico{flex:none;display:inline-grid;place-items:center;width:20px;height:20px;margin-top:1px;border-radius:50%;background:var(--err);color:#fff;font-size:13px;font-weight:800;line-height:1}
+@supports (field-sizing:content){.card textarea{field-sizing:content;max-height:320px}}
 .field-help{font-size:14px;color:var(--gris)}
 .addr-wrap{position:relative}
 .addr-list{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:20;list-style:none;margin:0;padding:6px;background:var(--blanc);border:3px solid #000;border-radius:14px;box-shadow:6px 6px 0 #000;max-height:300px;overflow:auto}
@@ -811,7 +816,7 @@ details.pkg-addons>summary{flex-wrap:wrap;column-gap:10px;row-gap:0}
 
       <label class="opt opt-wide reveal" style="--d:0.04s">
         <input type="checkbox" value="Déperlant vitres" data-price="10">
-        <div class="opt-video"><video muted loop playsinline preload="none" poster="img/deperlant-apercu.webp" data-lazy-video aria-label="Démonstration : l'eau perle et glisse sur un pare-brise traité"><source type="video/mp4" data-src="img/deperlant.mp4"></video><span class="opt-video-tag">Démonstration</span></div>
+        <div class="opt-video"><video muted loop playsinline preload="none" data-poster="img/deperlant-apercu.webp" data-lazy-video aria-label="Démonstration : l'eau perle et glisse sur un pare-brise traité"><source type="video/mp4" data-src="img/deperlant.mp4"></video><span class="opt-video-tag">Démonstration</span></div>
         <div class="opt-body">
           <span class="opt-new">Nouveau</span>
           <svg aria-hidden="true" class="icon" viewBox="0 0 24 24" fill="none"><path d="M3 18L7 6h10l4 12" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M10 10c0 1.2-1 2-1 2.6a1 1 0 002 0c0-.6-1-1.4-1-2.6zM14 13c0 1.2-1 2-1 2.6a1 1 0 002 0c0-.6-1-1.4-1-2.6z" fill="currentColor"/></svg>
@@ -906,7 +911,7 @@ details.pkg-addons>summary{flex-wrap:wrap;column-gap:10px;row-gap:0}
             </div>
             <p class="opt-rules" id="optRules"></p>
             <div class="dep-preview" id="depPreview" hidden>
-              <video muted loop playsinline preload="none" poster="img/deperlant-apercu.webp"></video>
+              <video muted loop playsinline preload="none" data-poster="img/deperlant-apercu.webp"></video>
               <div><strong>Déperlant pour vitres</strong><br>La pluie perle et glisse toute seule sur le pare-brise.</div>
             </div>
           </fieldset>
@@ -946,11 +951,11 @@ details.pkg-addons>summary{flex-wrap:wrap;column-gap:10px;row-gap:0}
         <div class="field-row">
           <div class="field">
             <label for="nom">Nom et prénom</label>
-            <input type="text" id="nom" name="Nom" required>
+            <input type="text" id="nom" name="Nom" autocomplete="name" autocapitalize="words" spellcheck="false" enterkeyhint="next" required>
           </div>
           <div class="field">
             <label for="tel">Téléphone</label>
-            <input type="tel" id="tel" name="Téléphone" inputmode="tel" autocomplete="tel" placeholder="06 12 34 56 78" required>
+            <input type="tel" id="tel" name="Téléphone" inputmode="tel" autocomplete="tel" enterkeyhint="next" placeholder="06 12 34 56 78" required>
           </div>
         </div>
 
@@ -967,7 +972,7 @@ details.pkg-addons>summary{flex-wrap:wrap;column-gap:10px;row-gap:0}
 
         <div class="field">
           <label for="vehicule">Véhicule (marque, modèle) <span class="optional">— facultatif</span></label>
-          <input type="text" id="vehicule" name="Véhicule" placeholder="Ex : Peugeot 208">
+          <input type="text" id="vehicule" name="Véhicule" autocapitalize="words" enterkeyhint="next" placeholder="Ex : Peugeot 208">
         </div>
 
         <div class="field">
@@ -1116,7 +1121,7 @@ details.pkg-addons>summary{flex-wrap:wrap;column-gap:10px;row-gap:0}
     const v = box.querySelector('video');
     function maj(){
       box.hidden = !cb.checked;
-      if (cb.checked) { if (!v.src) v.src = src.getAttribute('data-src') || src.src; v.play().catch(()=>{}); } else v.pause();
+      if (cb.checked) { if (!v.poster && v.dataset.poster) v.poster = v.dataset.poster; if (!v.src) v.src = src.getAttribute('data-src') || src.src; v.play().catch(()=>{}); } else v.pause();
     }
     document.getElementById('optionChecks').addEventListener('change', maj);
     document.getElementById('continueToBooking').addEventListener('click', () => setTimeout(maj, 0));
@@ -1126,7 +1131,7 @@ details.pkg-addons>summary{flex-wrap:wrap;column-gap:10px;row-gap:0}
 
   // Vidéo du déperlant : téléchargée seulement quand elle devient visible
   document.querySelectorAll('video[data-lazy-video]').forEach(v => {
-    const go = () => { v.querySelectorAll('source[data-src]').forEach(sc => { sc.src = sc.getAttribute('data-src'); }); v.load(); v.play().catch(()=>{}); };
+    const go = () => { if (v.dataset.poster) v.poster = v.dataset.poster; v.querySelectorAll('source[data-src]').forEach(sc => { sc.src = sc.getAttribute('data-src'); }); v.load(); v.play().catch(()=>{}); };
     if (!('IntersectionObserver' in window)) return go();
     const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { io.disconnect(); go(); } }, { rootMargin: '300px' });
     io.observe(v);
@@ -2181,6 +2186,38 @@ details.pkg-addons>summary{flex-wrap:wrap;column-gap:10px;row-gap:0}
       const io = new IntersectionObserver(es => { es.forEach(e => e.isIntersecting ? vus.add(e.target) : vus.delete(e.target)); barre.classList.toggle('cachee', vus.size > 0); });
       io.observe(document.getElementById('rendez-vous')); io.observe(document.querySelector('.hero'));
     }
+  })();
+  // ===== Erreurs du formulaire affichées sous le champ (et plus seulement dans la bulle du navigateur) =====
+  (function(){
+    const form = document.getElementById('bookingForm'); if (!form) return;
+    const msgs = { nom: 'Indiquez votre nom et prénom.', tel: 'Indiquez votre numéro de téléphone.', adresse: "Indiquez l'adresse où nous récupérons votre véhicule." };
+    let premier = true;
+    ['nom', 'tel', 'adresse'].forEach(id => {
+      const el = document.getElementById(id); if (!el) return;
+      const field = el.closest('.field');
+      const p = document.createElement('p'); p.className = 'field-err'; p.id = id + 'Err'; p.hidden = true;
+      p.innerHTML = '<span class="field-err-ico" aria-hidden="true">!</span><span></span>';
+      field.appendChild(p);
+      el.setAttribute('aria-describedby', ((el.getAttribute('aria-describedby') || '') + ' ' + p.id).trim());
+      let touche = false;
+      const montrer = () => {
+        // pour l'adresse « pas choisie dans la liste », le message est déjà affiché juste en dessous
+        if (id === 'adresse' && !el.validity.valueMissing) { cacher(); el.setAttribute('aria-invalid', 'true'); return; }
+        p.lastChild.textContent = el.validity.valueMissing ? msgs[id] : el.validationMessage;
+        p.hidden = false; el.setAttribute('aria-invalid', 'true');
+      };
+      const cacher = () => { p.hidden = true; el.removeAttribute('aria-invalid'); };
+      el.addEventListener('invalid', e => {
+        e.preventDefault(); montrer();
+        if (premier) { premier = false; el.focus({ preventScroll: true }); el.scrollIntoView({ behavior: 'smooth', block: 'center' }); setTimeout(() => { premier = true; }, 300); }
+      });
+      el.addEventListener('input', () => { touche = true; if (el.checkValidity()) cacher(); else if (!p.hidden) montrer(); });
+      el.addEventListener('change', () => { if (el.checkValidity()) cacher(); });
+      // comme :user-invalid : on ne signale une erreur qu'après que la personne a quitté le champ
+      if (id !== 'adresse') el.addEventListener('blur', () => setTimeout(() => { if (touche && !el.checkValidity()) montrer(); }, 0));
+    });
+    form.addEventListener('reset', () => form.querySelectorAll('.field-err').forEach(p => { p.hidden = true; }) );
+    form.addEventListener('reset', () => ['nom', 'tel', 'adresse'].forEach(id => { const el = document.getElementById(id); if (el) el.removeAttribute('aria-invalid'); }));
   })();
 </script>
 
